@@ -2,6 +2,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CurrentPage } from './current.page';
+import { AuthenticationService } from '../services/authentication/authentication.service';
+import { createAuthenticationServiceMock } from '../services/authentication/authentication.mock';
 
 describe('CurrentPage', () => {
   let component: CurrentPage;
@@ -9,10 +11,15 @@ describe('CurrentPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CurrentPage ],
+      declarations: [CurrentPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    })
-    .compileComponents();
+      providers: [
+        {
+          provide: AuthenticationService,
+          useFactory: createAuthenticationServiceMock
+        }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

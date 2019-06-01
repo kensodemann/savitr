@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../services/authentication/authentication.service';
 
 @Component({
   selector: 'app-current',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CurrentPage implements OnInit {
 
-  constructor() { }
+  constructor(public authentication: AuthenticationService) { }
 
   ngOnInit() {
   }

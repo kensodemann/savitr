@@ -1,10 +1,12 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestBed, async } from '@angular/core/testing';
 
-import { Platform } from '@ionic/angular';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { NavController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { RouterTestingModule } from '@angular/router/testing';
+import { createAngularFireAuthMock, createNavControllerMock } from 'test/mocks';
 
 import { AppComponent } from './app.component';
 
@@ -22,6 +24,8 @@ describe('AppComponent', () => {
       declarations: [AppComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
+        { provide: AngularFireAuth, useFactory: createAngularFireAuthMock },
+        { provide: NavController, useFactory: createNavControllerMock },
         { provide: StatusBar, useValue: statusBarSpy },
         { provide: SplashScreen, useValue: splashScreenSpy },
         { provide: Platform, useValue: platformSpy },
@@ -68,4 +72,25 @@ describe('AppComponent', () => {
     expect(menuItems[3].getAttribute('ng-reflect-router-link')).toEqual('/about');
   });
 
+  describe('changing the user', () => {
+    beforeEach(() => {
+      const fixture = TestBed.createComponent(AppComponent);
+      fixture.detectChanges();
+    });
+
+    it('does not navigate if there is a user', () => {
+      const angularFireAuth = TestBed.get(AngularFireAuth);
+      const navController = TestBed.get(NavController);
+      angularFireAuth.authState.next({ id: 42 });
+      expect(navController.navigateRoot).not.toHaveBeenCalled();
+    });
+
+    it('navigates to login if there is no user', () => {
+      const angularFireAuth = TestBed.get(AngularFireAuth);
+      const navController = TestBed.get(NavController);
+      angularFireAuth.authState.next();
+      expect(navController.navigateRoot).toHaveBeenCalledTimes(1);
+      expect(navController.navigateRoot).toHaveBeenCalledWith(['login']);
+    });
+  });
 });
