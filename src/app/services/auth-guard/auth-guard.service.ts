@@ -16,12 +16,10 @@ export class AuthGuardService implements CanActivate {
   async canActivate(): Promise<boolean> {
     console.log('checking if can activate');
     if (await this.getUser()) {
-      console.log('can activate');
       return true;
     }
 
     this.navController.navigateRoot(['login']);
-    console.log('cannot activate');
     return false;
   }
 

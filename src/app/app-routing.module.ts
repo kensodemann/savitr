@@ -6,18 +6,28 @@ import { AuthGuardService } from './services/auth-guard/auth-guard.service';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'current',
     pathMatch: 'full'
   },
   {
-    path: 'home',
+    path: 'about',
     canActivate: [AuthGuardService],
-    loadChildren: './home/home.module#HomePageModule'
+    loadChildren: './about/about.module#AboutPageModule'
   },
   {
-    path: 'list',
+    path: 'current',
     canActivate: [AuthGuardService],
-    loadChildren: './list/list.module#ListPageModule'
+    loadChildren: './current/current.module#CurrentPageModule'
+  },
+  {
+    path: 'exercises',
+    canActivate: [AuthGuardService],
+    loadChildren: './exercises/exercises.module#ExercisesPageModule'
+  },
+  {
+    path: 'history',
+    canActivate: [AuthGuardService],
+    loadChildren: './history/history.module#HistoryPageModule'
   },
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' }
 ];
