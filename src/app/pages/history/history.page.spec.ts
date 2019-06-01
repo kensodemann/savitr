@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HistoryPage } from './history.page';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { createAuthenticationServiceMock } from '../../services/authentication/authentication.mock';
+import { createAuthenticationServiceMock } from '../../services/authentication/authentication.service.mock';
 
 describe('HistoryPage', () => {
   let component: HistoryPage;

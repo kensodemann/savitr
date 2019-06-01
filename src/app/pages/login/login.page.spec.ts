@@ -9,7 +9,7 @@ import {
 } from '@ionic/angular';
 
 import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { createAuthenticationServiceMock } from '../../services/authentication/authentication.mock';
+import { createAuthenticationServiceMock } from '../../services/authentication/authentication.service.mock';
 import {
   createNavControllerMock,
   createOverlayControllerMock,
