@@ -2,8 +2,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExercisesPage } from './exercises.page';
-import { AuthenticationService } from '../services/authentication/authentication.service';
-import { createAuthenticationServiceMock } from '../services/authentication/authentication.mock';
+import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { createAuthenticationServiceMock } from '../../services/authentication/authentication.mock';
 
 describe('ExercisesPage', () => {
   let component: ExercisesPage;

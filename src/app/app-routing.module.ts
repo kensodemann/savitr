@@ -12,24 +12,24 @@ const routes: Routes = [
   {
     path: 'about',
     canActivate: [AuthGuardService],
-    loadChildren: './about/about.module#AboutPageModule'
+    loadChildren: './pages/about/about.module#AboutPageModule'
   },
   {
     path: 'current',
     canActivate: [AuthGuardService],
-    loadChildren: './current/current.module#CurrentPageModule'
+    loadChildren: './pages/current/current.module#CurrentPageModule'
   },
   {
     path: 'exercises',
     canActivate: [AuthGuardService],
-    loadChildren: './exercises/exercises.module#ExercisesPageModule'
+    loadChildren: './pages/exercises/exercises.module#ExercisesPageModule'
   },
   {
     path: 'history',
     canActivate: [AuthGuardService],
-    loadChildren: './history/history.module#HistoryPageModule'
+    loadChildren: './pages/history/history.module#HistoryPageModule'
   },
-  { path: 'login', loadChildren: './login/login.module#LoginPageModule' }
+  { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' }
 ];
 
 @NgModule({
