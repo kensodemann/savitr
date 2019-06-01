@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar> <ion-title>Login</ion-title> </ion-toolbar>
+</ion-header>
+
+<ion-content text-center padding>
+  <form #loginForm="ngForm">
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">E-Mail Address</ion-label>
+        <ion-input
+          id="email-input"
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          #emailInput="ngModel"
+          required
+          email
+          (ionInput)="clearMessages()"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input
+          id="password-input"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          #passwordInput="ngModel"
+          required
+          (ionInput)="clearMessages()"
+        ></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-button fill="clear" (click)="handlePasswordReset()"
+      >Reset Password
+    </ion-button>
+    <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="info" *ngIf="infoMessage">{{ infoMessage }}</div>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button
+      id="signin-button"
+      expand="full"
+      [disabled]="!loginForm.form.valid"
+      (click)="login()"
+      >Sign in</ion-button
+    >
+  </ion-toolbar>
+</ion-footer>
