@@ -14,14 +14,14 @@ export function createAngularFireAuthMock() {
 }
 
 class TestDocument<T> {
-  private _data: T;
+  private lclData: T;
 
   constructor(public id: string, data: T) {
-    this._data = data;
+    this.lclData = data;
   }
 
   data(): T {
-    return this._data;
+    return this.lclData;
   }
 }
 

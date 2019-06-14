@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ExercisesPage } from './exercises.page';
+import { EditorsModule } from 'src/app/editors/editors.module';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    EditorsModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)

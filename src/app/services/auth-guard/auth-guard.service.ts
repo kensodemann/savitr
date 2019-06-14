@@ -14,7 +14,6 @@ export class AuthGuardService implements CanActivate {
   ) {}
 
   async canActivate(): Promise<boolean> {
-    console.log('checking if can activate');
     if (await this.getUser()) {
       return true;
     }
