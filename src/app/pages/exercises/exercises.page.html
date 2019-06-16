@@ -4,10 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-buttons slot="primary">
-      <ion-button
-        id="logout-button"
-        (click)="authentication.logout()"
-      >
+      <ion-button id="logout-button" (click)="authentication.logout()">
         <ion-icon slot="icon-only" name="log-out"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -16,6 +13,15 @@
 </ion-header>
 
 <ion-content>
+  <ion-list *ngFor="let e of exercisesByArea">
+    <ion-list-header>
+      <ion-label>{{ e.area }}</ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let exercise of e.exercises">
+      <ion-label>{{ exercise.name }}</ion-label>
+    </ion-item>
+  </ion-list>
+
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button id="add-button" (click)="add()">
       <ion-icon name="add"></ion-icon>
