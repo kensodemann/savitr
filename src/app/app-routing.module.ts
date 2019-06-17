@@ -12,30 +12,32 @@ const routes: Routes = [
   {
     path: 'about',
     canActivate: [AuthGuardService],
-    loadChildren: './pages/about/about.module#AboutPageModule'
+    loadChildren: () => import('./pages/about/about.module').then(m => m.AboutPageModule)
   },
   {
     path: 'current',
     canActivate: [AuthGuardService],
-    loadChildren: './pages/current/current.module#CurrentPageModule'
+    loadChildren: () => import('./pages/current/current.module').then(m => m.CurrentPageModule)
   },
   {
     path: 'exercises',
     canActivate: [AuthGuardService],
-    loadChildren: './pages/exercises/exercises.module#ExercisesPageModule'
+    loadChildren: () =>
+      import('./pages/exercises/exercises.module').then(m => m.ExercisesPageModule)
   },
   {
     path: 'history',
     canActivate: [AuthGuardService],
-    loadChildren: './pages/history/history.module#HistoryPageModule'
+    loadChildren: () => import('./pages/history/history.module').then(m => m.HistoryPageModule)
   },
-  { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' }
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
+  }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
-  ],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
