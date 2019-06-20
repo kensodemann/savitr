@@ -79,8 +79,34 @@ describe('ExercisesPage', () => {
     });
 
     it('presents the editor', async () => {
-      const modalController = TestBed.get(ModalController);
       await component.add();
+      expect(editor.present).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('edit', () => {
+    const exercise = {
+      id: '420059399405',
+      name: 'Push Back',
+      description: 'Find something you do not like, rebel against it',
+      type: 'Body Weight',
+      area: 'Core'
+    };
+
+    it('creates a modal editor', () => {
+      const modalController = TestBed.get(ModalController);
+      component.edit(exercise);
+      expect(modalController.create).toHaveBeenCalledTimes(1);
+      expect(modalController.create).toHaveBeenCalledWith({
+        component: ExerciseEditorComponent,
+        componentProps: {
+          exercise
+        }
+      });
+    });
+
+    it('presents the editor', async () => {
+      await component.edit(exercise);
       expect(editor.present).toHaveBeenCalledTimes(1);
     });
   });

@@ -17,9 +17,11 @@
     <ion-list-header>
       <ion-label>{{ e.area }}</ion-label>
     </ion-list-header>
-    <ion-item *ngFor="let exercise of e.exercises">
-      <ion-label>{{ exercise.name }}</ion-label>
-    </ion-item>
+    <app-exercise-list-item
+      *ngFor="let exercise of e.exercises"
+      [exercise]="exercise"
+      (edit)="edit(exercise)"
+    ></app-exercise-list-item>
   </ion-list>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">

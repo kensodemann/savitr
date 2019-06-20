@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { ExercisesPage } from './exercises.page';
 import { EditorsModule } from 'src/app/editors/editors.module';
+import { ExerciseListItemComponentModule } from 'src/app/shared/exercise-list-item/exercise-list-item.module';
 
 const routes: Routes = [
   {
@@ -19,6 +20,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     EditorsModule,
+    ExerciseListItemComponentModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)

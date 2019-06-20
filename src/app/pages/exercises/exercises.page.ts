@@ -30,9 +30,7 @@ export class ExercisesPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.exercisesSubscription = this.exercisesService
-      .all()
-      .subscribe(all => this.processExercises(all));
+    this.exercisesSubscription = this.exercisesService.all().subscribe(all => this.processExercises(all));
   }
 
   ngOnDestroy() {
@@ -44,11 +42,14 @@ export class ExercisesPage implements OnInit, OnDestroy {
     modal.present();
   }
 
+  async edit(exercise: Exercise): Promise<void> {
+    const modal = await this.modalController.create({ component: ExerciseEditorComponent, componentProps: { exercise } });
+    modal.present();
+  }
+
   private processExercises(all: Array<Exercise>) {
     this.exercisesByArea = [];
-    exerciseFocusAreas.forEach(area =>
-      this.exercisesByArea.push(this.exercisesForArea(all, area))
-    );
+    exerciseFocusAreas.forEach(area => this.exercisesByArea.push(this.exercisesForArea(all, area)));
   }
 
   private exercisesForArea(all: Array<Exercise>, area: string): AreaExercises {
