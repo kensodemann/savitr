@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 
 import { ExercisesPage } from './exercises.page';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { ExerciseFocusAreas } from 'src/app/default-data';
 
 describe('ExercisesPage', () => {
+  let alert;
   let component: ExercisesPage;
   let editor;
   let exercisesList: Subject<Array<Exercise>>;
@@ -24,11 +25,13 @@ describe('ExercisesPage', () => {
 
   beforeEach(async(() => {
     initiailzeTestData();
+    alert = createOverlayElementMock('Alert');
     editor = createOverlayElementMock('Modal');
     TestBed.configureTestingModule({
       declarations: [ExercisesPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
+        { provide: AlertController, useFactory: () => createOverlayControllerMock('AlertController', alert) },
         { provide: AuthenticationService, useFactory: createAuthenticationServiceMock },
         { provide: ExercisesService, useFactory: createExercisesServiceMock },
         {
@@ -62,7 +65,6 @@ describe('ExercisesPage', () => {
     });
 
     it('sets the exercises to the sorted list of exercises segregated by area', () => {
-      const svc = TestBed.get(ExercisesService);
       exercisesList.next(exercises);
       expect(component.exercisesByArea).toEqual(sortedExercises);
     });
@@ -108,6 +110,58 @@ describe('ExercisesPage', () => {
     it('presents the editor', async () => {
       await component.edit(exercise);
       expect(editor.present).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('delete', () => {
+    const exercise = {
+      id: '420059399405',
+      name: 'Push Back',
+      description: 'Find something you do not like, rebel against it',
+      type: 'Body Weight',
+      area: 'Core'
+    };
+
+    beforeEach(() => {
+      alert.onDidDismiss.and.returnValue(Promise.resolve({}));
+    });
+
+    it('asks the user if they actually want to delete', () => {
+      const alertController = TestBed.get(AlertController);
+      component.delete(exercise);
+      expect(alertController.create).toHaveBeenCalledTimes(1);
+      expect(alertController.create).toHaveBeenCalledWith({
+        header: 'Remove Exercise?',
+        subHeader: exercise.name,
+        message: 'This action cannot be undone. Are you sure you want to continue?',
+        buttons: [{ text: 'Yes', role: 'confirm' }, { text: 'No', role: 'cancel' }]
+      });
+    });
+
+    it('presents the alert', async () => {
+      await component.delete(exercise);
+      expect(alert.present).toHaveBeenCalledTimes(1);
+    });
+
+    it('does the delete if the "confirm" button is pressed', async () => {
+      const svc = TestBed.get(ExercisesService);
+      alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'confirm' }));
+      await component.delete(exercise);
+      expect(svc.delete).toHaveBeenCalledTimes(1);
+      expect(svc.delete).toHaveBeenCalledWith({
+        id: '420059399405',
+        name: 'Push Back',
+        description: 'Find something you do not like, rebel against it',
+        type: 'Body Weight',
+        area: 'Core'
+      });
+    });
+
+    it('does not do the delete if the "confirm" button is pressed', async () => {
+      const svc = TestBed.get(ExercisesService);
+      alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'cancel' }));
+      await component.delete(exercise);
+      expect(svc.delete).not.toHaveBeenCalled();
     });
   });
 

@@ -20,6 +20,7 @@
     <app-exercise-list-item
       *ngFor="let exercise of e.exercises"
       [exercise]="exercise"
+      (delete)="delete(exercise)"
       (edit)="edit(exercise)"
     ></app-exercise-list-item>
   </ion-list>

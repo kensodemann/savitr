@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -24,6 +24,7 @@ export class ExercisesPage implements OnInit, OnDestroy {
   exercisesByArea: Array<AreaExercises>;
 
   constructor(
+    private alertController: AlertController,
     public authentication: AuthenticationService,
     private exercisesService: ExercisesService,
     private modalController: ModalController
@@ -45,6 +46,20 @@ export class ExercisesPage implements OnInit, OnDestroy {
   async edit(exercise: Exercise): Promise<void> {
     const modal = await this.modalController.create({ component: ExerciseEditorComponent, componentProps: { exercise } });
     modal.present();
+  }
+
+  async delete(exercise: Exercise): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Remove Exercise?',
+      subHeader: exercise.name,
+      message: 'This action cannot be undone. Are you sure you want to continue?',
+      buttons: [{ text: 'Yes', role: 'confirm' }, { text: 'No', role: 'cancel' }]
+    });
+    alert.present();
+    const result = await alert.onDidDismiss();
+    if (result.role === 'confirm') {
+      this.exercisesService.delete(exercise);
+    }
   }
 
   private processExercises(all: Array<Exercise>) {
