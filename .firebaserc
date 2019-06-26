@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "savitr-workouts"
+    "development": "savitr-workouts",
+    "production": "savitr-workouts"
   }
 }
