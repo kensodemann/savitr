@@ -1,11 +1,12 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavController } from '@ionic/angular';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 import { HistoryPage } from './history.page';
 import { AuthenticationService } from '@app/services';
 import { createAuthenticationServiceMock } from '@app/services/mocks';
-import { createNavControllerMock } from 'test/mocks';
+import { createNavControllerMock, createAngularFireAuthMock } from 'test/mocks';
 import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
 import { createWeeklyWorkoutLogsServiceMock } from '@app/services/firestore-data/mocks';
 
@@ -18,6 +19,7 @@ describe('HistoryPage', () => {
       declarations: [HistoryPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
+        { provide: AngularFireAuth, useFactory: createAngularFireAuthMock },
         {
           provide: AuthenticationService,
           useFactory: createAuthenticationServiceMock
@@ -42,6 +44,8 @@ describe('HistoryPage', () => {
   });
 
   it('gets the work logs', () => {
+    const afAuth = TestBed.get(AngularFireAuth);
+    afAuth.authState.next({ id: '1234325' });
     const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
     expect(workoutLogs.all).toHaveBeenCalledTimes(1);
   });
@@ -51,9 +55,7 @@ describe('HistoryPage', () => {
       const navController = TestBed.get(NavController);
       component.add();
       expect(navController.navigateForward).toHaveBeenCalledTimes(1);
-      expect(navController.navigateForward).toHaveBeenCalledWith([
-        'workout-plan'
-      ]);
+      expect(navController.navigateForward).toHaveBeenCalledWith(['workout-plan']);
     });
   });
 });

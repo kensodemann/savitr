@@ -4,7 +4,6 @@ import {
   AngularFirestoreCollection,
   DocumentChangeAction
 } from '@angular/fire/firestore';
-import { User, firestore } from 'firebase';
 
 import { FirestoreDataService } from '../firestore-data.service';
 import { WorkoutLog } from '@app/models';
@@ -14,15 +13,15 @@ import { AngularFireAuth } from '@angular/fire/auth';
   providedIn: 'root'
 })
 export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
-  constructor(private firestore: AngularFirestore, afAuth: AngularFireAuth) {
-    super(afAuth);
+  constructor(private firestore: AngularFirestore, private afAuth: AngularFireAuth) {
+    super();
   }
 
-  protected getCollection(u: User): AngularFirestoreCollection<WorkoutLog> {
-    if (u) {
+  protected getCollection(): AngularFirestoreCollection<WorkoutLog> {
+    if (this.afAuth.auth.currentUser) {
       return this.firestore
         .collection('users')
-        .doc(u.uid)
+        .doc(this.afAuth.auth.currentUser.uid)
         .collection('weekly-workout-logs', ref =>
           ref.orderBy('beginDate', 'desc')
         );
@@ -38,7 +37,7 @@ export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
       return {
         id,
         beginDate: new Date(
-          ((data as any).beginDate as firestore.Timestamp).seconds * 1000
+          ((data as any).beginDate).seconds * 1000
         )
       };
     });

@@ -9,10 +9,7 @@ import {
   createAngularFireAuthMock,
   createDocumentSnapshotMock
 } from 'test/mocks';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection
-} from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
 
@@ -24,8 +21,8 @@ interface DataType {
 }
 
 class TestService extends FirestoreDataService<DataType> {
-  constructor(private firestore: AngularFirestore, afAuth: AngularFireAuth) {
-    super(afAuth);
+  constructor(private firestore: AngularFirestore) {
+    super();
   }
 
   protected getCollection(): AngularFirestoreCollection<DataType> {
@@ -33,7 +30,7 @@ class TestService extends FirestoreDataService<DataType> {
   }
 }
 
-describe('ExercisesService', () => {
+describe('FirestoreDataService', () => {
   let collection;
   let dataService: FirestoreDataService<DataType>;
 
@@ -60,14 +57,14 @@ describe('ExercisesService', () => {
     expect(dataService).toBeTruthy();
   });
 
-  it('grabs a references to the data collection', fakeAsync(() => {
-    tick();
-    const angularFirestore = TestBed.get(AngularFirestore);
-    expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
-    expect(angularFirestore.collection).toHaveBeenCalledWith('data-collection');
-  }));
-
   describe('all', () => {
+    it('grabs a references to the data collection', () => {
+      const angularFirestore = TestBed.get(AngularFirestore);
+      dataService.all();
+      expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
+      expect(angularFirestore.collection).toHaveBeenCalledWith('data-collection');
+    });
+
     it('looks for snapshot changes', () => {
       dataService.all();
       expect(collection.snapshotChanges).toHaveBeenCalledTimes(1);
@@ -78,14 +75,12 @@ describe('ExercisesService', () => {
         of([
           createAction('314PI', {
             name: `Baker's Square`,
-            description:
-              'Makers of overly sweet pies and otherwise crappy food',
+            description: 'Makers of overly sweet pies and otherwise crappy food',
             isActive: true
           }),
           createAction('420HI', {
             name: 'Joe',
-            description:
-              'Some guy named Joe who sells week on my street corner',
+            description: 'Some guy named Joe who sells week on my street corner',
             isActive: false
           })
         ])
@@ -95,15 +90,13 @@ describe('ExercisesService', () => {
           {
             id: '314PI',
             name: `Baker's Square`,
-            description:
-              'Makers of overly sweet pies and otherwise crappy food',
+            description: 'Makers of overly sweet pies and otherwise crappy food',
             isActive: true
           },
           {
             id: '420HI',
             name: 'Joe',
-            description:
-              'Some guy named Joe who sells week on my street corner',
+            description: 'Some guy named Joe who sells week on my street corner',
             isActive: false
           }
         ])

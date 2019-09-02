@@ -30,43 +30,30 @@ describe('DailyExercisesService', () => {
     angularFirestore.collection.and.returnValue(collection);
   });
 
-  beforeEach(inject(
-    [DailyExercisesService],
-    (service: DailyExercisesService) => {
-      dailyExercises = service;
-    }
-  ));
+  beforeEach(inject([DailyExercisesService], (service: DailyExercisesService) => {
+    dailyExercises = service;
+  }));
 
   it('should be created', () => {
     expect(dailyExercises).toBeTruthy();
   });
 
-  describe('when the user is logged in', () => {
+  describe('all', () => {
     beforeEach(() => {
+      // NOTE: User needs to be logged in for this service to be useful
       const afAuth = TestBed.get(AngularFireAuth);
-      afAuth.authState.next({ uid: '123abc' });
+      afAuth.auth.currentUser = { uid: '123abc' };
     });
 
     it('grabs a reference to the daily-exercises collection for the user', () => {
       const angularFirestore = TestBed.get(AngularFirestore);
+      dailyExercises.all();
       expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
       expect(angularFirestore.collection).toHaveBeenCalledWith('users');
       expect(collection.doc).toHaveBeenCalledTimes(1);
       expect(collection.doc).toHaveBeenCalledWith('123abc');
       expect(doc.collection).toHaveBeenCalledTimes(1);
       expect(doc.collection).toHaveBeenCalledWith('daily-exercises');
-    });
-  });
-
-  describe('when the user is logged in', () => {
-    beforeEach(() => {
-      const afAuth = TestBed.get(AngularFireAuth);
-      afAuth.authState.next();
-    });
-
-    it('grabs nothing', () => {
-      const angularFirestore = TestBed.get(AngularFirestore);
-      expect(angularFirestore.collection).not.toHaveBeenCalled();
     });
   });
 });

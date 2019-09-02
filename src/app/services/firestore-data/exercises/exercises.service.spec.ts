@@ -37,6 +37,7 @@ describe('ExercisesService', () => {
 
   it('grabs a references to the exercises collection', () => {
     const angularFirestore = TestBed.get(AngularFirestore);
+    exercises.all();
     expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
     expect(angularFirestore.collection).toHaveBeenCalledWith('exercises');
   });

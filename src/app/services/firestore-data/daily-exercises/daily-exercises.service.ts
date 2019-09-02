@@ -13,15 +13,15 @@ import { User } from 'firebase';
   providedIn: 'root'
 })
 export class DailyExercisesService extends FirestoreDataService<DailyExercise> {
-  constructor(private firestore: AngularFirestore, afAuth: AngularFireAuth) {
-    super(afAuth);
+  constructor(private firestore: AngularFirestore, private afAuth: AngularFireAuth) {
+    super();
   }
 
-  protected getCollection(u: User): AngularFirestoreCollection<DailyExercise> {
-    if (u) {
+  protected getCollection(): AngularFirestoreCollection<DailyExercise> {
+    if (this.afAuth.auth.currentUser) {
       return this.firestore
         .collection('users')
-        .doc(u.uid)
+        .doc(this.afAuth.auth.currentUser.uid)
         .collection('daily-exercises');
     }
   }
