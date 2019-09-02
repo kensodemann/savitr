@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 
 import { ExerciseEditorComponent } from './exercise-editor.component';
-import { ExercisesService } from '../../services/firestore-data/exercises/exercises.service';
-import { exerciseFocusAreas, exerciseTypes } from '../../default-data';
+import { ExercisesService } from '@app/services/firestore-data';
+import { exerciseFocusAreas, exerciseTypes } from '@app/default-data';
 
 import { createOverlayControllerMock } from 'test/mocks';
-import { createExercisesServiceMock } from '../../services/firestore-data/exercises/exercises.service.mock';
+import { createExercisesServiceMock } from '@app/services/firestore-data/mocks';
 
 describe('ExerciseEditorComponent', () => {
   let component: ExerciseEditorComponent;

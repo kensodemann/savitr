@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
-import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { version } from '../../default-data';
-import { Version } from '../../models/version';
+import { AuthenticationService } from '@app/services';
+import { version } from '@app/default-data';
+import { Version } from '@app/models/version';
 
 @Component({
   selector: 'app-about',

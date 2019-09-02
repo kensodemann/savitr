@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { NavController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { ApplicationService } from './services/application/application.service';
+import { ApplicationService } from '@app/services';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
       icon: 'home'
     },
     {
-      title: 'History',
+      title: 'History & Planning',
       url: '/history',
       icon: 'calendar'
     },

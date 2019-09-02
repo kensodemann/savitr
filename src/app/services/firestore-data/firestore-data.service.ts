@@ -1,28 +1,30 @@
-import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction, DocumentReference } from '@angular/fire/firestore';
+import {
+  AngularFirestoreCollection,
+  DocumentChangeAction,
+  DocumentReference
+} from '@angular/fire/firestore';
+import { User } from 'firebase';
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AngularFireAuth } from '@angular/fire/auth';
 
-export class FirestoreDataService<T extends { id?: string}> {
+export abstract class FirestoreDataService<T extends { id?: string }> {
   protected collection: AngularFirestoreCollection<T>;
 
-  constructor(firestore: AngularFirestore, collectionName: string) {
-    this.collection = firestore.collection(collectionName);
+  constructor(afAuth: AngularFireAuth) {
+    afAuth.authState.subscribe(u => {
+      this.collection = this.getCollection(u);
+    });
   }
 
   all(): Observable<Array<T>> {
     return this.collection.snapshotChanges().pipe(map(this.actionsToData));
   }
 
-  get(id: string): Observable<T> {
-    return this.collection
-      .doc<T>(id)
-      .valueChanges()
-      .pipe(
-        map(item => {
-          return { id, ...(item as object) } as T;
-        })
-      );
+  async get(id: string): Promise<T> {
+    const doc = await this.collection.doc<T>(id).ref.get();
+    return { id, ...(doc && doc.data()) } as T;
   }
 
   add(item: T): Promise<DocumentReference> {
@@ -46,4 +48,6 @@ export class FirestoreDataService<T extends { id?: string}> {
       return { id, ...(data as object) } as T;
     });
   }
+
+  protected abstract getCollection(user: User): AngularFirestoreCollection<T>;
 }

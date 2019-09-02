@@ -4,15 +4,24 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-buttons slot="primary">
-      <ion-button
-        id="logout-button"
-        (click)="authentication.logout()"
-      >
+      <ion-button id="logout-button" (click)="authentication.logout()">
         <ion-icon slot="icon-only" name="log-out"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Workout History</ion-title>
+    <ion-title>History & Planning</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let log of logs$ | async">
+      <ion-label>{{ log.beginDate | date }}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button id="add-button" color="tertiary" (click)="add()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

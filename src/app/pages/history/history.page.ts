@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { AuthenticationService } from '@app/services';
+import { NavController } from '@ionic/angular';
+import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
+import { Observable } from 'rxjs';
+import { WorkoutLog } from '@app/models';
 
 @Component({
   selector: 'app-history',
@@ -7,7 +11,19 @@ import { AuthenticationService } from '../../services/authentication/authenticat
   styleUrls: ['./history.page.scss']
 })
 export class HistoryPage implements OnInit {
-  constructor(public authentication: AuthenticationService) {}
+  logs$: Observable<Array<WorkoutLog>>;
 
-  ngOnInit() {}
+  constructor(
+    public authentication: AuthenticationService,
+    private navController: NavController,
+    private workoutLogs: WeeklyWorkoutLogsService
+  ) {}
+
+  ngOnInit() {
+    this.logs$ = this.workoutLogs.all();
+  }
+
+  add() {
+    this.navController.navigateForward(['workout-plan']);
+  }
 }

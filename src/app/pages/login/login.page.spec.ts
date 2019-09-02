@@ -8,8 +8,8 @@ import {
   NavController
 } from '@ionic/angular';
 
-import { AuthenticationService } from '../../services/authentication/authentication.service';
-import { createAuthenticationServiceMock } from '../../services/authentication/authentication.service.mock';
+import { AuthenticationService } from '@app/services';
+import { createAuthenticationServiceMock } from '@app/services/mocks';
 import {
   createNavControllerMock,
   createOverlayControllerMock,

@@ -7,7 +7,7 @@ import { byName } from 'src/app/util';
 import { exerciseFocusAreas } from 'src/app/default-data';
 import { Exercise } from 'src/app/models/exercise';
 import { ExerciseEditorComponent } from 'src/app/editors/exercise-editor/exercise-editor.component';
-import { ExercisesService } from 'src/app/services/firestore-data/exercises/exercises.service';
+import { ExercisesService } from '@app/services/firestore-data';
 
 interface AreaExercises {
   area: string;

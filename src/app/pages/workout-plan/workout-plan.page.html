@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Create Workout Plan</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form #workoutPlanForm="ngForm">
+    <ion-list>
+      <ion-item>
+        <ion-label>Begin Date</ion-label>
+        <ion-select
+          name="beginDate"
+          [(ngModel)]="beginDate"
+          (ionChange)="beginDateChanged()"
+          #endDateSelect="ngModel"
+          required
+        >
+          <ion-select-option *ngFor="let dt of beginDates" [value]="dt">{{
+            dt | date
+          }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <app-day-header (click)="addExercise(0)">Sunday</app-day-header>
+      <app-day-header (click)="addExercise(1)">Monday</app-day-header>
+      <app-day-header (click)="addExercise(2)">Tuesday</app-day-header>
+      <app-day-header (click)="addExercise(3)">Wednesday</app-day-header>
+      <app-day-header (click)="addExercise(4)">Thursday</app-day-header>
+      <app-day-header (click)="addExercise(5)">Friday</app-day-header>
+      <app-day-header (click)="addExercise(6)">Saturday</app-day-header>
+    </ion-list>
+  </form>
+</ion-content>

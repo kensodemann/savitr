@@ -1,11 +1,5 @@
-import { EMPTY } from 'rxjs';
+import { createFirestoreDataServiceMock  } from '../firestore-data.service.mock';
 
 export function createExercisesServiceMock() {
-  return jasmine.createSpyObj('exercisesService', {
-    all: EMPTY,
-    get: EMPTY,
-    add: Promise.resolve(),
-    delete: Promise.resolve(),
-    update: Promise.resolve(),
-  });
+  return createFirestoreDataServiceMock('ExercisesService');
 }

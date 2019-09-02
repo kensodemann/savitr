@@ -5,10 +5,10 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { ExercisesPage } from './exercises.page';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { ExerciseEditorComponent } from 'src/app/editors/exercise-editor/exercise-editor.component';
-import { ExercisesService } from 'src/app/services/firestore-data/exercises/exercises.service';
+import { ExercisesService } from '@app/services/firestore-data';
 
 import { createAuthenticationServiceMock } from 'src/app/services/authentication/authentication.service.mock';
-import { createExercisesServiceMock } from 'src/app/services/firestore-data/exercises/exercises.service.mock';
+import { createExercisesServiceMock } from '@app/services/firestore-data/mocks';
 import { createOverlayControllerMock, createOverlayElementMock } from 'test/mocks';
 import { Exercise } from 'src/app/models/exercise';
 import { Subject } from 'rxjs';

@@ -4,15 +4,28 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-buttons slot="primary">
-      <ion-button
-        id="logout-button"
-        (click)="authentication.logout()"
-      >
+      <ion-button id="logout-button" (click)="authentication.logout()">
         <ion-icon slot="icon-only" name="log-out"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Current Week</ion-title>
+    <ion-title>Current Workout</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <ion-segment
+    color="secondary"
+    (ionChange)="segmentChanged($event)"
+    [(ngModel)]="currentView"
+  >
+    <ion-segment-button value="today">
+      <ion-label>Today</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="this-week">
+      <ion-label>This Week</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <app-this-week *ngIf="currentView === 'this-week'"></app-this-week>
+  <app-today *ngIf="currentView === 'today'"></app-today>
+</ion-content>

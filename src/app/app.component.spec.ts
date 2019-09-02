@@ -4,9 +4,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { NavController } from '@ionic/angular';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { ApplicationService } from './services/application/application.service';
+import { ApplicationService } from '@app/services';
 import { createAngularFireAuthMock, createNavControllerMock } from 'test/mocks';
-import { createApplicationServiceMock } from './services/application/application.service.mock';
+import { createApplicationServiceMock } from '@app/services/mocks';
 
 import { AppComponent } from './app.component';
 
@@ -40,7 +40,7 @@ describe('AppComponent', () => {
     const menuItems = app.querySelectorAll('ion-label');
     expect(menuItems.length).toEqual(4);
     expect(menuItems[0].textContent).toContain('Current');
-    expect(menuItems[1].textContent).toContain('History');
+    expect(menuItems[1].textContent).toContain('History & Planning');
     expect(menuItems[2].textContent).toContain('Exercises');
     expect(menuItems[3].textContent).toContain('About');
   });

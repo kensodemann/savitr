@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 import {
   createOverlayControllerMock,
   createOverlayElementMock
-} from '../../../../test/mocks';
+} from '@test/mocks';
 
 describe('ApplicationService', () => {
   let alert;

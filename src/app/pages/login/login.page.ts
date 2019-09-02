@@ -5,7 +5,7 @@ import {
   NavController
 } from '@ionic/angular';
 
-import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { AuthenticationService } from '@app/services';
 
 @Component({
   selector: 'app-login',

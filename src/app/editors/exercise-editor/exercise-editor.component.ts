@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
-import { exerciseFocusAreas, exerciseTypes } from '../../default-data';
-import { Exercise } from '../../models/exercise';
-import { ExercisesService } from 'src/app/services/firestore-data/exercises/exercises.service';
+import { exerciseFocusAreas, exerciseTypes } from '@app/default-data';
+import { Exercise } from '@app/models';
+import { ExercisesService } from '@app/services/firestore-data';
 
 @Component({
   selector: 'app-exercise-editor',

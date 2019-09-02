@@ -1,27 +1,34 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 import { ExercisesService } from './exercises.service';
 import {
   createAngularFirestoreMock,
-  createAngularFirestoreCollectionMock
+  createAngularFirestoreCollectionMock,
+  createAngularFireAuthMock
 } from 'test/mocks';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 describe('ExercisesService', () => {
   let collection;
   let exercises: ExercisesService;
 
   beforeEach(() => {
-    const angularFirestore = createAngularFirestoreMock();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: AngularFireAuth, useFactory: createAngularFireAuthMock },
+        { provide: AngularFirestore, useFactory: createAngularFirestoreMock }
+      ]
+    });
+    const angularFirestore = TestBed.get(AngularFirestore);
     collection = createAngularFirestoreCollectionMock();
     angularFirestore.collection.and.returnValue(collection);
-    TestBed.configureTestingModule({
-      providers: [{ provide: AngularFirestore, useValue: angularFirestore }]
-    });
   });
 
   beforeEach(inject([ExercisesService], (service: ExercisesService) => {
     exercises = service;
+    const afAuth = TestBed.get(AngularFireAuth);
+    afAuth.authState.next();
   }));
 
   it('should be created', () => {

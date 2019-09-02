@@ -5,8 +5,16 @@ import {
   createAction,
   createAngularFirestoreMock,
   createAngularFirestoreCollectionMock,
-  createAngularFirestoreDocumentMock
+  createAngularFirestoreDocumentMock,
+  createAngularFireAuthMock,
+  createDocumentSnapshotMock
 } from 'test/mocks';
+import {
+  AngularFirestore,
+  AngularFirestoreCollection
+} from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
 
 interface DataType {
   id?: string;
@@ -15,26 +23,49 @@ interface DataType {
   isActive: boolean;
 }
 
+class TestService extends FirestoreDataService<DataType> {
+  constructor(private firestore: AngularFirestore, afAuth: AngularFireAuth) {
+    super(afAuth);
+  }
+
+  protected getCollection(): AngularFirestoreCollection<DataType> {
+    return this.firestore.collection('data-collection');
+  }
+}
+
 describe('ExercisesService', () => {
-  let angularFirestore;
   let collection;
   let dataService: FirestoreDataService<DataType>;
 
   beforeEach(() => {
-    angularFirestore = createAngularFirestoreMock();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: AngularFireAuth, useFactory: createAngularFireAuthMock },
+        { provide: AngularFirestore, useFactory: createAngularFirestoreMock },
+        TestService
+      ]
+    });
+    const angularFirestore = TestBed.get(AngularFirestore);
     collection = createAngularFirestoreCollectionMock();
     angularFirestore.collection.and.returnValue(collection);
-    dataService = new FirestoreDataService<DataType>(angularFirestore, 'data-collection');
   });
+
+  beforeEach(inject([TestService], (service: TestService) => {
+    dataService = service;
+    const afAuth = TestBed.get(AngularFireAuth);
+    afAuth.authState.next();
+  }));
 
   it('should be created', () => {
     expect(dataService).toBeTruthy();
   });
 
-  it('grabs a references to the data collection', () => {
+  it('grabs a references to the data collection', fakeAsync(() => {
+    tick();
+    const angularFirestore = TestBed.get(AngularFirestore);
     expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
     expect(angularFirestore.collection).toHaveBeenCalledWith('data-collection');
-  });
+  }));
 
   describe('all', () => {
     it('looks for snapshot changes', () => {
@@ -47,12 +78,14 @@ describe('ExercisesService', () => {
         of([
           createAction('314PI', {
             name: `Baker's Square`,
-            description: 'Makers of overly sweet pies and otherwise crappy food',
+            description:
+              'Makers of overly sweet pies and otherwise crappy food',
             isActive: true
           }),
           createAction('420HI', {
             name: 'Joe',
-            description: 'Some guy named Joe who sells week on my street corner',
+            description:
+              'Some guy named Joe who sells week on my street corner',
             isActive: false
           })
         ])
@@ -62,13 +95,15 @@ describe('ExercisesService', () => {
           {
             id: '314PI',
             name: `Baker's Square`,
-            description: 'Makers of overly sweet pies and otherwise crappy food',
+            description:
+              'Makers of overly sweet pies and otherwise crappy food',
             isActive: true
           },
           {
             id: '420HI',
             name: 'Joe',
-            description: 'Some guy named Joe who sells week on my street corner',
+            description:
+              'Some guy named Joe who sells week on my street corner',
             isActive: false
           }
         ])
@@ -91,25 +126,23 @@ describe('ExercisesService', () => {
 
     it('gets the value of the document', () => {
       dataService.get('199405fkkgi59');
-      expect(document.valueChanges).toHaveBeenCalledTimes(1);
+      expect(document.ref.get).toHaveBeenCalledTimes(1);
     });
 
-    it('returns the document with the ID', () => {
-      document.valueChanges.and.returnValue(
-        of({
-          name: 'Joe',
-          description: 'Some guy named Joe who sells week on my street corner',
-          isActive: false
-        })
-      );
-      dataService.get('199405fkkgi59').subscribe(c =>
-        expect(c).toEqual({
-          id: '199405fkkgi59',
-          name: 'Joe',
-          description: 'Some guy named Joe who sells week on my street corner',
-          isActive: false
-        })
-      );
+    it('returns the document with the ID', async () => {
+      const snapshot = createDocumentSnapshotMock();
+      snapshot.data.and.returnValue({
+        name: 'Joe',
+        description: 'Some guy named Joe who sells week on my street corner',
+        isActive: false
+      });
+      document.ref.get.and.returnValue(snapshot);
+      expect(await dataService.get('199405fkkgi59')).toEqual({
+        id: '199405fkkgi59',
+        name: 'Joe',
+        description: 'Some guy named Joe who sells week on my street corner',
+        isActive: false
+      });
     });
   });
 

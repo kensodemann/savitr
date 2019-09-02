@@ -4,6 +4,8 @@ export function createAngularFireAuthMock() {
   return {
     authState: new Subject(),
     user: of(null),
+    idToken: of(null),
+    idTokenResult: of(null),
     auth: jasmine.createSpyObj('Auth', {
       sendPasswordResetEmail: Promise.resolve(),
       signInWithEmailAndPassword: Promise.resolve(),
@@ -34,13 +36,16 @@ export function createAction<T>(id: string, data: T) {
 }
 
 export function createAngularFirestoreDocumentMock() {
-  return jasmine.createSpyObj('AngularFirestoreDocument', {
+  const mock = jasmine.createSpyObj('AngularFirestoreDocument', {
     set: Promise.resolve(),
     update: Promise.resolve(),
     delete: Promise.resolve(),
     valueChanges: EMPTY,
-    snapshotChanges: EMPTY
+    snapshotChanges: EMPTY,
+    collection: null
   });
+  mock.ref = createDocumentReferenceMock();
+  return mock;
 }
 
 export function createAngularFirestoreCollectionMock() {
@@ -56,5 +61,17 @@ export function createAngularFirestoreMock() {
   return jasmine.createSpyObj('AngularFirestore', {
     collection: createAngularFirestoreCollectionMock(),
     doc: createAngularFirestoreDocumentMock()
+  });
+}
+
+export function createDocumentReferenceMock() {
+  return jasmine.createSpyObj('DocumentReference', {
+    get: Promise.resolve()
+  });
+}
+
+export function createDocumentSnapshotMock() {
+  return jasmine.createSpyObj('DocumentSnapshot', {
+    data: undefined
   });
 }
