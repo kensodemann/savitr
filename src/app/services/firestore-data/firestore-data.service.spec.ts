@@ -1,3 +1,7 @@
+import { inject, TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { of } from 'rxjs';
 
 import { FirestoreDataService } from './firestore-data.service';
@@ -9,9 +13,6 @@ import {
   createAngularFireAuthMock,
   createDocumentSnapshotMock
 } from 'test/mocks';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
 
 interface DataType {
   id?: string;
@@ -20,6 +21,7 @@ interface DataType {
   isActive: boolean;
 }
 
+@Injectable()
 class TestService extends FirestoreDataService<DataType> {
   constructor(private firestore: AngularFirestore) {
     super();
