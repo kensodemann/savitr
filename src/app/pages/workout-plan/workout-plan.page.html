@@ -14,12 +14,13 @@
         <ion-label>Begin Date</ion-label>
         <ion-select
           name="beginDate"
-          [(ngModel)]="beginDate"
+          [(ngModel)]="beginMS"
           (ionChange)="beginDateChanged()"
           #endDateSelect="ngModel"
           required
+          [disabled]="disableDateChange"
         >
-          <ion-select-option *ngFor="let dt of beginDates" [value]="dt">{{
+          <ion-select-option *ngFor="let dt of beginDates" [value]="dt.getTime()">{{
             dt | date
           }}</ion-select-option>
         </ion-select>

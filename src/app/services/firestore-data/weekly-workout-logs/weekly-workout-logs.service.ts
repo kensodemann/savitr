@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection,
-  DocumentChangeAction
-} from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/firestore';
 
 import { FirestoreDataService } from '../firestore-data.service';
 import { WorkoutLog } from '@app/models';
@@ -22,25 +18,27 @@ export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
       return this.firestore
         .collection('users')
         .doc(this.afAuth.auth.currentUser.uid)
-        .collection('weekly-workout-logs', ref =>
-          ref.orderBy('beginDate', 'desc')
-        );
+        .collection('weekly-workout-logs', ref => ref.orderBy('beginDate', 'desc'));
     }
   }
 
-  protected actionsToData(
-    actions: Array<DocumentChangeAction<WorkoutLog>>
-  ): Array<WorkoutLog> {
+  protected actionsToData(actions: Array<DocumentChangeAction<WorkoutLog>>): Array<WorkoutLog> {
     return actions.map(a => {
       const data = a.payload.doc.data();
       const id = a.payload.doc.id;
       return {
         id,
-        beginDate: new Date(
-          ((data as any).beginDate).seconds * 1000
-        )
+        beginDate: new Date((data as any).beginDate.seconds * 1000)
       };
     });
+  }
+
+  async get(id: string): Promise<WorkoutLog> {
+    const doc = await super.get(id);
+    if (doc && doc.beginDate) {
+      doc.beginDate = new Date((doc.beginDate as any).seconds * 1000);
+    }
+    return doc;
   }
 
   async getForDate(dt: Date): Promise<WorkoutLog> {

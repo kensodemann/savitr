@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '@app/services';
-import { NavController } from '@ionic/angular';
 import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
 import { Observable, EMPTY } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
@@ -18,7 +17,6 @@ export class HistoryPage implements OnInit {
   constructor(
     private afAuth: AngularFireAuth,
     public authentication: AuthenticationService,
-    private navController: NavController,
     private workoutLogs: WeeklyWorkoutLogsService
   ) {}
 
@@ -32,9 +30,5 @@ export class HistoryPage implements OnInit {
         }
       })
     );
-  }
-
-  add() {
-    this.navController.navigateForward(['workout-plan']);
   }
 }

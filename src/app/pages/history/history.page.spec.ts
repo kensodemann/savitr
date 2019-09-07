@@ -49,13 +49,4 @@ describe('HistoryPage', () => {
     const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
     expect(workoutLogs.all).toHaveBeenCalledTimes(1);
   });
-
-  describe('add', () => {
-    it('navigates to the workout-plan page', () => {
-      const navController = TestBed.get(NavController);
-      component.add();
-      expect(navController.navigateForward).toHaveBeenCalledTimes(1);
-      expect(navController.navigateForward).toHaveBeenCalledWith(['workout-plan']);
-    });
-  });
 });

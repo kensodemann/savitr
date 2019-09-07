@@ -12,6 +12,10 @@ const routes: Routes = [
   {
     path: '',
     component: WorkoutPlanPage
+  },
+  {
+    path: ':id',
+    component: WorkoutPlanPage
   }
 ];
 

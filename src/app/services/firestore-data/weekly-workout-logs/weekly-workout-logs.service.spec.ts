@@ -6,13 +6,15 @@ import {
   createAngularFirestoreMock,
   createAngularFirestoreCollectionMock,
   createAngularFirestoreDocumentMock,
-  createAngularFireAuthMock
+  createAngularFireAuthMock,
+  createDocumentSnapshotMock
 } from 'test/mocks';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 describe('WeeklyWorkoutLogsService', () => {
-  let collection;
-  let doc;
+  let logsCollection;
+  let userCollection;
+  let userDoc;
   let weeklyWorkoutLogs: WeeklyWorkoutLogsService;
 
   beforeEach(() => {
@@ -23,42 +25,61 @@ describe('WeeklyWorkoutLogsService', () => {
       ]
     });
     const angularFirestore = TestBed.get(AngularFirestore);
-    collection = createAngularFirestoreCollectionMock();
-    angularFirestore.collection.and.returnValue(collection);
-    doc = createAngularFirestoreDocumentMock();
-    collection = createAngularFirestoreCollectionMock();
-    collection.doc.and.returnValue(doc);
-    doc.collection.and.returnValue(collection);
-    angularFirestore.collection.and.returnValue(collection);
+    userCollection = createAngularFirestoreCollectionMock();
+    angularFirestore.collection.and.returnValue(userCollection);
+    userDoc = createAngularFirestoreDocumentMock();
+    userCollection = createAngularFirestoreCollectionMock();
+    userCollection.doc.and.returnValue(userDoc);
+    logsCollection = createAngularFirestoreCollectionMock();
+    userDoc.collection.and.returnValue(logsCollection);
+    angularFirestore.collection.and.returnValue(userCollection);
   });
 
-  beforeEach(inject(
-    [WeeklyWorkoutLogsService],
-    (service: WeeklyWorkoutLogsService) => {
-      weeklyWorkoutLogs = service;
-    }
-  ));
+  beforeEach(inject([WeeklyWorkoutLogsService], (service: WeeklyWorkoutLogsService) => {
+    weeklyWorkoutLogs = service;
+    // NOTE: User needs to be logged in for this service to be useful
+    const afAuth = TestBed.get(AngularFireAuth);
+    afAuth.auth.currentUser = { uid: '123abc' };
+  }));
 
   it('should be created', () => {
     expect(weeklyWorkoutLogs).toBeTruthy();
   });
 
   describe('all', () => {
-    beforeEach(() => {
-      // NOTE: User needs to be logged in for this service to be useful
-      const afAuth = TestBed.get(AngularFireAuth);
-      afAuth.auth.currentUser = { uid: '123abc' };
-    });
-
     it('grabs a references to the daily-exercises collection for the user', () => {
       const angularFirestore = TestBed.get(AngularFirestore);
       weeklyWorkoutLogs.all();
       expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
       expect(angularFirestore.collection).toHaveBeenCalledWith('users');
-      expect(collection.doc).toHaveBeenCalledTimes(1);
-      expect(collection.doc).toHaveBeenCalledWith('123abc');
-      expect(doc.collection).toHaveBeenCalledTimes(1);
-      expect(doc.collection.calls.argsFor(0)[0]).toEqual('weekly-workout-logs');
+      expect(userCollection.doc).toHaveBeenCalledTimes(1);
+      expect(userCollection.doc).toHaveBeenCalledWith('123abc');
+      expect(userDoc.collection).toHaveBeenCalledTimes(1);
+      expect(userDoc.collection.calls.argsFor(0)[0]).toEqual('weekly-workout-logs');
+    });
+  });
+
+  describe('get', () => {
+    let document;
+    beforeEach(() => {
+      document = createAngularFirestoreDocumentMock();
+      logsCollection.doc.and.returnValue(document);
+    });
+
+    it('translates from Firestore Timestamp to Date', async () => {
+      const date = new Date('2019-08-14T00:00:00.000000');
+      const seconds = date.getTime() / 1000;
+      const snapshot = createDocumentSnapshotMock();
+      snapshot.data.and.returnValue({
+        beginDate: {
+          seconds
+        }
+      });
+      document.ref.get.and.returnValue(snapshot);
+      expect(await weeklyWorkoutLogs.get('123abc')).toEqual({
+        id: '123abc',
+        beginDate: date
+      });
     });
   });
 });
