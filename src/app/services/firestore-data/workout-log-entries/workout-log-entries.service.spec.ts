@@ -1,7 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 
-import { DailyExercisesService } from './daily-exercises.service';
+import { WorkoutLogEntriesService } from './workout-log-entries.service';
 import {
   createAngularFirestoreMock,
   createAngularFirestoreCollectionMock,
@@ -13,7 +13,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 describe('DailyExercisesService', () => {
   let collection;
   let doc;
-  let dailyExercises: DailyExercisesService;
+  let workoutLogEntries: WorkoutLogEntriesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -30,12 +30,12 @@ describe('DailyExercisesService', () => {
     angularFirestore.collection.and.returnValue(collection);
   });
 
-  beforeEach(inject([DailyExercisesService], (service: DailyExercisesService) => {
-    dailyExercises = service;
+  beforeEach(inject([WorkoutLogEntriesService], (service: WorkoutLogEntriesService) => {
+    workoutLogEntries = service;
   }));
 
   it('should be created', () => {
-    expect(dailyExercises).toBeTruthy();
+    expect(workoutLogEntries).toBeTruthy();
   });
 
   describe('all', () => {
@@ -47,13 +47,13 @@ describe('DailyExercisesService', () => {
 
     it('grabs a reference to the daily-exercises collection for the user', () => {
       const angularFirestore = TestBed.get(AngularFirestore);
-      dailyExercises.all();
+      workoutLogEntries.all();
       expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
       expect(angularFirestore.collection).toHaveBeenCalledWith('users');
       expect(collection.doc).toHaveBeenCalledTimes(1);
       expect(collection.doc).toHaveBeenCalledWith('123abc');
       expect(doc.collection).toHaveBeenCalledTimes(1);
-      expect(doc.collection).toHaveBeenCalledWith('daily-exercises');
+      expect(doc.collection).toHaveBeenCalledWith('workout-log-entries');
     });
   });
 });

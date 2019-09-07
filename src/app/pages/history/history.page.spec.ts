@@ -19,7 +19,6 @@ describe('HistoryPage', () => {
       declarations: [HistoryPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: AngularFireAuth, useFactory: createAngularFireAuthMock },
         {
           provide: AuthenticationService,
           useFactory: createAuthenticationServiceMock
@@ -44,8 +43,6 @@ describe('HistoryPage', () => {
   });
 
   it('gets the work logs', () => {
-    const afAuth = TestBed.get(AngularFireAuth);
-    afAuth.authState.next({ id: '1234325' });
     const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
     expect(workoutLogs.all).toHaveBeenCalledTimes(1);
   });

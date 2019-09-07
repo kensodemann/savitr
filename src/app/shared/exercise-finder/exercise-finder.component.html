@@ -1,0 +1,7 @@
+<ion-header>
+  <ion-searchbar (ionChange)="applyFilter($event.detail.value)"></ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <app-exercise-list [exercises]="exercises$ | async" (view)="select($event)"></app-exercise-list>
+</ion-content>

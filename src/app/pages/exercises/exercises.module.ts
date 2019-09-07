@@ -6,12 +6,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ExercisesPage } from './exercises.page';
-import { EditorsModule } from '@app/editors/editors.module';
-import { ExerciseListComponentModule } from '@app/shared/exercise-list/exercise-list.module';
-import { ExerciseListItemComponentModule } from '@app/shared/exercise-list-item/exercise-list-item.module';
+import { ExerciseEditorComponentModule } from '@app/editors';
+import { ExerciseListComponentModule } from '@app/shared';
+import { AuthGuardService } from '@app/services';
 
 const routes: Routes = [
   {
+    canActivate: [AuthGuardService],
     path: '',
     component: ExercisesPage
   }
@@ -20,9 +21,8 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    EditorsModule,
+    ExerciseEditorComponentModule,
     ExerciseListComponentModule,
-    ExerciseListItemComponentModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)

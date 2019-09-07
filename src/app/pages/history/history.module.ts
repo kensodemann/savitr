@@ -6,9 +6,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { HistoryPage } from './history.page';
+import { AuthGuardService } from '@app/services';
 
 const routes: Routes = [
   {
+    canActivate: [AuthGuardService],
     path: '',
     component: HistoryPage
   }

@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="primary">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ title }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form #logEntryForm="ngForm">
+    <ion-list>
+      <ion-item (click)="findExercise()" *ngIf="!exercise">
+        <ion-label color="danger">
+          Select an Exercise
+        </ion-label>
+      </ion-item>
+      <app-exercise-list-item [exercise]="exercise" *ngIf="exercise" (view)="findExercise()"></app-exercise-list-item>
+      <ion-item>
+        <ion-label position="floating">Sets</ion-label>
+        <ion-input type="number" name="sets" [(ngModel)]="sets" #setsInput="ngModel"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Reps</ion-label>
+        <ion-input type="number" name="reps" [(ngModel)]="reps" #repsInput="ngModel"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Time</ion-label>
+        <ion-input type="text" name="time" [(ngModel)]="time" #timeInput="ngModel"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Weight / Resitence</ion-label>
+        <ion-input type="number" name="weight" [(ngModel)]="weight" #weightInput="ngModel"></ion-input>
+      </ion-item>
+    </ion-list>
+    <div class="error" *ngIf="errorMessage">Error: {{ errorMessage }}</div>
+    <div class="warning" *ngIf="warningMessage">Warning: {{ warningMessage }}</div>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button color="tertiary" expand="full" [disabled]="!canSave" (click)="save()">Save</ion-button>
+  </ion-toolbar>
+</ion-footer>

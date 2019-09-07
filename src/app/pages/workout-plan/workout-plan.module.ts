@@ -5,15 +5,19 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { WorkoutPlanPage } from './workout-plan.page';
+import { AuthGuardService } from '@app/services';
 import { DayHeaderComponent } from './day-header/day-header.component';
+import { LogEntryEditorComponentModule } from '@app/editors';
+import { WorkoutPlanPage } from './workout-plan.page';
 
 const routes: Routes = [
   {
+    canActivate: [AuthGuardService],
     path: '',
     component: WorkoutPlanPage
   },
   {
+    canActivate: [AuthGuardService],
     path: ':id',
     component: WorkoutPlanPage
   }
@@ -22,6 +26,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    LogEntryEditorComponentModule,
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
