@@ -6,8 +6,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ExercisesPage } from './exercises.page';
-import { EditorsModule } from 'src/app/editors/editors.module';
-import { ExerciseListItemComponentModule } from 'src/app/shared/exercise-list-item/exercise-list-item.module';
+import { EditorsModule } from '@app/editors/editors.module';
+import { ExerciseListComponentModule } from '@app/shared/exercise-list/exercise-list.module';
+import { ExerciseListItemComponentModule } from '@app/shared/exercise-list-item/exercise-list-item.module';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     EditorsModule,
+    ExerciseListComponentModule,
     ExerciseListItemComponentModule,
     FormsModule,
     IonicModule,
