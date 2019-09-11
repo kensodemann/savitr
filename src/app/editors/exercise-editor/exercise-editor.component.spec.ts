@@ -4,11 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 
 import { ExerciseEditorComponent } from './exercise-editor.component';
-import { ExercisesService } from '@app/services/firestore-data';
 import { exerciseFocusAreas, exerciseTypes } from '@app/default-data';
 
 import { createOverlayControllerMock } from 'test/mocks';
-import { createExercisesServiceMock } from '@app/services/firestore-data/mocks';
 
 describe('ExerciseEditorComponent', () => {
   let component: ExerciseEditorComponent;
@@ -18,10 +16,7 @@ describe('ExerciseEditorComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ExerciseEditorComponent],
       imports: [FormsModule, IonicModule],
-      providers: [
-        { provide: ExercisesService, useFactory: createExercisesServiceMock },
-        { provide: ModalController, useFactory: () => createOverlayControllerMock('ModalController') }
-      ],
+      providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock('ModalController') }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   }));
@@ -104,31 +99,34 @@ describe('ExerciseEditorComponent', () => {
         fixture.detectChanges();
       });
 
-      it('adds the exercise', () => {
-        const exercisesService = TestBed.get(ExercisesService);
-        component.save();
-        expect(exercisesService.add).toHaveBeenCalledTimes(1);
+      it('closes the editor', async () => {
+        const modalController = TestBed.get(ModalController);
+        await component.save();
+        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
       });
 
-      it('properly builds the exercise being added', () => {
-        const exercisesService = TestBed.get(ExercisesService);
+      it('returns the editted exercise', () => {
+        const modalController = TestBed.get(ModalController);
         component.area = component.areas[2];
         component.type = component.types[1];
         component.name = 'Bench Press';
         component.description = 'Lay down, push weight off chest to prevent crushing';
         component.save();
-        expect(exercisesService.add).toHaveBeenCalledWith({
-          name: 'Bench Press',
-          description: 'Lay down, push weight off chest to prevent crushing',
-          area: component.areas[2],
-          type: component.types[1]
-        });
+        expect(modalController.dismiss).toHaveBeenCalledWith(
+          {
+            name: 'Bench Press',
+            description: 'Lay down, push weight off chest to prevent crushing',
+            area: component.areas[2],
+            type: component.types[1]
+          },
+          jasmine.any(String)
+        );
       });
 
-      it('closes the editor', async () => {
+      it('uses the "save" role', () => {
         const modalController = TestBed.get(ModalController);
-        await component.save();
-        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
       });
     });
 
@@ -144,32 +142,32 @@ describe('ExerciseEditorComponent', () => {
         fixture.detectChanges();
       });
 
-      it('updates the exercise', () => {
-        const exercisesService = TestBed.get(ExercisesService);
-        component.save();
-        expect(exercisesService.update).toHaveBeenCalledTimes(1);
+      it('closes the editor', async () => {
+        const modalController = TestBed.get(ModalController);
+        await component.save();
+        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
       });
 
-      it('properly builds the exercise being added', () => {
-        const exercisesService = TestBed.get(ExercisesService);
+      it('returns the editted exercise', () => {
+        const modalController = TestBed.get(ModalController);
         component.area = component.areas[1];
         component.type = component.types[2];
         component.name = 'Bench Press';
         component.description = 'Lay down, push weight off chest to prevent crushing';
         component.save();
-        expect(exercisesService.update).toHaveBeenCalledWith({
+        expect(modalController.dismiss).toHaveBeenCalledWith({
           id: '428588494',
           name: 'Bench Press',
           description: 'Lay down, push weight off chest to prevent crushing',
           area: component.areas[1],
           type: component.types[2]
-        });
+        }, jasmine.any(String));
       });
 
-      it('closes the editor', async () => {
+      it('uses the "save" role', () => {
         const modalController = TestBed.get(ModalController);
-        await component.save();
-        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
       });
     });
   });

@@ -58,6 +58,7 @@ describe('ExercisesPage', () => {
       component.add();
       expect(modalController.create).toHaveBeenCalledTimes(1);
       expect(modalController.create).toHaveBeenCalledWith({
+        backdropDismiss: false,
         component: ExerciseEditorComponent
       });
     });
@@ -65,6 +66,37 @@ describe('ExercisesPage', () => {
     it('presents the editor', async () => {
       await component.add();
       expect(editor.present).toHaveBeenCalledTimes(1);
+    });
+
+    describe('if the "save" role was used', () => {
+      it('updates the exercise', async () => {
+        const service = TestBed.get(ExercisesService);
+        editor.onDidDismiss.and.returnValue({
+          data: {
+            name: 'Squats',
+            description: 'Not to be confused with squirts',
+            area: 'Lower Body',
+            type: 'Free Weights'
+          },
+          role: 'save'
+        });
+        await component.add();
+        expect(service.add).toHaveBeenCalledTimes(1);
+        expect(service.add).toHaveBeenCalledWith({
+          name: 'Squats',
+          description: 'Not to be confused with squirts',
+          area: 'Lower Body',
+          type: 'Free Weights'
+        });
+      });
+    });
+
+    describe('if editing was cancelled without saving', () => {
+      it('does not update the exercise', async () => {
+        const service = TestBed.get(ExercisesService);
+        await component.add();
+        expect(service.add).not.toHaveBeenCalled();
+      });
     });
   });
 
@@ -82,6 +114,7 @@ describe('ExercisesPage', () => {
       component.edit(exercise);
       expect(modalController.create).toHaveBeenCalledTimes(1);
       expect(modalController.create).toHaveBeenCalledWith({
+        backdropDismiss: false,
         component: ExerciseEditorComponent,
         componentProps: {
           exercise
@@ -92,6 +125,39 @@ describe('ExercisesPage', () => {
     it('presents the editor', async () => {
       await component.edit(exercise);
       expect(editor.present).toHaveBeenCalledTimes(1);
+    });
+
+    describe('if the "save" role was used', () => {
+      it('updates the exercise', async () => {
+        const service = TestBed.get(ExercisesService);
+        editor.onDidDismiss.and.returnValue({
+          data: {
+            id: '420059399405',
+            name: 'Squats',
+            description: 'Not to be confused with squirts',
+            area: 'Lower Body',
+            type: 'Free Weights'
+          },
+          role: 'save'
+        });
+        await component.edit(exercise);
+        expect(service.update).toHaveBeenCalledTimes(1);
+        expect(service.update).toHaveBeenCalledWith({
+          id: '420059399405',
+          name: 'Squats',
+          description: 'Not to be confused with squirts',
+          area: 'Lower Body',
+          type: 'Free Weights'
+        });
+      });
+    });
+
+    describe('if editing was cancelled without saving', () => {
+      it('does not update the exercise', async () => {
+        const service = TestBed.get(ExercisesService);
+        await component.edit(exercise);
+        expect(service.update).not.toHaveBeenCalled();
+      });
     });
   });
 

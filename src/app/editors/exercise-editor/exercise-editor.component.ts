@@ -3,7 +3,6 @@ import { ModalController } from '@ionic/angular';
 
 import { exerciseFocusAreas, exerciseTypes } from '@app/default-data';
 import { Exercise } from '@app/models';
-import { ExercisesService } from '@app/services/firestore-data';
 
 @Component({
   selector: 'app-exercise-editor',
@@ -26,10 +25,7 @@ export class ExerciseEditorComponent implements OnInit {
   errorMessage: string;
   warningMessage: string;
 
-  constructor(
-    private exercisesService: ExercisesService,
-    private modalController: ModalController
-  ) {}
+  constructor(private modalController: ModalController) {}
 
   ngOnInit() {
     this.initializeTitle();
@@ -42,20 +38,7 @@ export class ExerciseEditorComponent implements OnInit {
   }
 
   async save() {
-    try {
-      await this.saveExercise();
-      this.modalController.dismiss();
-    } catch (error) {
-      this.errorMessage = `Error saving: ${error.message}`;
-    }
-  }
-
-  private async saveExercise() {
-    if (this.exercise) {
-      await this.exercisesService.update(this.exerciseObject());
-    } else {
-      await this.exercisesService.add(this.exerciseObject());
-    }
+    this.modalController.dismiss(this.exerciseObject(), 'save');
   }
 
   private exerciseObject(): Exercise {

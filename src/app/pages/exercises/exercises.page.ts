@@ -20,23 +20,35 @@ export class ExercisesPage implements OnInit {
     public authentication: AuthenticationService,
     private exercisesService: ExercisesService,
     private modalController: ModalController
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.exercises$ = this.exercisesService.all();
   }
 
   async add(): Promise<void> {
-    const modal = await this.modalController.create({ component: ExerciseEditorComponent });
+    const modal = await this.modalController.create({
+      backdropDismiss: false,
+      component: ExerciseEditorComponent
+    });
     modal.present();
+    const res = await modal.onDidDismiss();
+    if (res && res.role === 'save') {
+      this.exercisesService.add(res.data);
+    }
   }
 
   async edit(exercise: Exercise): Promise<void> {
     const modal = await this.modalController.create({
+      backdropDismiss: false,
       component: ExerciseEditorComponent,
       componentProps: { exercise }
     });
     modal.present();
+    const res = await modal.onDidDismiss();
+    if (res && res.role === 'save') {
+      this.exercisesService.update(res.data);
+    }
   }
 
   async delete(exercise: Exercise): Promise<void> {
