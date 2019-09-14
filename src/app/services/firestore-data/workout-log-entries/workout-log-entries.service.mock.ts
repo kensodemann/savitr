@@ -1,5 +1,8 @@
 import { createFirestoreDataServiceMock } from '../firestore-data.service.mock';
 
 export function createWorkoutLogEntriesServiceMock() {
-  return createFirestoreDataServiceMock('DailyExercisesService');
+  const mock = createFirestoreDataServiceMock('DailyExercisesService');
+  mock.getAllForLog = jasmine.createSpy('getAllForLog');
+  mock.getAllForLog.and.returnValue(Promise.resolve([]));
+  return mock;
 }

@@ -9,6 +9,7 @@ import { AuthGuardService } from '@app/services';
 import { DayHeaderComponent } from './day-header/day-header.component';
 import { LogEntryEditorComponentModule } from '@app/editors';
 import { WorkoutPlanPage } from './workout-plan.page';
+import { WorkoutLogEntryListItemComponentModule } from '@app/shared';
 
 const routes: Routes = [
   {
@@ -29,7 +30,8 @@ const routes: Routes = [
     LogEntryEditorComponentModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    WorkoutLogEntryListItemComponentModule
   ],
   declarations: [WorkoutPlanPage, DayHeaderComponent]
 })

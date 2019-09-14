@@ -9,30 +9,42 @@
 
 <ion-content>
   <form #workoutPlanForm="ngForm">
-    <ion-list>
-      <ion-item>
-        <ion-label>Begin Date</ion-label>
-        <ion-select
-          name="beginDate"
-          [(ngModel)]="beginMS"
-          (ionChange)="beginDateChanged()"
-          #endDateSelect="ngModel"
-          required
-          [disabled]="disableDateChange"
-        >
-          <ion-select-option *ngFor="let dt of beginDates" [value]="dt.getTime()">{{
-            dt | date
-          }}</ion-select-option>
-        </ion-select>
-      </ion-item>
+    <ion-item>
+      <ion-label>Begin Date</ion-label>
+      <ion-select
+        name="beginDate"
+        [(ngModel)]="beginMS"
+        (ionChange)="beginDateChanged()"
+        #endDateSelect="ngModel"
+        required
+        [disabled]="disableDateChange"
+      >
+        <ion-select-option *ngFor="let dt of beginDates" [value]="dt.getTime()">{{ dt | date }}</ion-select-option>
+      </ion-select>
+    </ion-item>
 
+    <ion-list>
       <app-day-header (click)="addExercise(0)">Sunday</app-day-header>
+      <app-workout-log-entry-list-item *ngFor="let log of exerciseLogs[0]" [workoutLogEntry]="log">
+      </app-workout-log-entry-list-item>
       <app-day-header (click)="addExercise(1)">Monday</app-day-header>
+      <app-workout-log-entry-list-item *ngFor="let log of exerciseLogs[1]" [workoutLogEntry]="log">
+      </app-workout-log-entry-list-item>
       <app-day-header (click)="addExercise(2)">Tuesday</app-day-header>
+      <app-workout-log-entry-list-item *ngFor="let log of exerciseLogs[2]" [workoutLogEntry]="log">
+      </app-workout-log-entry-list-item>
       <app-day-header (click)="addExercise(3)">Wednesday</app-day-header>
+      <app-workout-log-entry-list-item *ngFor="let log of exerciseLogs[3]" [workoutLogEntry]="log">
+      </app-workout-log-entry-list-item>
       <app-day-header (click)="addExercise(4)">Thursday</app-day-header>
+      <app-workout-log-entry-list-item *ngFor="let log of exerciseLogs[4]" [workoutLogEntry]="log">
+      </app-workout-log-entry-list-item>
       <app-day-header (click)="addExercise(5)">Friday</app-day-header>
+      <app-workout-log-entry-list-item *ngFor="let log of exerciseLogs[5]" [workoutLogEntry]="log">
+      </app-workout-log-entry-list-item>
       <app-day-header (click)="addExercise(6)">Saturday</app-day-header>
+      <app-workout-log-entry-list-item *ngFor="let log of exerciseLogs[6]" [workoutLogEntry]="log">
+      </app-workout-log-entry-list-item>
     </ion-list>
   </form>
 </ion-content>

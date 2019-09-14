@@ -4,7 +4,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Location } from '@angular/common';
 import { UrlSerializer, ActivatedRoute } from '@angular/router';
 import { AlertController, IonicModule, ModalController } from '@ionic/angular';
-import { parseISO } from 'date-fns';
+import { parseISO, getTime } from 'date-fns';
 
 import { WorkoutPlanPage } from './workout-plan.page';
 import { DateService } from '@app/services';
@@ -16,9 +16,11 @@ import {
 } from '@app/services/firestore-data/mocks';
 import { createActivatedRouteMock, createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
 import { LogEntryEditorComponent } from '@app/editors';
+import { WorkoutLogEntry } from '@app/models';
 
 describe('WorkoutPlanPage', () => {
   let alert;
+  let logEntries: Array<WorkoutLogEntry>;
   let component: WorkoutPlanPage;
   let fixture: ComponentFixture<WorkoutPlanPage>;
   let modal;
@@ -44,6 +46,7 @@ describe('WorkoutPlanPage', () => {
   }));
 
   beforeEach(() => {
+    initializeTestData();
     const dates = TestBed.get(DateService);
     dates.beginDates.and.returnValue([
       parseISO('2019-07-07'),
@@ -130,16 +133,42 @@ describe('WorkoutPlanPage', () => {
 
   describe('on begin date changed', () => {
     beforeEach(() => {
+      const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
+      workoutLogs.getForDate.and.returnValue({
+        id: '12399goasdf9',
+        beginDate: parseISO('2019-07-21')
+      });
       fixture.detectChanges();
     });
 
     it('gets the workout log for that begin date', () => {
       const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
-      const date = new Date();
+      const date = parseISO('2019-07-21');
       component.beginMS = date.getTime();
       component.beginDateChanged();
       expect(workoutLogs.getForDate).toHaveBeenCalledTimes(1);
       expect(workoutLogs.getForDate).toHaveBeenCalledWith(date);
+    });
+
+    it('gets the exercises for the log', async () => {
+      const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+      await component.beginDateChanged();
+      expect(workoutLogEntries.getAllForLog).toHaveBeenCalledTimes(1);
+      expect(workoutLogEntries.getAllForLog).toHaveBeenCalledWith('12399goasdf9');
+    });
+
+    it('processes the exercise logs', async () => {
+      const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+      workoutLogEntries.getAllForLog.and.returnValue(Promise.resolve(logEntries));
+      await component.beginDateChanged();
+      expect(component.exerciseLogs.length).toEqual(7);
+      expect(component.exerciseLogs[0].length).toEqual(1);
+      expect(component.exerciseLogs[1].length).toEqual(3);
+      expect(component.exerciseLogs[2].length).toEqual(0);
+      expect(component.exerciseLogs[3].length).toEqual(1);
+      expect(component.exerciseLogs[4].length).toEqual(2);
+      expect(component.exerciseLogs[5].length).toEqual(0);
+      expect(component.exerciseLogs[6].length).toEqual(0);
     });
   });
 
@@ -166,9 +195,11 @@ describe('WorkoutPlanPage', () => {
     describe('with a chosen date', () => {
       beforeEach(async () => {
         const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
+        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
         workoutLogs.getForDate.and.returnValue(
           Promise.resolve({ id: '199g009d8a', beginDate: parseISO('2019-07-21') })
         );
+        workoutLogEntries.getAllForLog.and.returnValue(Promise.resolve(logEntries));
         component.beginMS = parseISO('2019-07-21').getTime();
         await component.beginDateChanged();
         modal.onDidDismiss.and.returnValue({});
@@ -220,11 +251,6 @@ describe('WorkoutPlanPage', () => {
           const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
           await component.addExercise(1);
           expect(workoutLogEntries.add).toHaveBeenCalledTimes(1);
-        });
-
-        it('passes the returned data', async () => {
-          const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
-          await component.addExercise(1);
           expect(workoutLogEntries.add).toHaveBeenCalledWith({
             workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
             logDate: parseISO('2019-07-22'),
@@ -238,6 +264,17 @@ describe('WorkoutPlanPage', () => {
             time: '1:45'
           });
         });
+
+        it('adds the item to the appropriate date', async () => {
+          await component.addExercise(1);
+          expect(component.exerciseLogs[0].length).toEqual(1);
+          expect(component.exerciseLogs[1].length).toEqual(4);
+          expect(component.exerciseLogs[2].length).toEqual(0);
+          expect(component.exerciseLogs[3].length).toEqual(1);
+          expect(component.exerciseLogs[4].length).toEqual(2);
+          expect(component.exerciseLogs[5].length).toEqual(0);
+          expect(component.exerciseLogs[6].length).toEqual(0);
+        });
       });
 
       describe('when the user cancels the item', () => {
@@ -249,4 +286,121 @@ describe('WorkoutPlanPage', () => {
       });
     });
   });
+
+  function initializeTestData() {
+    logEntries = [
+      {
+        id: 'fkkgiire0953',
+        logDate: parseISO('2019-07-22'),
+        workoutLog: {
+          id: '199g009d8a',
+          beginDate: parseISO('2019-07-21')
+        },
+        exercise: {
+          id: '1149953',
+          name: 'Curls',
+          description: 'Basic Biscept Curls',
+          type: 'Free Weight',
+          area: 'Upper Body'
+        },
+        completed: false
+      },
+      {
+        id: 'fkkgiffoeid',
+        logDate: parseISO('2019-07-21'),
+        workoutLog: {
+          id: '199g009d8a',
+          beginDate: parseISO('2019-07-21')
+        },
+        exercise: {
+          id: 'jadfoibdk',
+          name: 'Jog',
+          description: 'Uhg',
+          type: 'Body Weight',
+          area: 'Cardio'
+        },
+        completed: false
+      },
+      {
+        id: 'kfkafoig9f0ed',
+        logDate: parseISO('2019-07-22'),
+        workoutLog: {
+          id: '199g009d8a',
+          beginDate: parseISO('2019-07-21')
+        },
+        exercise: {
+          id: 'fkfvibdj',
+          name: 'Exercise Bike',
+          description: 'Basic Biking',
+          type: 'Machine',
+          area: 'Cardio'
+        },
+        completed: false
+      },
+      {
+        id: 'fkfig09ekfek',
+        logDate: parseISO('2019-07-24'),
+        workoutLog: {
+          id: '199g009d8a',
+          beginDate: parseISO('2019-07-21')
+        },
+        exercise: {
+          id: 'kfkfigfid',
+          name: 'Leg Curls',
+          description: 'Basic Leg Curls',
+          type: 'Machine',
+          area: 'Lower Body'
+        },
+        completed: false
+      },
+      {
+        id: 'ifiifiigifi',
+        logDate: parseISO('2019-07-22'),
+        workoutLog: {
+          id: '199g009d8a',
+          beginDate: parseISO('2019-07-21')
+        },
+        exercise: {
+          id: 'iifgiifdie',
+          name: 'Bench Press',
+          description: 'Basic Press',
+          type: 'Free Weight',
+          area: 'Upper Body'
+        },
+        completed: false
+      },
+      {
+        id: 'firemyass',
+        logDate: parseISO('2019-07-25'),
+        workoutLog: {
+          id: '199g009d8a',
+          beginDate: parseISO('2019-07-21')
+        },
+        exercise: {
+          id: 'jadfoibdk',
+          name: 'Jog',
+          description: 'Uhg',
+          type: 'Body Weight',
+          area: 'Cardio'
+        },
+        completed: false
+      },
+      {
+        id: 'fiifigofdive',
+        logDate: parseISO('2019-07-25'),
+        workoutLog: {
+          id: '199g009d8a',
+          beginDate: parseISO('2019-07-21')
+        },
+        exercise: {
+          id: '1149953',
+          name: 'Curls',
+          description: 'Basic Biscept Curls',
+          type: 'Free Weight',
+          area: 'Upper Body'
+        },
+        completed: false
+      }
+    ];
+  }
 });

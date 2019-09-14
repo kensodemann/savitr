@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
-import { addDays } from 'date-fns';
+import { addDays, getDay } from 'date-fns';
 
 import { DateService } from '@app/services';
 import { LogEntryEditorComponent } from '@app/editors';
 import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
-import { WorkoutLog } from '@app/models';
+import { WorkoutLog, WorkoutLogEntry } from '@app/models';
 
 @Component({
   selector: 'app-workout-plan',
@@ -19,6 +19,7 @@ export class WorkoutPlanPage implements OnInit {
   beginMS: number;
   beginDates: Array<Date>;
   disableDateChange: boolean;
+  exerciseLogs: Array<Array<WorkoutLogEntry>>;
 
   constructor(
     private alertController: AlertController,
@@ -30,41 +31,62 @@ export class WorkoutPlanPage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.initDates();
+    this.initExerciseLogs();
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      await this.initWorkLog(id);
-    } else {
-      this.initNewWorkLog();
+      await this.getWorkLog(id);
     }
   }
 
   async addExercise(offset: number) {
     if (!this.beginMS) {
-      const alert = await this.alertController.create({
-        header: 'No Date',
-        message: 'Please select a begin date.',
-        buttons: ['OK']
-      });
-      alert.present();
+      this.alertNoDate();
     } else {
       const logDate = addDays(new Date(this.beginMS), offset);
-      const modal = await this.modalController.create({
-        component: LogEntryEditorComponent,
-        componentProps: { logDate, workoutLog: this.currentWorkoutLog }
-      });
-      modal.present();
-      const res = await modal.onDidDismiss();
-      if (res && res.role === 'save') {
-        this.workoutLogEntries.add(res.data);
-      }
+      await this.addNewExercise(logDate);
     }
   }
 
   async beginDateChanged() {
     this.currentWorkoutLog = await this.workoutLogs.getForDate(new Date(this.beginMS));
+    if (this.currentWorkoutLog) {
+      await this.getWorkoutLogEntries();
+    }
   }
 
-  private async initWorkLog(id: string) {
+  private async addNewExercise(logDate: Date) {
+    const modal = await this.modalController.create({
+      component: LogEntryEditorComponent,
+      componentProps: { logDate, workoutLog: this.currentWorkoutLog }
+    });
+    modal.present();
+    const res = await modal.onDidDismiss();
+    if (res && res.role === 'save') {
+      await this.workoutLogEntries.add(res.data);
+      const day = getDay(res.data.logDate);
+      this.exerciseLogs[day].push(res.data);
+    }
+  }
+
+  private async alertNoDate() {
+    const alert = await this.alertController.create({
+      header: 'No Date',
+      message: 'Please select a begin date.',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  private initExerciseLogs() {
+    this.exerciseLogs = [[], [], [], [], [], [], []];
+  }
+
+  private initDates() {
+    this.beginDates = this.dates.beginDates();
+  }
+
+  private async getWorkLog(id: string) {
     this.currentWorkoutLog = await this.workoutLogs.get(id);
     if (this.currentWorkoutLog) {
       this.beginMS = this.currentWorkoutLog.beginDate.getTime();
@@ -73,7 +95,12 @@ export class WorkoutPlanPage implements OnInit {
     }
   }
 
-  private initNewWorkLog() {
-    this.beginDates = this.dates.beginDates();
+  private async getWorkoutLogEntries() {
+    const logs = await this.workoutLogEntries.getAllForLog(this.currentWorkoutLog.id);
+    this.initExerciseLogs();
+    logs.forEach(log => {
+      const day = getDay(log.logDate);
+      this.exerciseLogs[day].push(log);
+    });
   }
 }
