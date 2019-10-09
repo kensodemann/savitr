@@ -37,6 +37,7 @@ describe('ApplicationService', () => {
 
   describe('registered for updates', () => {
     beforeEach(() => {
+      alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'cancel' }));
       const service: ApplicationService = TestBed.get(ApplicationService);
       service.registerForUpdates();
     });

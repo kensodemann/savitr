@@ -2,16 +2,13 @@ import { Injectable } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { SwUpdate } from '@angular/service-worker';
 
+import { yesNoButtons } from '@app/util';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApplicationService {
-
-  constructor(
-    private alert: AlertController,
-    private update: SwUpdate
-  ) { }
+  constructor(private alert: AlertController, private update: SwUpdate) {}
 
   registerForUpdates() {
     this.update.available.subscribe(() => this.promptUser());
@@ -22,15 +19,12 @@ export class ApplicationService {
       header: 'Update Available',
       message:
         'An update is available for this application. Would you like to restart this application to get the update?',
-      buttons: [
-        {
-          text: 'Yes',
-          handler: () =>
-            this.update.activateUpdate().then(() => document.location.reload())
-        },
-        { text: 'No', role: 'cancel' }
-      ]
+      buttons: yesNoButtons
     });
-    alert.present();
+    await alert.present();
+    const result = await alert.onDidDismiss();
+    if (result.role === 'confirm') {
+      this.update.activateUpdate().then(() => document.location.reload());
+    }
   }
 }

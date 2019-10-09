@@ -7,3 +7,5 @@ export function byName(c1: { name: string }, c2: { name: string }): number {
   }
   return 0;
 }
+
+export const yesNoButtons = [{ text: 'Yes', role: 'confirm' }, { text: 'No', role: 'cancel' }];

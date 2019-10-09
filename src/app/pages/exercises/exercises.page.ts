@@ -6,6 +6,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { Exercise } from 'src/app/models/exercise';
 import { ExerciseEditorComponent } from 'src/app/editors/exercise-editor/exercise-editor.component';
 import { ExercisesService } from '@app/services/firestore-data';
+import { yesNoButtons } from '@app/util';
 
 @Component({
   selector: 'app-exercises',
@@ -56,7 +57,7 @@ export class ExercisesPage implements OnInit {
       header: 'Remove Exercise?',
       subHeader: exercise.name,
       message: 'This action cannot be undone. Are you sure you want to continue?',
-      buttons: [{ text: 'Yes', role: 'confirm' }, { text: 'No', role: 'cancel' }]
+      buttons: yesNoButtons
     });
     alert.present();
     const result = await alert.onDidDismiss();

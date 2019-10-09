@@ -265,15 +265,12 @@ describe('WorkoutPlanPage', () => {
           });
         });
 
-        it('adds the item to the appropriate date', async () => {
+        it('requeries the database', async () => {
+          const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+          workoutLogEntries.getAllForLog.calls.reset();
           await component.addExercise(1);
-          expect(component.exerciseLogs[0].length).toEqual(1);
-          expect(component.exerciseLogs[1].length).toEqual(4);
-          expect(component.exerciseLogs[2].length).toEqual(0);
-          expect(component.exerciseLogs[3].length).toEqual(1);
-          expect(component.exerciseLogs[4].length).toEqual(2);
-          expect(component.exerciseLogs[5].length).toEqual(0);
-          expect(component.exerciseLogs[6].length).toEqual(0);
+          expect(workoutLogEntries.getAllForLog).toHaveBeenCalledTimes(1);
+          expect(workoutLogEntries.getAllForLog).toHaveBeenCalledWith('199g009d8a');
         });
       });
 
@@ -283,6 +280,70 @@ describe('WorkoutPlanPage', () => {
           await component.addExercise(1);
           expect(workoutLogEntries.add).not.toHaveBeenCalled();
         });
+      });
+    });
+  });
+
+  describe('deleting a workout log entry', () => {
+    beforeEach(async () => {
+      const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
+      const route = TestBed.get(ActivatedRoute);
+      route.snapshot.paramMap.get.and.returnValue('12399goasdf9');
+      workoutLogs.get.and.returnValue({
+        id: '12399goasdf9',
+        beginDate: parseISO('2019-07-21')
+      });
+      await fixture.detectChanges();
+      alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'backdrop' }));
+    });
+
+    it('asks the user if they are sure', async () => {
+      const alertController = TestBed.get(AlertController);
+      await component.delete(logEntries[1]);
+      expect(alertController.create).toHaveBeenCalledTimes(1);
+      expect(alertController.create).toHaveBeenCalledWith({
+        header: 'Remove Entry?',
+        message: 'Are you sure you would like to remove this exercise from the workout log?',
+        buttons: [{ text: 'Yes', role: 'confirm' }, { text: 'No', role: 'cancel' }]
+      });
+      expect(alert.present).toHaveBeenCalledTimes(1);
+    });
+
+    describe('when the user says yes', () => {
+      beforeEach(() => {
+        alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'confirm' }));
+      });
+
+      it('deletes the log entry', async () => {
+        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+        await component.delete(logEntries[1]);
+        expect(workoutLogEntries.delete).toHaveBeenCalledTimes(1);
+        expect(workoutLogEntries.delete).toHaveBeenCalledWith(logEntries[1]);
+      });
+
+      it('refreshes the workout log', async () => {
+        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+        await component.delete(logEntries[1]);
+        expect(workoutLogEntries.getAllForLog).toHaveBeenCalledTimes(1);
+        expect(workoutLogEntries.getAllForLog).toHaveBeenCalledWith('12399goasdf9');
+      });
+    });
+
+    describe('when the user says no', () => {
+      beforeEach(() => {
+        alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'cancel' }));
+      });
+
+      it('does not delete the log entry', async () => {
+        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+        await component.delete(logEntries[1]);
+        expect(workoutLogEntries.delete).not.toHaveBeenCalled();
+      });
+
+      it('does not refresh the workout log', async () => {
+        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+        await component.delete(logEntries[1]);
+        expect(workoutLogEntries.getAllForLog).not.toHaveBeenCalled();
       });
     });
   });

@@ -6,7 +6,8 @@ import { addDays, getDay } from 'date-fns';
 import { DateService } from '@app/services';
 import { LogEntryEditorComponent } from '@app/editors';
 import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
-import { WorkoutLog, WorkoutLogEntry } from '@app/models';
+import { WorkoutLog, WorkoutLogEntry, Exercise } from '@app/models';
+import { yesNoButtons } from '@app/util';
 
 @Component({
   selector: 'app-workout-plan',
@@ -48,6 +49,20 @@ export class WorkoutPlanPage implements OnInit {
     }
   }
 
+  async delete(logEntry: WorkoutLogEntry) {
+    const alert = await this.alertController.create({
+      header: 'Remove Entry?',
+      message: 'Are you sure you would like to remove this exercise from the workout log?',
+      buttons: yesNoButtons
+    });
+    alert.present();
+    const res = await alert.onDidDismiss();
+    if (res.role === 'confirm') {
+      await this.workoutLogEntries.delete(logEntry);
+      await this.getWorkoutLogEntries();
+    }
+  }
+
   async beginDateChanged() {
     this.currentWorkoutLog = await this.workoutLogs.getForDate(new Date(this.beginMS));
     if (this.currentWorkoutLog) {
@@ -64,8 +79,7 @@ export class WorkoutPlanPage implements OnInit {
     const res = await modal.onDidDismiss();
     if (res && res.role === 'save') {
       await this.workoutLogEntries.add(res.data);
-      const day = getDay(res.data.logDate);
-      this.exerciseLogs[day].push(res.data);
+      await this.getWorkoutLogEntries();
     }
   }
 
