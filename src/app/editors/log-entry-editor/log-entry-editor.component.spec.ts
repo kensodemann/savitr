@@ -36,12 +36,57 @@ describe('LogEntryEditorComponent', () => {
   });
 
   describe('on initialize', () => {
-    beforeEach(() => {
-      fixture.detectChanges();
+    describe('when a log entry is set', () => {
+      beforeEach(() => {
+        component.workoutLogEntry = {
+          workoutLog: {
+            id: '1234j99g0d',
+            beginDate: parseISO('2019-09-08')
+          },
+          logDate: parseISO('2019-09-10'),
+          exercise: {
+            id: '773758FC3',
+            name: 'Dumbbell Bench Press',
+            description: 'Bench press using two dumbbells',
+            area: 'Upper Body',
+            type: 'Free Weight'
+          },
+          time: '1:45',
+          sets: 4,
+          reps: 12,
+          weight: 35,
+          completed: false
+        };
+        fixture.detectChanges();
+      });
+
+      it('sets the title to "Edit Exercise"', () => {
+        expect(component.title).toEqual('Edit Exercise');
+      });
+
+      it('initializes editable fields', () => {
+        expect(component.time).toEqual('1:45');
+        expect(component.sets).toEqual(4);
+        expect(component.reps).toEqual(12);
+        expect(component.weight).toEqual(35);
+        expect(component.exercise).toEqual({
+          id: '773758FC3',
+          name: 'Dumbbell Bench Press',
+          description: 'Bench press using two dumbbells',
+          area: 'Upper Body',
+          type: 'Free Weight'
+        });
+      });
     });
 
-    it('sets the title to "Add Exercise"', () => {
-      expect(component.title).toEqual('Add Exercise');
+    describe('when a log entry is not set', () => {
+      beforeEach(() => {
+        fixture.detectChanges();
+      });
+
+      it('sets the title to "Add Exercise"', () => {
+        expect(component.title).toEqual('Add Exercise');
+      });
     });
   });
 
@@ -193,45 +238,15 @@ describe('LogEntryEditorComponent', () => {
   });
 
   describe('save', () => {
-    beforeEach(() => {
-      component.logDate = parseISO('2019-09-10');
-      component.workoutLog = {
-        id: '1234j99g0d',
-        beginDate: parseISO('2019-09-08')
-      };
-      fixture.detectChanges();
-    });
-
-    it('dismisses the modal', () => {
-      const modalController = TestBed.get(ModalController);
-      component.save();
-      expect(modalController.dismiss).toHaveBeenCalledTimes(1);
-    });
-
-    it('uses the "save" role', () => {
-      const modalController = TestBed.get(ModalController);
-      component.save();
-      expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
-    });
-
-    it('returns the exercise / time data', () => {
-      const modalController = TestBed.get(ModalController);
-      component.exercise = {
-        id: '773758FC3',
-        name: 'Dumbbell Bench Press',
-        description: 'Bench press using two dumbbells',
-        area: 'Upper Body',
-        type: 'Free Weight'
-      };
-      component.time = '1:45';
-      component.save();
-      expect(modalController.dismiss).toHaveBeenCalledWith(
-        {
+    describe('an existing workout log entry', () => {
+      beforeEach(() => {
+        component.workoutLogEntry = {
+          id: 'sdfit9932530',
           workoutLog: {
-            id: '1234j99g0d',
-            beginDate: parseISO('2019-09-08')
+            id: '3834995304',
+            beginDate: parseISO('2019-09-15')
           },
-          logDate: parseISO('2019-09-10'),
+          logDate: parseISO('2019-09-17'),
           exercise: {
             id: '773758FC3',
             name: 'Dumbbell Bench Press',
@@ -240,46 +255,189 @@ describe('LogEntryEditorComponent', () => {
             type: 'Free Weight'
           },
           time: '1:45',
-          completed: false
-        },
-        jasmine.any(String)
-      );
-    });
-
-    it('returns the exercise / set / rep / weight data', () => {
-      const modalController = TestBed.get(ModalController);
-      component.exercise = {
-        id: '773758FC3',
-        name: 'Dumbbell Bench Press',
-        description: 'Bench press using two dumbbells',
-        area: 'Upper Body',
-        type: 'Free Weight'
-      };
-      component.sets = 4;
-      component.reps = 12;
-      component.weight = 50;
-      component.save();
-      expect(modalController.dismiss).toHaveBeenCalledWith(
-        {
-          workoutLog: {
-            id: '1234j99g0d',
-            beginDate: parseISO('2019-09-08')
-          },
-          logDate: parseISO('2019-09-10'),
-          exercise: {
-            id: '773758FC3',
-            name: 'Dumbbell Bench Press',
-            description: 'Bench press using two dumbbells',
-            area: 'Upper Body',
-            type: 'Free Weight'
-          },
           sets: 4,
           reps: 12,
-          weight: 50,
-          completed: false
-        },
-        jasmine.any(String)
-      );
+          weight: 35,
+          completed: true
+        };
+        fixture.detectChanges();
+      });
+      it('dismisses the modal', () => {
+        const modalController = TestBed.get(ModalController);
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
+      });
+
+      it('uses the "save" role', () => {
+        const modalController = TestBed.get(ModalController);
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
+      });
+
+      it('returns the exercise / time data', () => {
+        const modalController = TestBed.get(ModalController);
+        component.exercise = {
+          id: '39940AB39',
+          name: 'Barbell Bench Press',
+          description: 'Standard bench press',
+          area: 'Upper Body',
+          type: 'Free Weight'
+        };
+        component.time = '2:00';
+        component.sets = undefined;
+        component.reps = undefined;
+        component.weight = undefined;
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledWith(
+          {
+            id: 'sdfit9932530',
+            workoutLog: {
+              id: '3834995304',
+              beginDate: parseISO('2019-09-15')
+            },
+            logDate: parseISO('2019-09-17'),
+            exercise: {
+              id: '39940AB39',
+              name: 'Barbell Bench Press',
+              description: 'Standard bench press',
+              area: 'Upper Body',
+              type: 'Free Weight'
+            },
+            time: '2:00',
+            completed: true
+          },
+          jasmine.any(String)
+        );
+      });
+
+      it('returns the exercise / set / rep / weight data', () => {
+        const modalController = TestBed.get(ModalController);
+        component.exercise = {
+          id: '39940AB39',
+          name: 'Barbell Bench Press',
+          description: 'Standard bench press',
+          area: 'Upper Body',
+          type: 'Free Weight'
+        };
+        component.time = '';
+        component.sets = 3;
+        component.reps = 15;
+        component.weight = 85;
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledWith(
+          {
+            id: 'sdfit9932530',
+            workoutLog: {
+              id: '3834995304',
+              beginDate: parseISO('2019-09-15')
+            },
+            logDate: parseISO('2019-09-17'),
+            exercise: {
+              id: '39940AB39',
+              name: 'Barbell Bench Press',
+              description: 'Standard bench press',
+              area: 'Upper Body',
+              type: 'Free Weight'
+            },
+            sets: 3,
+            reps: 15,
+            weight: 85,
+            completed: true
+          },
+          jasmine.any(String)
+        );
+      });
+    });
+
+    describe('a new workout log entry', () => {
+      beforeEach(() => {
+        component.logDate = parseISO('2019-09-10');
+        component.workoutLog = {
+          id: '1234j99g0d',
+          beginDate: parseISO('2019-09-08')
+        };
+        fixture.detectChanges();
+      });
+
+      it('dismisses the modal', () => {
+        const modalController = TestBed.get(ModalController);
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
+      });
+
+      it('uses the "save" role', () => {
+        const modalController = TestBed.get(ModalController);
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
+      });
+
+      it('returns the exercise / time data', () => {
+        const modalController = TestBed.get(ModalController);
+        component.exercise = {
+          id: '773758FC3',
+          name: 'Dumbbell Bench Press',
+          description: 'Bench press using two dumbbells',
+          area: 'Upper Body',
+          type: 'Free Weight'
+        };
+        component.time = '1:45';
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledWith(
+          {
+            workoutLog: {
+              id: '1234j99g0d',
+              beginDate: parseISO('2019-09-08')
+            },
+            logDate: parseISO('2019-09-10'),
+            exercise: {
+              id: '773758FC3',
+              name: 'Dumbbell Bench Press',
+              description: 'Bench press using two dumbbells',
+              area: 'Upper Body',
+              type: 'Free Weight'
+            },
+            time: '1:45',
+            completed: false
+          },
+          jasmine.any(String)
+        );
+      });
+
+      it('returns the exercise / set / rep / weight data', () => {
+        const modalController = TestBed.get(ModalController);
+        component.exercise = {
+          id: '773758FC3',
+          name: 'Dumbbell Bench Press',
+          description: 'Bench press using two dumbbells',
+          area: 'Upper Body',
+          type: 'Free Weight'
+        };
+        component.sets = 4;
+        component.reps = 12;
+        component.weight = 50;
+        component.save();
+        expect(modalController.dismiss).toHaveBeenCalledWith(
+          {
+            workoutLog: {
+              id: '1234j99g0d',
+              beginDate: parseISO('2019-09-08')
+            },
+            logDate: parseISO('2019-09-10'),
+            exercise: {
+              id: '773758FC3',
+              name: 'Dumbbell Bench Press',
+              description: 'Bench press using two dumbbells',
+              area: 'Upper Body',
+              type: 'Free Weight'
+            },
+            sets: 4,
+            reps: 12,
+            weight: 50,
+            completed: false
+          },
+          jasmine.any(String)
+        );
+      });
     });
   });
 });

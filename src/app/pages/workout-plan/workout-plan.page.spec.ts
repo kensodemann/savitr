@@ -285,7 +285,7 @@ describe('WorkoutPlanPage', () => {
   });
 
   describe('deleting a workout log entry', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
       const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
       const route = TestBed.get(ActivatedRoute);
       route.snapshot.paramMap.get.and.returnValue('12399goasdf9');
@@ -293,7 +293,7 @@ describe('WorkoutPlanPage', () => {
         id: '12399goasdf9',
         beginDate: parseISO('2019-07-21')
       });
-      await fixture.detectChanges();
+      fixture.detectChanges();
       alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'backdrop' }));
     });
 
@@ -344,6 +344,95 @@ describe('WorkoutPlanPage', () => {
         const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
         await component.delete(logEntries[1]);
         expect(workoutLogEntries.getAllForLog).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('editing a workout log entry', () => {
+    beforeEach(() => {
+      const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
+      const route = TestBed.get(ActivatedRoute);
+      route.snapshot.paramMap.get.and.returnValue('12399goasdf9');
+      workoutLogs.get.and.returnValue({
+        id: '12399goasdf9',
+        beginDate: parseISO('2019-07-21')
+      });
+      fixture.detectChanges();
+    });
+
+    it('opens a modal', () => {
+      const modalController = TestBed.get(ModalController);
+      component.edit(logEntries[2]);
+      expect(modalController.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('passes the log entry to the editor component', () => {
+      const modalController = TestBed.get(ModalController);
+      component.edit(logEntries[2]);
+      expect(modalController.create).toHaveBeenCalledWith({
+        component: LogEntryEditorComponent,
+        componentProps: {
+          workoutLogEntry: logEntries[2] 
+        }
+      });
+    });
+
+    it('presents the editor modal', async () => {
+      await component.edit(logEntries[2]);
+      expect(modal.present).toHaveBeenCalledTimes(1);
+    });
+
+    describe('when the user saves the edit', () => {
+      beforeEach(() => {
+        modal.onDidDismiss.and.returnValue({
+          data: {
+            workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
+            logDate: parseISO('2019-07-22'),
+            exercise: {
+              id: '773758FC3',
+              name: 'Dumbbell Bench Press',
+              description: 'Bench press using two dumbbells',
+              area: 'Upper Body',
+              type: 'Free Weight'
+            },
+            time: '1:45'
+          },
+          role: 'save'
+        });
+      });
+
+      it('updates the workout log entry', async () => {
+        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+        await component.edit(logEntries[2]);
+        expect(workoutLogEntries.update).toHaveBeenCalledTimes(1);
+        expect(workoutLogEntries.update).toHaveBeenCalledWith({
+          workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
+          logDate: parseISO('2019-07-22'),
+          exercise: {
+            id: '773758FC3',
+            name: 'Dumbbell Bench Press',
+            description: 'Bench press using two dumbbells',
+            area: 'Upper Body',
+            type: 'Free Weight'
+          },
+          time: '1:45'
+        });
+      });
+
+      it('requeries the database', async () => {
+        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+        workoutLogEntries.getAllForLog.calls.reset();
+        await component.edit(logEntries[2]);
+        expect(workoutLogEntries.getAllForLog).toHaveBeenCalledTimes(1);
+        expect(workoutLogEntries.getAllForLog).toHaveBeenCalledWith('12399goasdf9');
+      });
+    });
+
+    describe('when the user cancels the edit', () => {
+      it('does nothing', async () => {
+        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+        await component.edit(logEntries[2]);
+        expect(workoutLogEntries.update).not.toHaveBeenCalled();
       });
     });
   });

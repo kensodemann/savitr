@@ -63,6 +63,19 @@ export class WorkoutPlanPage implements OnInit {
     }
   }
 
+  async edit(workoutLogEntry: WorkoutLogEntry) {
+    const modal = await this.modalController.create({
+      component: LogEntryEditorComponent,
+      componentProps: { workoutLogEntry }
+    });
+    modal.present();
+    const res = await modal.onDidDismiss();
+    if (res && res.role === 'save') {
+      await this.workoutLogEntries.update(res.data);
+      await this.getWorkoutLogEntries();
+    }
+  }
+
   async beginDateChanged() {
     this.currentWorkoutLog = await this.workoutLogs.getForDate(new Date(this.beginMS));
     if (this.currentWorkoutLog) {

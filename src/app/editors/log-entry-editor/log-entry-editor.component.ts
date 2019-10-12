@@ -21,11 +21,21 @@ export class LogEntryEditorComponent implements OnInit {
 
   @Input() logDate: Date;
   @Input() workoutLog: WorkoutLog;
+  @Input() workoutLogEntry: WorkoutLogEntry;
 
   constructor(private modalController: ModalController) {}
 
   ngOnInit() {
-    this.title = 'Add Exercise';
+    if (this.workoutLogEntry) {
+      this.title = 'Edit Exercise';
+      this.time = this.workoutLogEntry.time;
+      this.sets = this.workoutLogEntry.sets;
+      this.reps = this.workoutLogEntry.reps;
+      this.weight = this.workoutLogEntry.weight;
+      this.exercise = this.workoutLogEntry.exercise;
+    } else {
+      this.title = 'Add Exercise';
+    }
   }
 
   async findExercise() {
@@ -46,12 +56,20 @@ export class LogEntryEditorComponent implements OnInit {
   }
 
   save() {
+    const entry: WorkoutLogEntry = this.createWorkoutLogEntry();
+    this.modalController.dismiss(entry, 'save');
+  }
+
+  private createWorkoutLogEntry() {
     const entry: WorkoutLogEntry = {
-      workoutLog: this.workoutLog,
-      logDate: this.logDate,
+      workoutLog: this.workoutLog || this.workoutLogEntry.workoutLog,
+      logDate: this.logDate || this.workoutLogEntry.logDate,
       exercise: this.exercise,
-      completed: false
+      completed: this.workoutLogEntry ? this.workoutLogEntry.completed : false
     };
+    if (this.workoutLogEntry) {
+      entry.id = this.workoutLogEntry.id;
+    }
     if (this.time) {
       entry.time = this.time;
     }
@@ -64,6 +82,6 @@ export class LogEntryEditorComponent implements OnInit {
     if (this.weight) {
       entry.weight = this.weight;
     }
-    this.modalController.dismiss(entry , 'save');
+    return entry;
   }
 }
