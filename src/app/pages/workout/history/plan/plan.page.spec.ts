@@ -6,7 +6,7 @@ import { UrlSerializer, ActivatedRoute } from '@angular/router';
 import { AlertController, IonicModule, ModalController } from '@ionic/angular';
 import { parseISO, getTime } from 'date-fns';
 
-import { WorkoutPlanPage } from './workout-plan.page';
+import { PlanPage } from './plan.page';
 import { DateService } from '@app/services';
 import { createDateServiceMock } from '@app/services/mocks';
 import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
@@ -18,18 +18,18 @@ import { createActivatedRouteMock, createOverlayControllerMock, createOverlayEle
 import { LogEntryEditorComponent } from '@app/editors';
 import { WorkoutLogEntry } from '@app/models';
 
-describe('WorkoutPlanPage', () => {
+describe('PlanPage', () => {
   let alert;
   let logEntries: Array<WorkoutLogEntry>;
-  let component: WorkoutPlanPage;
-  let fixture: ComponentFixture<WorkoutPlanPage>;
+  let component: PlanPage;
+  let fixture: ComponentFixture<PlanPage>;
   let modal;
 
   beforeEach(async(() => {
     alert = createOverlayElementMock('Alert');
     modal = createOverlayElementMock('Modal');
     TestBed.configureTestingModule({
-      declarations: [WorkoutPlanPage],
+      declarations: [PlanPage],
       imports: [FormsModule, IonicModule],
       providers: [
         { provide: ActivatedRoute, useFactory: createActivatedRouteMock },
@@ -55,7 +55,7 @@ describe('WorkoutPlanPage', () => {
       parseISO('2019-07-28'),
       parseISO('2019-08-04')
     ]);
-    fixture = TestBed.createComponent(WorkoutPlanPage);
+    fixture = TestBed.createComponent(PlanPage);
     component = fixture.componentInstance;
   });
 

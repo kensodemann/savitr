@@ -4,18 +4,13 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'current',
+    redirectTo: 'workout',
     pathMatch: 'full'
   },
   {
     path: 'about',
     loadChildren: () =>
       import('./pages/about/about.module').then(m => m.AboutPageModule)
-  },
-  {
-    path: 'current',
-    loadChildren: () =>
-      import('./pages/current/current.module').then(m => m.CurrentPageModule)
   },
   {
     path: 'exercises',
@@ -25,20 +20,15 @@ const routes: Routes = [
       )
   },
   {
-    path: 'history',
-    loadChildren: () =>
-      import('./pages/history/history.module').then(m => m.HistoryPageModule)
-  },
-  {
     path: 'login',
     loadChildren: () =>
       import('./pages/login/login.module').then(m => m.LoginPageModule)
   },
   {
-    path: 'workout-plan',
+    path: 'workout',
     loadChildren: () =>
-      import('./pages/workout-plan/workout-plan.module').then(
-        m => m.WorkoutPlanPageModule
+      import('./pages/workout/workout.module').then(
+        m => m.WorkoutModule
       )
   }
 ];

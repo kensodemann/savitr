@@ -13,12 +13,12 @@ export class AppComponent implements OnInit {
   public appPages = [
     {
       title: 'Current',
-      url: '/current',
+      url: '/workout/current',
       icon: 'home'
     },
     {
       title: 'History & Planning',
-      url: '/history',
+      url: '/workout/history',
       icon: 'calendar'
     },
     {

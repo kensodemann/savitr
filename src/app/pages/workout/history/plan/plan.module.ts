@@ -6,33 +6,34 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { AuthGuardService } from '@app/services';
-import { DayHeaderComponent } from './day-header/day-header.component';
 import { LogEntryEditorComponentModule } from '@app/editors';
-import { WorkoutPlanPage } from './workout-plan.page';
+import { PlanPage } from './plan.page';
 import { WorkoutLogEntryListItemComponentModule } from '@app/shared';
+import { DayHeaderComponentModule } from '@app/pages/workout/shared/day-header/day-header.module';
 
 const routes: Routes = [
   {
     canActivate: [AuthGuardService],
     path: '',
-    component: WorkoutPlanPage
+    component: PlanPage
   },
   {
     canActivate: [AuthGuardService],
     path: ':id',
-    component: WorkoutPlanPage
+    component: PlanPage
   }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
-    LogEntryEditorComponentModule,
+    DayHeaderComponentModule,
     FormsModule,
     IonicModule,
+    LogEntryEditorComponentModule,
     RouterModule.forChild(routes),
     WorkoutLogEntryListItemComponentModule
   ],
-  declarations: [WorkoutPlanPage, DayHeaderComponent]
+  declarations: [PlanPage]
 })
-export class WorkoutPlanPageModule {}
+export class PlanPageModule {}

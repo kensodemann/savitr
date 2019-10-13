@@ -6,15 +6,15 @@ import { addDays, getDay } from 'date-fns';
 import { DateService } from '@app/services';
 import { LogEntryEditorComponent } from '@app/editors';
 import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
-import { WorkoutLog, WorkoutLogEntry, Exercise } from '@app/models';
+import { WorkoutLog, WorkoutLogEntry } from '@app/models';
 import { yesNoButtons } from '@app/util';
 
 @Component({
-  selector: 'app-workout-plan',
-  templateUrl: './workout-plan.page.html',
-  styleUrls: ['./workout-plan.page.scss']
+  selector: 'app-plan',
+  templateUrl: './plan.page.html',
+  styleUrls: ['./plan.page.scss']
 })
-export class WorkoutPlanPage implements OnInit {
+export class PlanPage implements OnInit {
   private currentWorkoutLog: WorkoutLog;
 
   beginMS: number;

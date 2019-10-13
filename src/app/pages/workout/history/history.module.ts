@@ -13,6 +13,11 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     path: '',
     component: HistoryPage
+  },
+  {
+    canActivate: [AuthGuardService],
+    path: 'plan',
+    loadChildren: () => import('./plan/plan.module').then(m => m.PlanPageModule)
   }
 ];
 
