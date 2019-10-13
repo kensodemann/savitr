@@ -372,7 +372,7 @@ describe('WorkoutPlanPage', () => {
       expect(modalController.create).toHaveBeenCalledWith({
         component: LogEntryEditorComponent,
         componentProps: {
-          workoutLogEntry: logEntries[2] 
+          workoutLogEntry: logEntries[2]
         }
       });
     });
