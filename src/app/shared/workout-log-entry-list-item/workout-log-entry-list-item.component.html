@@ -1,16 +1,29 @@
 <ion-item-sliding>
-  <ion-item (click)="view.emit()">
+  <ion-item>
     <ion-label>
       <div class="title">
         {{ workoutLogEntry.exercise.name }}
       </div>
       <div class="details">
-        <div *ngIf="workoutLogEntry.sets"><div class="label">Sets:</div> {{ workoutLogEntry.sets }}</div>
-        <div *ngIf="workoutLogEntry.reps"><div class="label">Reps:</div> {{ workoutLogEntry.reps }}</div>
-        <div *ngIf="workoutLogEntry.time"><div class="label">Time:</div> {{ workoutLogEntry.time }}</div>
-        <div *ngIf="workoutLogEntry.weight"><div class="label">Weight:</div> {{ workoutLogEntry.weight }}</div>
+        <div *ngIf="workoutLogEntry.sets">
+          <div class="label">Sets:</div>
+          {{ workoutLogEntry.sets }}
+        </div>
+        <div *ngIf="workoutLogEntry.reps">
+          <div class="label">Reps:</div>
+          {{ workoutLogEntry.reps }}
+        </div>
+        <div *ngIf="workoutLogEntry.time">
+          <div class="label">Time:</div>
+          {{ workoutLogEntry.time }}
+        </div>
+        <div *ngIf="workoutLogEntry.weight">
+          <div class="label">Weight:</div>
+          {{ workoutLogEntry.weight }}
+        </div>
       </div>
     </ion-label>
+    <ion-checkbox *ngIf="showCompletion" slot="end" [(ngModel)]="completed" (ionChange)="toggleCompletion()"></ion-checkbox>
   </ion-item>
 
   <ion-item-options>

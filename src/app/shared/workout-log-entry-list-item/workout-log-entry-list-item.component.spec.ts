@@ -10,10 +10,9 @@ describe('WorkoutLogEntryListItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WorkoutLogEntryListItemComponent ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    })
-    .compileComponents();
+      declarations: [WorkoutLogEntryListItemComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -35,10 +34,37 @@ describe('WorkoutLogEntryListItemComponent', () => {
       logDate: parseISO('2019-07-23'),
       completed: false
     };
-    fixture.detectChanges();
   });
 
   it('should create', () => {
+    fixture.detectChanges();
     expect(component).toBeTruthy();
+  });
+
+  describe('initialization', () => {
+    [true, false].forEach(value => {
+      it(`assigns the completed flag a value of ${value}`, () => {
+        component.workoutLogEntry.completed = value;
+        fixture.detectChanges();
+        expect(component.completed).toEqual(value);
+      });
+    });
+  });
+
+  describe('toggling', () => {
+    beforeEach(() => {
+      fixture.detectChanges();
+    });
+
+    [true, false].forEach(value => {
+      it(`emits the current completed flag value of ${value}`, done => {
+        component.toggle.subscribe(x => {
+          expect(x).toEqual(value);
+          done();
+        });
+        component.completed = value;
+        component.toggleCompletion();
+      });
+    });
   });
 });

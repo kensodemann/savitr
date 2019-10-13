@@ -8,16 +8,25 @@ import { WorkoutLogEntry } from '@app/models';
 })
 export class WorkoutLogEntryListItemComponent implements OnInit {
   @Input() workoutLogEntry: WorkoutLogEntry;
+  @Input() showCompletion: boolean;
+
+  completed: boolean;
 
   @Output() delete: EventEmitter<void>;
   @Output() edit: EventEmitter<void>;
-  @Output() view: EventEmitter<void>;
+  @Output() toggle: EventEmitter<boolean>;
 
   constructor() {
     this.delete = new EventEmitter();
     this.edit = new EventEmitter();
-    this.view = new EventEmitter();
+    this.toggle = new EventEmitter();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.completed = this.workoutLogEntry.completed;
+  }
+
+  toggleCompletion() {
+    this.toggle.emit(this.completed);
+  }
 }
