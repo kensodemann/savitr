@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuardService } from '@app/services';
+import { LogEntryEditorComponentModule } from '@app/editors';
 
 const routes: Routes = [
   {
@@ -19,10 +20,10 @@ const routes: Routes = [
     canActivate: [AuthGuardService],
     path: 'history',
     loadChildren: () => import('./history/history.module').then(m => m.HistoryPageModule)
-  },
+  }
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes)]
+  imports: [CommonModule, LogEntryEditorComponentModule, RouterModule.forChild(routes)]
 })
 export class WorkoutModule {}

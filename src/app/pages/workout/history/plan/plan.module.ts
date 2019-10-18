@@ -6,7 +6,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { AuthGuardService } from '@app/services';
-import { LogEntryEditorComponentModule } from '@app/editors';
 import { PlanPage } from './plan.page';
 import { WorkoutLogEntryListItemComponentModule } from '@app/shared';
 import { DayHeaderComponentModule } from '@app/pages/workout/shared/day-header/day-header.module';
@@ -30,7 +29,6 @@ const routes: Routes = [
     DayHeaderComponentModule,
     FormsModule,
     IonicModule,
-    LogEntryEditorComponentModule,
     RouterModule.forChild(routes),
     WorkoutLogEntryListItemComponentModule
   ],

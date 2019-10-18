@@ -3,20 +3,18 @@ import { FormsModule } from '@angular/forms';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Location } from '@angular/common';
 import { UrlSerializer, ActivatedRoute } from '@angular/router';
-import { AlertController, IonicModule, ModalController } from '@ionic/angular';
-import { parseISO, getTime } from 'date-fns';
+import { AlertController, IonicModule } from '@ionic/angular';
+import { parseISO } from 'date-fns';
 
 import { PlanPage } from './plan.page';
 import { DateService } from '@app/services';
 import { createDateServiceMock } from '@app/services/mocks';
-import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
-import {
-  createWeeklyWorkoutLogsServiceMock,
-  createWorkoutLogEntriesServiceMock
-} from '@app/services/firestore-data/mocks';
+import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
+import { createWeeklyWorkoutLogsServiceMock } from '@app/services/firestore-data/mocks';
 import { createActivatedRouteMock, createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
-import { LogEntryEditorComponent } from '@app/editors';
 import { WorkoutLogEntry } from '@app/models';
+import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
+import { createWorkoutPageServiceMock } from '@app/pages/workout/services/workout-page/workout-page.service.mock';
 
 describe('PlanPage', () => {
   let alert;
@@ -36,10 +34,9 @@ describe('PlanPage', () => {
         { provide: AlertController, useFactory: () => createOverlayControllerMock('AlertController', alert) },
         { provide: DateService, useFactory: createDateServiceMock },
         { provide: Location, useValue: {} },
-        { provide: ModalController, useFactory: () => createOverlayControllerMock('ModalController', modal) },
         { provide: UrlSerializer, useValue: {} },
         { provide: WeeklyWorkoutLogsService, useFactory: createWeeklyWorkoutLogsServiceMock },
-        { provide: WorkoutLogEntriesService, useFactory: createWorkoutLogEntriesServiceMock }
+        { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
@@ -150,25 +147,14 @@ describe('PlanPage', () => {
       expect(workoutLogs.getForDate).toHaveBeenCalledWith(date);
     });
 
-    it('gets the exercises for the log', async () => {
-      const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+    it('gets the entries for the log', async () => {
+      const workoutPageService = TestBed.get(WorkoutPageService);
       await component.beginDateChanged();
-      expect(workoutLogEntries.getAllForLog).toHaveBeenCalledTimes(1);
-      expect(workoutLogEntries.getAllForLog).toHaveBeenCalledWith('12399goasdf9');
-    });
-
-    it('processes the exercise logs', async () => {
-      const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
-      workoutLogEntries.getAllForLog.and.returnValue(Promise.resolve(logEntries));
-      await component.beginDateChanged();
-      expect(component.exerciseLogs.length).toEqual(7);
-      expect(component.exerciseLogs[0].length).toEqual(1);
-      expect(component.exerciseLogs[1].length).toEqual(3);
-      expect(component.exerciseLogs[2].length).toEqual(0);
-      expect(component.exerciseLogs[3].length).toEqual(1);
-      expect(component.exerciseLogs[4].length).toEqual(2);
-      expect(component.exerciseLogs[5].length).toEqual(0);
-      expect(component.exerciseLogs[6].length).toEqual(0);
+      expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
+      expect(workoutPageService.logEntries).toHaveBeenCalledWith({
+        id: '12399goasdf9',
+        beginDate: parseISO('2019-07-21')
+      });
     });
   });
 
@@ -180,105 +166,66 @@ describe('PlanPage', () => {
     describe('without a chosen date', () => {
       it('presents an alert', async () => {
         const alertController = TestBed.get(AlertController);
-        await component.addExercise(1);
+        await component.add(1);
         expect(alertController.create).toHaveBeenCalledTimes(1);
         expect(alert.present).toHaveBeenCalledTimes(1);
       });
 
-      it('does not open a modal', async () => {
-        const modalController = TestBed.get(ModalController);
-        await component.addExercise(1);
-        expect(modalController.create).not.toHaveBeenCalled();
+      it('does not perform the add action', async () => {
+        const workoutPageService = TestBed.get(WorkoutPageService);
+        await component.add(1);
+        expect(workoutPageService.add).not.toHaveBeenCalled();
       });
     });
 
     describe('with a chosen date', () => {
       beforeEach(async () => {
         const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
-        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
         workoutLogs.getForDate.and.returnValue(
           Promise.resolve({ id: '199g009d8a', beginDate: parseISO('2019-07-21') })
         );
-        workoutLogEntries.getAllForLog.and.returnValue(Promise.resolve(logEntries));
         component.beginMS = parseISO('2019-07-21').getTime();
         await component.beginDateChanged();
         modal.onDidDismiss.and.returnValue({});
       });
 
-      it('opens a modal', () => {
-        const modalController = TestBed.get(ModalController);
-        component.addExercise(1);
-        expect(modalController.create).toHaveBeenCalledTimes(1);
+      it('performs the add action', async () => {
+        const workoutPageService = TestBed.get(WorkoutPageService);
+        await component.add(1);
+        expect(workoutPageService.add).toHaveBeenCalledTimes(1);
+        expect(workoutPageService.add).toHaveBeenCalledWith(
+          {
+            id: '199g009d8a',
+            beginDate: parseISO('2019-07-21')
+          },
+          parseISO('2019-07-22')
+        );
       });
 
-      it('passes the proper date and component', () => {
-        const modalController = TestBed.get(ModalController);
-        component.addExercise(1);
-        expect(modalController.create).toHaveBeenCalledWith({
-          component: LogEntryEditorComponent,
-          componentProps: {
-            logDate: parseISO('2019-07-22'),
-            workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') }
-          }
-        });
-      });
-
-      it('presents the editor modal', async () => {
-        await component.addExercise(1);
-        expect(modal.present).toHaveBeenCalledTimes(1);
-      });
-
-      describe('when the user saves the item', () => {
+      describe('when the user completes the add action', () => {
         beforeEach(() => {
-          modal.onDidDismiss.and.returnValue({
-            data: {
-              workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
-              logDate: parseISO('2019-07-22'),
-              exercise: {
-                id: '773758FC3',
-                name: 'Dumbbell Bench Press',
-                description: 'Bench press using two dumbbells',
-                area: 'Upper Body',
-                type: 'Free Weight'
-              },
-              time: '1:45'
-            },
-            role: 'save'
-          });
+          const workoutPageService = TestBed.get(WorkoutPageService);
+          workoutPageService.add.and.returnValue(Promise.resolve(true));
         });
 
-        it('adds the workout log entry', async () => {
-          const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
-          await component.addExercise(1);
-          expect(workoutLogEntries.add).toHaveBeenCalledTimes(1);
-          expect(workoutLogEntries.add).toHaveBeenCalledWith({
-            workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
-            logDate: parseISO('2019-07-22'),
-            exercise: {
-              id: '773758FC3',
-              name: 'Dumbbell Bench Press',
-              description: 'Bench press using two dumbbells',
-              area: 'Upper Body',
-              type: 'Free Weight'
-            },
-            time: '1:45'
+        it('gets a fresh set of log entries', async () => {
+          const workoutPageService = TestBed.get(WorkoutPageService);
+          workoutPageService.logEntries.calls.reset();
+          await component.add(1);
+          expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
+          expect(workoutPageService.logEntries).toHaveBeenCalledWith({
+            id: '199g009d8a',
+            beginDate: parseISO('2019-07-21')
           });
-        });
-
-        it('requeries the database', async () => {
-          const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
-          workoutLogEntries.getAllForLog.calls.reset();
-          await component.addExercise(1);
-          expect(workoutLogEntries.getAllForLog).toHaveBeenCalledTimes(1);
-          expect(workoutLogEntries.getAllForLog).toHaveBeenCalledWith('199g009d8a');
         });
       });
 
-      describe('when the user cancels the item', () => {
+      describe('when the user cancels the add action', () => {
         it('does nothing', async () => {
-          const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
-          await component.addExercise(1);
-          expect(workoutLogEntries.add).not.toHaveBeenCalled();
+          const workoutPageService = TestBed.get(WorkoutPageService);
+          workoutPageService.logEntries.calls.reset();
+          await component.add(1);
+          expect(workoutPageService.logEntries).not.toHaveBeenCalled();
         });
       });
     });
@@ -294,56 +241,37 @@ describe('PlanPage', () => {
         beginDate: parseISO('2019-07-21')
       });
       fixture.detectChanges();
-      alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'backdrop' }));
     });
 
-    it('asks the user if they are sure', async () => {
-      const alertController = TestBed.get(AlertController);
+    it('performs the delete action', async () => {
+      const workoutPageService = TestBed.get(WorkoutPageService);
       await component.delete(logEntries[1]);
-      expect(alertController.create).toHaveBeenCalledTimes(1);
-      expect(alertController.create).toHaveBeenCalledWith({
-        header: 'Remove Entry?',
-        message: 'Are you sure you would like to remove this exercise from the workout log?',
-        buttons: [{ text: 'Yes', role: 'confirm' }, { text: 'No', role: 'cancel' }]
-      });
-      expect(alert.present).toHaveBeenCalledTimes(1);
+      expect(workoutPageService.delete).toHaveBeenCalledTimes(1);
+      expect(workoutPageService.delete).toHaveBeenCalledWith(logEntries[1]);
     });
 
-    describe('when the user says yes', () => {
+    describe('when the user completes the delete action', () => {
       beforeEach(() => {
-        alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'confirm' }));
+        const workoutPageService = TestBed.get(WorkoutPageService);
+        workoutPageService.delete.and.returnValue(Promise.resolve(true));
       });
 
-      it('deletes the log entry', async () => {
-        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+      it('refreshes the log entries', async () => {
+        const workoutPageService = TestBed.get(WorkoutPageService);
         await component.delete(logEntries[1]);
-        expect(workoutLogEntries.delete).toHaveBeenCalledTimes(1);
-        expect(workoutLogEntries.delete).toHaveBeenCalledWith(logEntries[1]);
-      });
-
-      it('refreshes the workout log', async () => {
-        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
-        await component.delete(logEntries[1]);
-        expect(workoutLogEntries.getAllForLog).toHaveBeenCalledTimes(1);
-        expect(workoutLogEntries.getAllForLog).toHaveBeenCalledWith('12399goasdf9');
+        expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
+        expect(workoutPageService.logEntries).toHaveBeenCalledWith({
+          id: '12399goasdf9',
+          beginDate: parseISO('2019-07-21')
+        });
       });
     });
 
-    describe('when the user says no', () => {
-      beforeEach(() => {
-        alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'cancel' }));
-      });
-
-      it('does not delete the log entry', async () => {
-        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+    describe('when the user cancels the delete action', () => {
+      it('does not refresh the log entries', async () => {
+        const workoutPageService = TestBed.get(WorkoutPageService);
         await component.delete(logEntries[1]);
-        expect(workoutLogEntries.delete).not.toHaveBeenCalled();
-      });
-
-      it('does not refresh the workout log', async () => {
-        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
-        await component.delete(logEntries[1]);
-        expect(workoutLogEntries.getAllForLog).not.toHaveBeenCalled();
+        expect(workoutPageService.logEntries).not.toHaveBeenCalled();
       });
     });
   });
@@ -360,79 +288,35 @@ describe('PlanPage', () => {
       fixture.detectChanges();
     });
 
-    it('opens a modal', () => {
-      const modalController = TestBed.get(ModalController);
-      component.edit(logEntries[2]);
-      expect(modalController.create).toHaveBeenCalledTimes(1);
-    });
-
-    it('passes the log entry to the editor component', () => {
-      const modalController = TestBed.get(ModalController);
-      component.edit(logEntries[2]);
-      expect(modalController.create).toHaveBeenCalledWith({
-        component: LogEntryEditorComponent,
-        componentProps: {
-          workoutLogEntry: logEntries[2]
-        }
-      });
-    });
-
-    it('presents the editor modal', async () => {
+    it('performs the edit action', async () => {
+      const workoutPageService = TestBed.get(WorkoutPageService);
       await component.edit(logEntries[2]);
-      expect(modal.present).toHaveBeenCalledTimes(1);
+      expect(workoutPageService.edit).toHaveBeenCalledTimes(1);
+      expect(workoutPageService.edit).toHaveBeenCalledWith(logEntries[2]);
     });
 
-    describe('when the user saves the edit', () => {
+    describe('when the user completes the edit action', () => {
       beforeEach(() => {
-        modal.onDidDismiss.and.returnValue({
-          data: {
-            workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
-            logDate: parseISO('2019-07-22'),
-            exercise: {
-              id: '773758FC3',
-              name: 'Dumbbell Bench Press',
-              description: 'Bench press using two dumbbells',
-              area: 'Upper Body',
-              type: 'Free Weight'
-            },
-            time: '1:45'
-          },
-          role: 'save'
-        });
+        const workoutPageService = TestBed.get(WorkoutPageService);
+        workoutPageService.edit.and.returnValue(Promise.resolve(true));
       });
 
-      it('updates the workout log entry', async () => {
-        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+      it('refreshes the log entries', async () => {
+        const workoutPageService = TestBed.get(WorkoutPageService);
         await component.edit(logEntries[2]);
-        expect(workoutLogEntries.update).toHaveBeenCalledTimes(1);
-        expect(workoutLogEntries.update).toHaveBeenCalledWith({
-          workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
-          logDate: parseISO('2019-07-22'),
-          exercise: {
-            id: '773758FC3',
-            name: 'Dumbbell Bench Press',
-            description: 'Bench press using two dumbbells',
-            area: 'Upper Body',
-            type: 'Free Weight'
-          },
-          time: '1:45'
+        expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
+        expect(workoutPageService.logEntries).toHaveBeenCalledWith({
+          id: '12399goasdf9',
+          beginDate: parseISO('2019-07-21')
         });
-      });
-
-      it('requeries the database', async () => {
-        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
-        workoutLogEntries.getAllForLog.calls.reset();
-        await component.edit(logEntries[2]);
-        expect(workoutLogEntries.getAllForLog).toHaveBeenCalledTimes(1);
-        expect(workoutLogEntries.getAllForLog).toHaveBeenCalledWith('12399goasdf9');
       });
     });
 
-    describe('when the user cancels the edit', () => {
-      it('does nothing', async () => {
-        const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+    describe('when the user cancels the edit action', () => {
+      it('does not refresh the log entries', async () => {
+        const workoutPageService = TestBed.get(WorkoutPageService);
         await component.edit(logEntries[2]);
-        expect(workoutLogEntries.update).not.toHaveBeenCalled();
+        expect(workoutPageService.logEntries).not.toHaveBeenCalled();
       });
     });
   });

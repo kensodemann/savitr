@@ -24,7 +24,7 @@
     </ion-item>
 
     <ion-list>
-      <app-day-header (click)="addExercise(0)">Sunday</app-day-header>
+      <app-day-header (click)="add(0)">Sunday</app-day-header>
       <app-workout-log-entry-list-item
         *ngFor="let log of exerciseLogs[0]"
         [workoutLogEntry]="log"
@@ -32,7 +32,7 @@
         (edit)="edit(log)"
       >
       </app-workout-log-entry-list-item>
-      <app-day-header (click)="addExercise(1)">Monday</app-day-header>
+      <app-day-header (click)="add(1)">Monday</app-day-header>
       <app-workout-log-entry-list-item
         *ngFor="let log of exerciseLogs[1]"
         [workoutLogEntry]="log"
@@ -40,7 +40,7 @@
         (edit)="edit(log)"
       >
       </app-workout-log-entry-list-item>
-      <app-day-header (click)="addExercise(2)">Tuesday</app-day-header>
+      <app-day-header (click)="add(2)">Tuesday</app-day-header>
       <app-workout-log-entry-list-item
         *ngFor="let log of exerciseLogs[2]"
         [workoutLogEntry]="log"
@@ -48,7 +48,7 @@
         (edit)="edit(log)"
       >
       </app-workout-log-entry-list-item>
-      <app-day-header (click)="addExercise(3)">Wednesday</app-day-header>
+      <app-day-header (click)="add(3)">Wednesday</app-day-header>
       <app-workout-log-entry-list-item
         *ngFor="let log of exerciseLogs[3]"
         [workoutLogEntry]="log"
@@ -56,7 +56,7 @@
         (edit)="edit(log)"
       >
       </app-workout-log-entry-list-item>
-      <app-day-header (click)="addExercise(4)">Thursday</app-day-header>
+      <app-day-header (click)="add(4)">Thursday</app-day-header>
       <app-workout-log-entry-list-item
         *ngFor="let log of exerciseLogs[4]"
         [workoutLogEntry]="log"
@@ -64,7 +64,7 @@
         (edit)="edit(log)"
       >
       </app-workout-log-entry-list-item>
-      <app-day-header (click)="addExercise(5)">Friday</app-day-header>
+      <app-day-header (click)="add(5)">Friday</app-day-header>
       <app-workout-log-entry-list-item
         *ngFor="let log of exerciseLogs[5]"
         [workoutLogEntry]="log"
@@ -72,7 +72,7 @@
         (edit)="edit(log)"
       >
       </app-workout-log-entry-list-item>
-      <app-day-header (click)="addExercise(6)">Saturday</app-day-header>
+      <app-day-header (click)="add(6)">Saturday</app-day-header>
       <app-workout-log-entry-list-item
         *ngFor="let log of exerciseLogs[6]"
         [workoutLogEntry]="log"

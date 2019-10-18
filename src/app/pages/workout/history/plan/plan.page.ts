@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController, ModalController } from '@ionic/angular';
-import { addDays, getDay } from 'date-fns';
+import { AlertController } from '@ionic/angular';
+import { addDays } from 'date-fns';
 
 import { DateService } from '@app/services';
-import { LogEntryEditorComponent } from '@app/editors';
-import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
+import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
 import { WorkoutLog, WorkoutLogEntry } from '@app/models';
-import { yesNoButtons } from '@app/util';
+import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
 
 @Component({
   selector: 'app-plan',
@@ -25,74 +24,47 @@ export class PlanPage implements OnInit {
   constructor(
     private alertController: AlertController,
     private dates: DateService,
-    private modalController: ModalController,
     private route: ActivatedRoute,
     private workoutLogs: WeeklyWorkoutLogsService,
-    private workoutLogEntries: WorkoutLogEntriesService
+    private workoutPageActions: WorkoutPageService
   ) {}
 
   async ngOnInit() {
-    this.initDates();
-    this.initExerciseLogs();
+    this.beginDates = this.dates.beginDates();
+    this.exerciseLogs = [[], [], [], [], [], [], []];
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       await this.getWorkLog(id);
     }
   }
 
-  async addExercise(offset: number) {
+  async add(offset: number) {
     if (!this.beginMS) {
       this.alertNoDate();
     } else {
       const logDate = addDays(new Date(this.beginMS), offset);
-      await this.addNewExercise(logDate);
+      if (await this.workoutPageActions.add(this.currentWorkoutLog, logDate)) {
+        this.exerciseLogs = await this.workoutPageActions.logEntries(this.currentWorkoutLog);
+      }
     }
   }
 
   async delete(logEntry: WorkoutLogEntry) {
-    const alert = await this.alertController.create({
-      header: 'Remove Entry?',
-      message: 'Are you sure you would like to remove this exercise from the workout log?',
-      buttons: yesNoButtons
-    });
-    alert.present();
-    const res = await alert.onDidDismiss();
-    if (res.role === 'confirm') {
-      await this.workoutLogEntries.delete(logEntry);
-      await this.getWorkoutLogEntries();
+    if (await this.workoutPageActions.delete(logEntry)) {
+      this.exerciseLogs = await this.workoutPageActions.logEntries(this.currentWorkoutLog);
     }
   }
 
   async edit(workoutLogEntry: WorkoutLogEntry) {
-    const modal = await this.modalController.create({
-      component: LogEntryEditorComponent,
-      componentProps: { workoutLogEntry }
-    });
-    modal.present();
-    const res = await modal.onDidDismiss();
-    if (res && res.role === 'save') {
-      await this.workoutLogEntries.update(res.data);
-      await this.getWorkoutLogEntries();
+    if (await this.workoutPageActions.edit(workoutLogEntry)) {
+      this.exerciseLogs = await this.workoutPageActions.logEntries(this.currentWorkoutLog);
     }
   }
 
   async beginDateChanged() {
     this.currentWorkoutLog = await this.workoutLogs.getForDate(new Date(this.beginMS));
     if (this.currentWorkoutLog) {
-      await this.getWorkoutLogEntries();
-    }
-  }
-
-  private async addNewExercise(logDate: Date) {
-    const modal = await this.modalController.create({
-      component: LogEntryEditorComponent,
-      componentProps: { logDate, workoutLog: this.currentWorkoutLog }
-    });
-    modal.present();
-    const res = await modal.onDidDismiss();
-    if (res && res.role === 'save') {
-      await this.workoutLogEntries.add(res.data);
-      await this.getWorkoutLogEntries();
+      this.exerciseLogs = await this.workoutPageActions.logEntries(this.currentWorkoutLog);
     }
   }
 
@@ -105,14 +77,6 @@ export class PlanPage implements OnInit {
     alert.present();
   }
 
-  private initExerciseLogs() {
-    this.exerciseLogs = [[], [], [], [], [], [], []];
-  }
-
-  private initDates() {
-    this.beginDates = this.dates.beginDates();
-  }
-
   private async getWorkLog(id: string) {
     this.currentWorkoutLog = await this.workoutLogs.get(id);
     if (this.currentWorkoutLog) {
@@ -120,14 +84,5 @@ export class PlanPage implements OnInit {
       this.disableDateChange = true;
       this.beginDates = [this.currentWorkoutLog.beginDate];
     }
-  }
-
-  private async getWorkoutLogEntries() {
-    const logs = await this.workoutLogEntries.getAllForLog(this.currentWorkoutLog.id);
-    this.initExerciseLogs();
-    logs.forEach(log => {
-      const day = getDay(log.logDate);
-      this.exerciseLogs[day].push(log);
-    });
   }
 }
