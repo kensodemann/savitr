@@ -49,8 +49,8 @@ export class PlanPage implements OnInit {
     }
   }
 
-  async delete(logEntry: WorkoutLogEntry) {
-    if (await this.workoutPageActions.delete(logEntry)) {
+  async delete(workoutLogEntry: WorkoutLogEntry) {
+    if (await this.workoutPageActions.delete(workoutLogEntry)) {
       this.exerciseLogs = await this.workoutPageActions.logEntries(this.currentWorkoutLog);
     }
   }

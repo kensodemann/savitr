@@ -23,63 +23,11 @@
       </ion-select>
     </ion-item>
 
-    <ion-list>
-      <app-day-header (click)="add(0)">Sunday</app-day-header>
-      <app-workout-log-entry-list-item
-        *ngFor="let log of exerciseLogs[0]"
-        [workoutLogEntry]="log"
-        (delete)="delete(log)"
-        (edit)="edit(log)"
-      >
-      </app-workout-log-entry-list-item>
-      <app-day-header (click)="add(1)">Monday</app-day-header>
-      <app-workout-log-entry-list-item
-        *ngFor="let log of exerciseLogs[1]"
-        [workoutLogEntry]="log"
-        (delete)="delete(log)"
-        (edit)="edit(log)"
-      >
-      </app-workout-log-entry-list-item>
-      <app-day-header (click)="add(2)">Tuesday</app-day-header>
-      <app-workout-log-entry-list-item
-        *ngFor="let log of exerciseLogs[2]"
-        [workoutLogEntry]="log"
-        (delete)="delete(log)"
-        (edit)="edit(log)"
-      >
-      </app-workout-log-entry-list-item>
-      <app-day-header (click)="add(3)">Wednesday</app-day-header>
-      <app-workout-log-entry-list-item
-        *ngFor="let log of exerciseLogs[3]"
-        [workoutLogEntry]="log"
-        (delete)="delete(log)"
-        (edit)="edit(log)"
-      >
-      </app-workout-log-entry-list-item>
-      <app-day-header (click)="add(4)">Thursday</app-day-header>
-      <app-workout-log-entry-list-item
-        *ngFor="let log of exerciseLogs[4]"
-        [workoutLogEntry]="log"
-        (delete)="delete(log)"
-        (edit)="edit(log)"
-      >
-      </app-workout-log-entry-list-item>
-      <app-day-header (click)="add(5)">Friday</app-day-header>
-      <app-workout-log-entry-list-item
-        *ngFor="let log of exerciseLogs[5]"
-        [workoutLogEntry]="log"
-        (delete)="delete(log)"
-        (edit)="edit(log)"
-      >
-      </app-workout-log-entry-list-item>
-      <app-day-header (click)="add(6)">Saturday</app-day-header>
-      <app-workout-log-entry-list-item
-        *ngFor="let log of exerciseLogs[6]"
-        [workoutLogEntry]="log"
-        (delete)="delete(log)"
-        (edit)="edit(log)"
-      >
-      </app-workout-log-entry-list-item>
-    </ion-list>
+    <app-weekly-workout
+      [exerciseLogs]="exerciseLogs"
+      (add)="add($event)"
+      (delete)="delete($event)"
+      (edit)="edit($event)"
+    ></app-weekly-workout>
   </form>
 </ion-content>

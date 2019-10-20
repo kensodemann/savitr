@@ -7,8 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { AuthGuardService } from '@app/services';
 import { PlanPage } from './plan.page';
-import { WorkoutLogEntryListItemComponentModule } from '@app/shared';
-import { DayHeaderComponentModule } from '@app/pages/workout/shared/day-header/day-header.module';
+import { WeeklyWorkoutComponentModule } from '@app/pages/workout/shared/weekly-workout/weekly-workout.module';
 
 const routes: Routes = [
   {
@@ -24,14 +23,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    DayHeaderComponentModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes),
-    WorkoutLogEntryListItemComponentModule
-  ],
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule.forChild(routes), WeeklyWorkoutComponentModule],
   declarations: [PlanPage]
 })
 export class PlanPageModule {}
