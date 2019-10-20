@@ -8,7 +8,10 @@ import { IonicModule } from '@ionic/angular';
 import { CurrentPage } from './current.page';
 import { ThisWeekComponent } from './this-week/this-week.component';
 import { TodayComponent } from './today/today.component';
+
 import { AuthGuardService } from '@app/services';
+
+import { NoWorkoutComponentModule } from '@app/shared';
 
 const routes: Routes = [
   {
@@ -19,7 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, FormsModule, IonicModule, NoWorkoutComponentModule, RouterModule.forChild(routes)],
   declarations: [CurrentPage, ThisWeekComponent, TodayComponent]
 })
 export class CurrentPageModule {}
