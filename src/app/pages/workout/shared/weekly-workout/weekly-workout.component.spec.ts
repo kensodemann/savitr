@@ -9,15 +9,15 @@ describe('WeeklyWorkoutComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WeeklyWorkoutComponent ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    })
-    .compileComponents();
+      declarations: [WeeklyWorkoutComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WeeklyWorkoutComponent);
     component = fixture.componentInstance;
+    component.exerciseLogs = [];
     fixture.detectChanges();
   });
 
