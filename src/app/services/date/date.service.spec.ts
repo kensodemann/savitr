@@ -3,13 +3,15 @@ import { TestBed } from '@angular/core/testing';
 import { DateService } from './date.service';
 
 describe('DateService', () => {
+  let now;
   beforeEach(() => {
-    jasmine.clock().install();
+    now = Date.now;
+    Date.now = jest.fn(() => 0);
     TestBed.configureTestingModule({});
   });
 
   afterEach(() => {
-    jasmine.clock().uninstall();
+    Date.now = now;
   });
 
   it('should be created', () => {
@@ -20,25 +22,21 @@ describe('DateService', () => {
   describe('current begin date', () => {
     it('returns the Sunday before the current date', () => {
       const service: DateService = TestBed.get(DateService);
-      jasmine.clock().mockDate(new Date('2019-07-03T14:23:35'));
-      expect(service.currentBeginDate()).toEqual(
-        new Date('2019-06-30T00:00:00')
-      );
+      (Date.now as any).mockReturnValue(new Date('2019-07-03T14:23:35').getTime());
+      expect(service.currentBeginDate()).toEqual(new Date('2019-06-30T00:00:00'));
     });
 
     it('returns today if today is a Sunday', () => {
       const service: DateService = TestBed.get(DateService);
-      jasmine.clock().mockDate(new Date('2019-07-07:23:35.000'));
-      expect(service.currentBeginDate()).toEqual(
-        new Date('2019-07-07T00:00:00.000')
-      );
+      (Date.now as any).mockReturnValue(new Date('2019-07-07T14:23:35').getTime());
+      expect(service.currentBeginDate()).toEqual(new Date('2019-07-07T00:00:00.000'));
     });
   });
 
   describe('beginDates', () => {
     it('returns the current begin date plus 4 more', () => {
       const service: DateService = TestBed.get(DateService);
-      jasmine.clock().mockDate(new Date('2019-07-03T14:23:35'));
+      (Date.now as any).mockReturnValue(new Date('2019-07-03T14:23:35').getTime());
       expect(service.beginDates()).toEqual([
         new Date('2019-06-30T00:00:00'),
         new Date('2019-07-07T00:00:00'),
@@ -50,7 +48,7 @@ describe('DateService', () => {
 
     it('handles today being Sunday', () => {
       const service: DateService = TestBed.get(DateService);
-      jasmine.clock().mockDate(new Date('2019-07-07:23:35.000'));
+      (Date.now as any).mockReturnValue(new Date('2019-07-07T14:23:35').getTime());
       expect(service.beginDates()).toEqual([
         new Date('2019-07-07T00:00:00'),
         new Date('2019-07-14T00:00:00'),
@@ -105,12 +103,8 @@ describe('DateService', () => {
   describe('format', () => {
     it('formats the date to the ISO date-only format', () => {
       const service: DateService = TestBed.get(DateService);
-      expect(service.format(new Date('2019-07-03T14:23:35'))).toEqual(
-        '2019-07-03'
-      );
-      expect(service.format(new Date('2019-07-05T00:00:00'))).toEqual(
-        '2019-07-05'
-      );
+      expect(service.format(new Date('2019-07-03T14:23:35'))).toEqual('2019-07-03');
+      expect(service.format(new Date('2019-07-05T00:00:00'))).toEqual('2019-07-05');
     });
   });
 });

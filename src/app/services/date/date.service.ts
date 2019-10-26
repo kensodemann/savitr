@@ -8,7 +8,8 @@ export class DateService {
   constructor() {}
 
   currentBeginDate(): Date {
-    const d = new Date();
+    // The "Date.now()" bit just makes testing easier
+    const d = new Date(Date.now());
     return startOfDay(setDay(d, 0));
   }
 
