@@ -190,6 +190,28 @@ describe('LoginPage', () => {
         expect(authentication.sendPasswordResetEmail).toHaveBeenCalledWith('test@testy.com');
       });
 
+      it('displays an info message', async () => {
+        alert.onDidDismiss.mockResolvedValue({
+          data: { values: { emailAddress: 'test@testy.com' } },
+          role: 'send'
+        });
+        await page.handlePasswordReset();
+        expect(page.infoMessage).toEqual('An e-mail has been sent to test@testy.com with password reset instructions.');
+        expect(page.errorMessage).toBeFalsy();
+      });
+
+      it('displays an error message if the send fails', async () => {
+        const authentication = TestBed.get(AuthenticationService);
+        authentication.sendPasswordResetEmail.mockRejectedValue({ message: 'welp, this sucks' });
+        alert.onDidDismiss.mockResolvedValue({
+          data: { values: { emailAddress: 'test@testy.com' } },
+          role: 'send'
+        });
+        await page.handlePasswordReset();
+        expect(page.infoMessage).toBeFalsy();
+        expect(page.errorMessage).toEqual('welp, this sucks');
+      });
+
       it('does not send the reset e-mail if no email address is entered', async () => {
         const authentication = TestBed.get(AuthenticationService);
         alert.onDidDismiss.mockResolvedValue({

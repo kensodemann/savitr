@@ -13,11 +13,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-segment
-    color="secondary"
-    (ionChange)="segmentChanged($event)"
-    [(ngModel)]="currentView"
-  >
+  <ion-segment color="secondary" [(ngModel)]="currentView">
     <ion-segment-button value="today">
       <ion-label>Today</ion-label>
     </ion-segment-button>

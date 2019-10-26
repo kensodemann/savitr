@@ -50,9 +50,10 @@ export function createAngularFirestoreDocumentMock() {
 export function createAngularFirestoreCollectionMock() {
   return {
     doc: jest.fn(() => createAngularFirestoreDocumentMock()),
-    add: jest.fn(() => Promise.resolve()),
+    add: jest.fn(() => Promise.resolve(createDocumentReferenceMock())),
     valueChanges: jest.fn(() => EMPTY),
-    snapshotChanges: jest.fn(() => EMPTY)
+    snapshotChanges: jest.fn(() => EMPTY),
+    ref: createCollectionReferenceMock([])
   };
 }
 
@@ -63,14 +64,28 @@ export function createAngularFirestoreMock() {
   };
 }
 
-export function createDocumentReferenceMock() {
+export function createCollectionReferenceMock(docs: Array<any>) {
   return {
-    get: jest.fn(() => Promise.resolve())
+    where: jest.fn(() => ({
+      get: jest.fn(() =>
+        Promise.resolve({
+          size: docs.length,
+          docs
+        })
+      )
+    }))
   };
 }
 
-export function createDocumentSnapshotMock() {
+export function createDocumentReferenceMock(doc?: { id: string; data: any }) {
   return {
-    data: jest.fn()
+    get: jest.fn(() => Promise.resolve(createDocumentSnapshotMock(doc)))
+  };
+}
+
+export function createDocumentSnapshotMock(doc?: { id: string; data: any }) {
+  return {
+    id: doc ? doc.id : 0,
+    data: jest.fn(() => (doc ? doc.data : {}))
   };
 }

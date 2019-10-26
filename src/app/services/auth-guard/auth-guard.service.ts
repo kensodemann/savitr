@@ -9,10 +9,7 @@ import { Subscription } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthGuardService implements CanActivate {
-  constructor(
-    private afAuth: AngularFireAuth,
-    private navController: NavController
-  ) {}
+  constructor(private afAuth: AngularFireAuth, private navController: NavController) {}
 
   async canActivate(): Promise<boolean> {
     if (await this.getUser()) {

@@ -1,12 +1,15 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { firestore } from 'firebase/app';
 
 import { WorkoutLogEntriesService } from './workout-log-entries.service';
 import {
   createAngularFirestoreMock,
   createAngularFirestoreCollectionMock,
   createAngularFireAuthMock,
-  createAngularFirestoreDocumentMock
+  createAngularFirestoreDocumentMock,
+  createCollectionReferenceMock,
+  createDocumentSnapshotMock
 } from '@test/mocks';
 import { AngularFireAuth } from '@angular/fire/auth';
 
@@ -32,6 +35,9 @@ describe('DailyExercisesService', () => {
 
   beforeEach(inject([WorkoutLogEntriesService], (service: WorkoutLogEntriesService) => {
     workoutLogEntries = service;
+    // NOTE: User needs to be logged in for this service to be useful
+    const afAuth = TestBed.get(AngularFireAuth);
+    afAuth.auth.currentUser = { uid: '123abc' };
   }));
 
   it('should be created', () => {
@@ -39,12 +45,6 @@ describe('DailyExercisesService', () => {
   });
 
   describe('all', () => {
-    beforeEach(() => {
-      // NOTE: User needs to be logged in for this service to be useful
-      const afAuth = TestBed.get(AngularFireAuth);
-      afAuth.auth.currentUser = { uid: '123abc' };
-    });
-
     it('grabs a reference to the daily-exercises collection for the user', () => {
       const angularFirestore = TestBed.get(AngularFirestore);
       workoutLogEntries.all();
@@ -54,6 +54,84 @@ describe('DailyExercisesService', () => {
       expect(collection.doc).toHaveBeenCalledWith('123abc');
       expect(doc.collection).toHaveBeenCalledTimes(1);
       expect(doc.collection).toHaveBeenCalledWith('workout-log-entries');
+    });
+  });
+
+  describe('getAllForLog', () => {
+    it('runs a query', async () => {
+      await workoutLogEntries.getAllForLog('314PI159');
+      expect(collection.ref.where).toHaveBeenCalledTimes(1);
+      expect(collection.ref.where).toHaveBeenCalledWith('workoutLog.id', '==', '314PI159');
+    });
+
+    it('maps the results', async () => {
+      collection.ref = createCollectionReferenceMock([
+        createDocumentSnapshotMock({
+          id: '314159',
+          data: {
+            workoutLog: { id: '314PI159', beginDate: new firestore.Timestamp(1563339600, 0) },
+            exercise: {
+              id: '420059399405',
+              name: 'Squats',
+              description: 'Not to be confused with squirts',
+              area: 'Lower Body',
+              type: 'Free Weights'
+            },
+            logDate: new firestore.Timestamp(1563512400, 0),
+            reps: 12,
+            sets: 4,
+            weight: 150
+          }
+        }),
+        createDocumentSnapshotMock({
+          id: '414608',
+          data: {
+            workoutLog: { id: '314PI159', beginDate: new firestore.Timestamp(1563339600, 0) },
+            exercise: {
+              id: '420059399405',
+              name: 'Push Back',
+              description: 'Find something you do not like, rebel against it',
+              type: 'Body Weight',
+              area: 'Core'
+            },
+            logDate: new firestore.Timestamp(1563512400, 0),
+            reps: 8,
+            sets: 6
+          }
+        })
+      ]);
+      const logs = await workoutLogEntries.getAllForLog('314PI159');
+      expect(logs).toEqual([
+        {
+          id: '314159',
+          workoutLog: { id: '314PI159', beginDate: new Date(1563339600000) },
+          exercise: {
+            id: '420059399405',
+            name: 'Squats',
+            description: 'Not to be confused with squirts',
+            area: 'Lower Body',
+            type: 'Free Weights'
+          },
+          logDate: new Date(1563512400000),
+          reps: 12,
+          sets: 4,
+          weight: 150
+        },
+        {
+          id: '414608',
+          workoutLog: { id: '314PI159', beginDate: new Date(1563339600000) },
+          exercise: {
+            id: '420059399405',
+            name: 'Push Back',
+            description: 'Find something you do not like, rebel against it',
+            type: 'Body Weight',
+            area: 'Core'
+          },
+          logDate: new Date(1563512400000),
+          reps: 8,
+          sets: 6
+        }
+      ]);
     });
   });
 });

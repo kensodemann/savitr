@@ -14,9 +14,4 @@ export class CurrentPage implements OnInit {
   ngOnInit() {
     this.currentView = 'today';
   }
-
-  segmentChanged(ev) {
-    // Note: may want to store the last selected value here and then
-    //       restore it in ngOnInit
-  }
 }

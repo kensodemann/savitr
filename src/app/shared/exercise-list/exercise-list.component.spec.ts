@@ -40,6 +40,11 @@ describe('ExerciseListComponent', () => {
       component.exercises = exercises;
       expect(component.exercisesByArea).toEqual(sortedExercises);
     });
+
+    it('does not crash if there is no data', () => {
+      component.exercises = null;
+      expect(component.exercisesByArea).toEqual([]);
+    });
   });
 
   function initiailzeTestData() {

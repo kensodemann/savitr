@@ -131,7 +131,7 @@ describe('PlanPage', () => {
   describe('on begin date changed', () => {
     beforeEach(() => {
       const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
-      workoutLogs.getForDate.mockReturnValue({
+      workoutLogs.getForDate.mockResolvedValue({
         id: '12399goasdf9',
         beginDate: parseISO('2019-07-21')
       });

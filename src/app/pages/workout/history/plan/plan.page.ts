@@ -63,9 +63,7 @@ export class PlanPage implements OnInit {
 
   async beginDateChanged() {
     this.currentWorkoutLog = await this.workoutLogs.getForDate(new Date(this.beginMS));
-    if (this.currentWorkoutLog) {
-      this.exerciseLogs = await this.workoutPageActions.logEntries(this.currentWorkoutLog);
-    }
+    this.exerciseLogs = await this.workoutPageActions.logEntries(this.currentWorkoutLog);
   }
 
   private async alertNoDate() {

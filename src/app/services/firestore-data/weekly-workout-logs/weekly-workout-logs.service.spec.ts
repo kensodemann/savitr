@@ -1,5 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { firestore } from 'firebase/app';
+import { of } from 'rxjs';
 
 import { WeeklyWorkoutLogsService } from './weekly-workout-logs.service';
 import {
@@ -7,9 +10,11 @@ import {
   createAngularFirestoreCollectionMock,
   createAngularFirestoreDocumentMock,
   createAngularFireAuthMock,
-  createDocumentSnapshotMock
+  createDocumentSnapshotMock,
+  createCollectionReferenceMock,
+  createDocumentReferenceMock,
+  createAction
 } from '@test/mocks';
-import { AngularFireAuth } from '@angular/fire/auth';
 
 describe('WeeklyWorkoutLogsService', () => {
   let logsCollection;
@@ -57,6 +62,32 @@ describe('WeeklyWorkoutLogsService', () => {
       expect(userDoc.collection).toHaveBeenCalledTimes(1);
       expect(userDoc.collection.mock.calls[0][0]).toEqual('weekly-workout-logs');
     });
+
+    it('translates Timestamps to Dates', done => {
+      logsCollection.snapshotChanges.mockReturnValue(
+        of([
+          createAction('314PI', {
+            beginDate: new firestore.Timestamp(1563339600, 0)
+          }),
+          createAction('420HI', {
+            beginDate: new firestore.Timestamp(1563445900, 0)
+          })
+        ])
+      );
+      weeklyWorkoutLogs.all().subscribe(l => {
+        expect(l).toEqual([
+          {
+            id: '314PI',
+            beginDate: new Date(1563339600000)
+          },
+          {
+            id: '420HI',
+            beginDate: new Date(1563445900000)
+          }
+        ]);
+        done();
+      });
+    });
   });
 
   describe('get', () => {
@@ -79,6 +110,46 @@ describe('WeeklyWorkoutLogsService', () => {
       expect(await weeklyWorkoutLogs.get('123abc')).toEqual({
         id: '123abc',
         beginDate: date
+      });
+    });
+  });
+
+  describe('getForDate', () => {
+    let newLog;
+    beforeEach(() => {
+      newLog = createDocumentReferenceMock({ id: '4273', data: { beginDate: new firestore.Timestamp(1563339600, 0) } });
+      logsCollection.add.mockResolvedValue(newLog);
+    });
+
+    it('runs a query', async () => {
+      const dt = new Date(1563339600000);
+      await weeklyWorkoutLogs.getForDate(dt);
+      expect(logsCollection.ref.where).toHaveBeenCalledTimes(1);
+      expect(logsCollection.ref.where).toHaveBeenCalledWith('beginDate', '==', dt);
+    });
+
+    it('returns the first log found by the query', async () => {
+      const dt = new Date(1563339600000);
+      logsCollection.ref = createCollectionReferenceMock([
+        createDocumentSnapshotMock({ id: '314159', data: { beginDate: new firestore.Timestamp(1563339600, 0) } }),
+        createDocumentSnapshotMock({ id: '414608290262', data: { beginDate: new firestore.Timestamp(1563339600, 0) } })
+      ]);
+      const log = await weeklyWorkoutLogs.getForDate(dt);
+      expect(log).toEqual({ id: '314159', beginDate: dt });
+    });
+
+    describe('when no log exists', () => {
+      it('creates a new log', async () => {
+        const dt = new Date(1563339600000);
+        await weeklyWorkoutLogs.getForDate(dt);
+        expect(logsCollection.add).toHaveBeenCalledTimes(1);
+        expect(logsCollection.add).toHaveBeenCalledWith({ beginDate: dt });
+      });
+
+      it('resolves to the newly created log', async () => {
+        const dt = new Date(1563339600000);
+        const log = await weeklyWorkoutLogs.getForDate(dt);
+        expect(log).toEqual({ id: '4273', beginDate: new Date(1563339600000) });
       });
     });
   });

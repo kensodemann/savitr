@@ -72,7 +72,7 @@ describe('FirestoreDataService', () => {
       expect(collection.snapshotChanges).toHaveBeenCalledTimes(1);
     });
 
-    it('maps the changes', () => {
+    it('maps the changes', done => {
       collection.snapshotChanges.mockReturnValue(
         of([
           createAction('314PI', {
@@ -87,7 +87,7 @@ describe('FirestoreDataService', () => {
           })
         ])
       );
-      dataService.all().subscribe(d =>
+      dataService.all().subscribe(d => {
         expect(d).toEqual([
           {
             id: '314PI',
@@ -101,8 +101,9 @@ describe('FirestoreDataService', () => {
             description: 'Some guy named Joe who sells week on my street corner',
             isActive: false
           }
-        ])
-      );
+        ]);
+        done();
+      });
     });
   });
 
