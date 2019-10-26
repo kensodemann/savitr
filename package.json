@@ -13,8 +13,9 @@
     "ng": "ng",
     "release": "node scripts/release.js",
     "start": "ng serve",
-    "test": "jest --watch",
-    "test:ci": "jest --runInBand"
+    "test": "jest --coverage",
+    "test:ci": "jest --runInBand",
+    "test:watch": "jest --watch"
   },
   "private": true,
   "dependencies": {

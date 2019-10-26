@@ -11,6 +11,13 @@ module.exports = {
     '^@env/(.*)$': '<rootDir>/src/environments/$1',
     '^@test/(.*)$': '<rootDir>/test/$1'
   },
+  collectCoverageFrom: [
+    'src/app/**/*.{ts,tsx}',
+    '!**/index.{ts,tsx}',
+    '!**/*.mock.{ts,tsx}',
+    '!**/*.module.{ts,tsx}',
+    '!**/*.spec.{ts,tsx}'
+  ],
   globals: {
     'ts-jest': {
       tsConfig: '<rootDir>/tsconfig.spec.json',
