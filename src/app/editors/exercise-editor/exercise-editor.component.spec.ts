@@ -6,7 +6,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { ExerciseEditorComponent } from './exercise-editor.component';
 import { exerciseFocusAreas, exerciseTypes } from '@app/default-data';
 
-import { createOverlayControllerMock } from 'test/mocks';
+import { createOverlayControllerMock } from '@test/mocks';
 
 describe('ExerciseEditorComponent', () => {
   let component: ExerciseEditorComponent;
@@ -16,7 +16,7 @@ describe('ExerciseEditorComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ExerciseEditorComponent],
       imports: [FormsModule, IonicModule],
-      providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock('ModalController') }],
+      providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock() }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   }));
@@ -155,13 +155,16 @@ describe('ExerciseEditorComponent', () => {
         component.name = 'Bench Press';
         component.description = 'Lay down, push weight off chest to prevent crushing';
         component.save();
-        expect(modalController.dismiss).toHaveBeenCalledWith({
-          id: '428588494',
-          name: 'Bench Press',
-          description: 'Lay down, push weight off chest to prevent crushing',
-          area: component.areas[1],
-          type: component.types[2]
-        }, jasmine.any(String));
+        expect(modalController.dismiss).toHaveBeenCalledWith(
+          {
+            id: '428588494',
+            name: 'Bench Press',
+            description: 'Lay down, push weight off chest to prevent crushing',
+            area: component.areas[1],
+            type: component.types[2]
+          },
+          jasmine.any(String)
+        );
       });
 
       it('uses the "save" role', () => {

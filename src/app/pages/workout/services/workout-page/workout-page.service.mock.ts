@@ -1,8 +1,8 @@
 export function createWorkoutPageServiceMock() {
-  return jasmine.createSpyObj('WorkoutPageService', {
-    add: Promise.resolve(false),
-    edit: Promise.resolve(false),
-    delete: Promise.resolve(false),
-    logEntries: Promise.resolve([[], [], [], [], [], [], []])
-  });
+  return {
+    add: jest.fn(() => Promise.resolve(false)),
+    edit: jest.fn(() => Promise.resolve(false)),
+    delete: jest.fn(() => Promise.resolve(false)),
+    logEntries: jest.fn(() => Promise.resolve([[], [], [], [], [], [], []]))
+  };
 }

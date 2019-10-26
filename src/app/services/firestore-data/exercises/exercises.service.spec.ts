@@ -6,7 +6,7 @@ import {
   createAngularFirestoreMock,
   createAngularFirestoreCollectionMock,
   createAngularFireAuthMock
-} from 'test/mocks';
+} from '@test/mocks';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 describe('ExercisesService', () => {
@@ -22,7 +22,7 @@ describe('ExercisesService', () => {
     });
     const angularFirestore = TestBed.get(AngularFirestore);
     collection = createAngularFirestoreCollectionMock();
-    angularFirestore.collection.and.returnValue(collection);
+    angularFirestore.collection.mockReturnValue(collection);
   });
 
   beforeEach(inject([ExercisesService], (service: ExercisesService) => {

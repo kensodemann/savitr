@@ -1,20 +1,11 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import {
-  AlertController,
-  IonicModule,
-  LoadingController,
-  NavController
-} from '@ionic/angular';
+import { AlertController, IonicModule, LoadingController, NavController } from '@ionic/angular';
 
 import { AuthenticationService } from '@app/services';
 import { createAuthenticationServiceMock } from '@app/services/mocks';
-import {
-  createNavControllerMock,
-  createOverlayControllerMock,
-  createOverlayElementMock
-} from 'test/mocks';
+import { createNavControllerMock, createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
 import { LoginPage } from './login.page';
 
 describe('LoginPage', () => {
@@ -24,8 +15,8 @@ describe('LoginPage', () => {
   let fixture: ComponentFixture<LoginPage>;
 
   beforeEach(async(() => {
-    alert = createOverlayElementMock('Alert');
-    loading = createOverlayElementMock('Loading');
+    alert = createOverlayElementMock();
+    loading = createOverlayElementMock();
     TestBed.configureTestingModule({
       imports: [FormsModule, IonicModule],
       declarations: [LoginPage],
@@ -33,8 +24,7 @@ describe('LoginPage', () => {
       providers: [
         {
           provide: AlertController,
-          useFactory: () =>
-            createOverlayControllerMock('AlertController', alert)
+          useFactory: () => createOverlayControllerMock(alert)
         },
         {
           provide: AuthenticationService,
@@ -42,8 +32,7 @@ describe('LoginPage', () => {
         },
         {
           provide: LoadingController,
-          useFactory: () =>
-            createOverlayControllerMock('LoadingController', loading)
+          useFactory: () => createOverlayControllerMock(loading)
         },
         { provide: NavController, useFactory: createNavControllerMock }
       ]
@@ -82,10 +71,7 @@ describe('LoginPage', () => {
     it('passes the email address and password to the login', async () => {
       const authentication = TestBed.get(AuthenticationService);
       await page.login();
-      expect(authentication.login).toHaveBeenCalledWith(
-        'test@mctesty.com',
-        'something secret'
-      );
+      expect(authentication.login).toHaveBeenCalledWith('test@mctesty.com', 'something secret');
     });
 
     describe('when no user is returned', () => {
@@ -104,7 +90,7 @@ describe('LoginPage', () => {
     describe('when a user is returned', () => {
       beforeEach(() => {
         const authentication = TestBed.get(AuthenticationService);
-        authentication.login.and.returnValue(Promise.resolve({ id: 42 }));
+        authentication.login.mockResolvedValue({ id: 42 });
       });
 
       it('navigates to the main page', async () => {
@@ -123,20 +109,15 @@ describe('LoginPage', () => {
     describe('when the login fails', () => {
       beforeEach(() => {
         const authentication = TestBed.get(AuthenticationService);
-        authentication.login.and.returnValue(
-          Promise.reject({
-            code: 'auth/wrong-password',
-            message:
-              'The password is invalid or the user does not have a password.'
-          })
-        );
+        authentication.login.mockRejectedValue({
+          code: 'auth/wrong-password',
+          message: 'The password is invalid or the user does not have a password.'
+        });
       });
 
       it('displays an error message', async () => {
         await page.login();
-        expect(page.errorMessage).toEqual(
-          'The password is invalid or the user does not have a password.'
-        );
+        expect(page.errorMessage).toEqual('The password is invalid or the user does not have a password.');
       });
 
       it('clears the password', async () => {
@@ -163,7 +144,7 @@ describe('LoginPage', () => {
       beforeEach(async () => {
         const alertController = TestBed.get(AlertController);
         await page.handlePasswordReset();
-        params = alertController.create.calls.argsFor(0)[0];
+        params = alertController.create.mock.calls[0][0];
       });
 
       it('asks for the user e-mail', () => {
@@ -172,9 +153,7 @@ describe('LoginPage', () => {
       });
 
       it('describes the process', () => {
-        expect(params.message).toContain(
-          'link that will allow you to reset your password'
-        );
+        expect(params.message).toContain('link that will allow you to reset your password');
       });
 
       it('has an input for the e-mail address', () => {
@@ -202,51 +181,41 @@ describe('LoginPage', () => {
     describe('on alert dismiss', () => {
       it('sends the reset e-mail if entered and send is pressed', async () => {
         const authentication = TestBed.get(AuthenticationService);
-        alert.onDidDismiss.and.returnValue(
-          Promise.resolve({
-            data: { values: { emailAddress: 'test@testy.com' } },
-            role: 'send'
-          })
-        );
+        alert.onDidDismiss.mockResolvedValue({
+          data: { values: { emailAddress: 'test@testy.com' } },
+          role: 'send'
+        });
         await page.handlePasswordReset();
         expect(authentication.sendPasswordResetEmail).toHaveBeenCalledTimes(1);
-        expect(authentication.sendPasswordResetEmail).toHaveBeenCalledWith(
-          'test@testy.com'
-        );
+        expect(authentication.sendPasswordResetEmail).toHaveBeenCalledWith('test@testy.com');
       });
 
       it('does not send the reset e-mail if no email address is entered', async () => {
         const authentication = TestBed.get(AuthenticationService);
-        alert.onDidDismiss.and.returnValue(
-          Promise.resolve({
-            data: { values: {} },
-            role: 'send'
-          })
-        );
+        alert.onDidDismiss.mockResolvedValue({
+          data: { values: {} },
+          role: 'send'
+        });
         await page.handlePasswordReset();
         expect(authentication.sendPasswordResetEmail).not.toHaveBeenCalled();
       });
 
       it('does not send the reset e-mail if cancel is pressed', async () => {
         const authentication = TestBed.get(AuthenticationService);
-        alert.onDidDismiss.and.returnValue(
-          Promise.resolve({
-            data: { values: { emailAddress: 'test@testy.com' } },
-            role: 'cancel'
-          })
-        );
+        alert.onDidDismiss.mockResolvedValue({
+          data: { values: { emailAddress: 'test@testy.com' } },
+          role: 'cancel'
+        });
         await page.handlePasswordReset();
         expect(authentication.sendPasswordResetEmail).not.toHaveBeenCalled();
       });
 
       it('does not send the reset e-mail if background is pressed', async () => {
         const authentication = TestBed.get(AuthenticationService);
-        alert.onDidDismiss.and.returnValue(
-          Promise.resolve({
-            data: { values: { emailAddress: 'test@testy.com' } },
-            role: 'background'
-          })
-        );
+        alert.onDidDismiss.mockResolvedValue({
+          data: { values: { emailAddress: 'test@testy.com' } },
+          role: 'background'
+        });
         await page.handlePasswordReset();
         expect(authentication.sendPasswordResetEmail).not.toHaveBeenCalled();
       });

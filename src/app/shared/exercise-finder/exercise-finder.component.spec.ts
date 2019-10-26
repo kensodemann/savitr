@@ -19,7 +19,7 @@ describe('ExerciseFinderComponent', () => {
       declarations: [ExerciseFinderComponent],
       providers: [
         { provide: ExercisesService, useFactory: createExercisesServiceMock },
-        { provide: ModalController, useFactory: () => createOverlayControllerMock('ModalController') }
+        { provide: ModalController, useFactory: () => createOverlayControllerMock() }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
@@ -39,7 +39,7 @@ describe('ExerciseFinderComponent', () => {
   describe('filtering', () => {
     beforeEach(() => {
       const srv = TestBed.get(ExercisesService);
-      srv.all.and.returnValue(of(exercises));
+      srv.all.mockReturnValue(of(exercises));
     });
 
     it('defaults to all exercises', () => {

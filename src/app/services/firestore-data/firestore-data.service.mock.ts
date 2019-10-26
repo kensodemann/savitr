@@ -1,11 +1,11 @@
 import { EMPTY } from 'rxjs';
 
-export function createFirestoreDataServiceMock(name: string) {
-  return jasmine.createSpyObj(name, {
-    all: EMPTY,
-    get: Promise.resolve(),
-    add: Promise.resolve(),
-    delete: Promise.resolve(),
-    update: Promise.resolve()
-  });
+export function createFirestoreDataServiceMock() {
+  return {
+    all: jest.fn(() => EMPTY),
+    get: jest.fn(() => Promise.resolve()),
+    add: jest.fn(() => Promise.resolve()),
+    delete: jest.fn(() => Promise.resolve()),
+    update: jest.fn(() => Promise.resolve())
+  };
 }

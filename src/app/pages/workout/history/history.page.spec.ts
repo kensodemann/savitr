@@ -6,7 +6,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { HistoryPage } from './history.page';
 import { AuthenticationService } from '@app/services';
 import { createAuthenticationServiceMock } from '@app/services/mocks';
-import { createNavControllerMock, createAngularFireAuthMock } from 'test/mocks';
+import { createNavControllerMock } from '@test/mocks';
 import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
 import { createWeeklyWorkoutLogsServiceMock } from '@app/services/firestore-data/mocks';
 

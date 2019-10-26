@@ -24,14 +24,14 @@ describe('PlanPage', () => {
   let modal;
 
   beforeEach(async(() => {
-    alert = createOverlayElementMock('Alert');
-    modal = createOverlayElementMock('Modal');
+    alert = createOverlayElementMock();
+    modal = createOverlayElementMock();
     TestBed.configureTestingModule({
       declarations: [PlanPage],
       imports: [FormsModule, IonicModule],
       providers: [
         { provide: ActivatedRoute, useFactory: createActivatedRouteMock },
-        { provide: AlertController, useFactory: () => createOverlayControllerMock('AlertController', alert) },
+        { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
         { provide: DateService, useFactory: createDateServiceMock },
         { provide: Location, useValue: {} },
         { provide: UrlSerializer, useValue: {} },
@@ -45,7 +45,7 @@ describe('PlanPage', () => {
   beforeEach(() => {
     initializeTestData();
     const dates = TestBed.get(DateService);
-    dates.beginDates.and.returnValue([
+    dates.beginDates.mockReturnValue([
       parseISO('2019-07-07'),
       parseISO('2019-07-14'),
       parseISO('2019-07-21'),
@@ -97,12 +97,12 @@ describe('PlanPage', () => {
     beforeEach(() => {
       const route = TestBed.get(ActivatedRoute);
       const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
-      route.snapshot.paramMap.get.and.returnValue('314159PI');
+      route.snapshot.paramMap.get.mockReturnValue('314159PI');
       getPromise = Promise.resolve({
         id: '314159PI',
         beginDate: parseISO('2019-05-14')
       });
-      workoutLogs.get.withArgs('314159PI').and.returnValue(getPromise);
+      workoutLogs.get.mockReturnValue(getPromise);
       fixture.detectChanges();
     });
 
@@ -131,7 +131,7 @@ describe('PlanPage', () => {
   describe('on begin date changed', () => {
     beforeEach(() => {
       const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
-      workoutLogs.getForDate.and.returnValue({
+      workoutLogs.getForDate.mockReturnValue({
         id: '12399goasdf9',
         beginDate: parseISO('2019-07-21')
       });
@@ -181,12 +181,10 @@ describe('PlanPage', () => {
     describe('with a chosen date', () => {
       beforeEach(async () => {
         const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
-        workoutLogs.getForDate.and.returnValue(
-          Promise.resolve({ id: '199g009d8a', beginDate: parseISO('2019-07-21') })
-        );
+        workoutLogs.getForDate.mockResolvedValue({ id: '199g009d8a', beginDate: parseISO('2019-07-21') });
         component.beginMS = parseISO('2019-07-21').getTime();
         await component.beginDateChanged();
-        modal.onDidDismiss.and.returnValue({});
+        modal.onDidDismiss.mockResolvedValue({});
       });
 
       it('performs the add action', async () => {
@@ -205,12 +203,12 @@ describe('PlanPage', () => {
       describe('when the user completes the add action', () => {
         beforeEach(() => {
           const workoutPageService = TestBed.get(WorkoutPageService);
-          workoutPageService.add.and.returnValue(Promise.resolve(true));
+          workoutPageService.add.mockResolvedValue(true);
         });
 
         it('gets a fresh set of log entries', async () => {
           const workoutPageService = TestBed.get(WorkoutPageService);
-          workoutPageService.logEntries.calls.reset();
+          workoutPageService.logEntries.mockClear();
           await component.add(1);
           expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
           expect(workoutPageService.logEntries).toHaveBeenCalledWith({
@@ -223,7 +221,7 @@ describe('PlanPage', () => {
       describe('when the user cancels the add action', () => {
         it('does nothing', async () => {
           const workoutPageService = TestBed.get(WorkoutPageService);
-          workoutPageService.logEntries.calls.reset();
+          workoutPageService.logEntries.mockClear();
           await component.add(1);
           expect(workoutPageService.logEntries).not.toHaveBeenCalled();
         });
@@ -235,8 +233,8 @@ describe('PlanPage', () => {
     beforeEach(() => {
       const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
       const route = TestBed.get(ActivatedRoute);
-      route.snapshot.paramMap.get.and.returnValue('12399goasdf9');
-      workoutLogs.get.and.returnValue({
+      route.snapshot.paramMap.get.mockReturnValue('12399goasdf9');
+      workoutLogs.get.mockResolvedValue({
         id: '12399goasdf9',
         beginDate: parseISO('2019-07-21')
       });
@@ -253,7 +251,7 @@ describe('PlanPage', () => {
     describe('when the user completes the delete action', () => {
       beforeEach(() => {
         const workoutPageService = TestBed.get(WorkoutPageService);
-        workoutPageService.delete.and.returnValue(Promise.resolve(true));
+        workoutPageService.delete.mockResolvedValue(true);
       });
 
       it('refreshes the log entries', async () => {
@@ -280,8 +278,8 @@ describe('PlanPage', () => {
     beforeEach(() => {
       const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
       const route = TestBed.get(ActivatedRoute);
-      route.snapshot.paramMap.get.and.returnValue('12399goasdf9');
-      workoutLogs.get.and.returnValue({
+      route.snapshot.paramMap.get.mockReturnValue('12399goasdf9');
+      workoutLogs.get.mockResolvedValue({
         id: '12399goasdf9',
         beginDate: parseISO('2019-07-21')
       });
@@ -298,7 +296,7 @@ describe('PlanPage', () => {
     describe('when the user completes the edit action', () => {
       beforeEach(() => {
         const workoutPageService = TestBed.get(WorkoutPageService);
-        workoutPageService.edit.and.returnValue(Promise.resolve(true));
+        workoutPageService.edit.mockResolvedValue(true);
       });
 
       it('refreshes the log entries', async () => {

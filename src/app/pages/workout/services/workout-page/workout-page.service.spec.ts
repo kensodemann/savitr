@@ -15,12 +15,12 @@ describe('PlanPage', () => {
   let modal;
 
   beforeEach(() => {
-    alert = createOverlayElementMock('Alert');
-    modal = createOverlayElementMock('Modal');
+    alert = createOverlayElementMock();
+    modal = createOverlayElementMock();
     TestBed.configureTestingModule({
       providers: [
-        { provide: AlertController, useFactory: () => createOverlayControllerMock('AlertController', alert) },
-        { provide: ModalController, useFactory: () => createOverlayControllerMock('ModalController', modal) },
+        { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
+        { provide: ModalController, useFactory: () => createOverlayControllerMock(modal) },
         { provide: WorkoutLogEntriesService, useFactory: createWorkoutLogEntriesServiceMock },
         WorkoutPageService
       ]
@@ -62,7 +62,7 @@ describe('PlanPage', () => {
 
     describe('when the user saves the item', () => {
       beforeEach(() => {
-        modal.onDidDismiss.and.returnValue({
+        modal.onDidDismiss.mockResolvedValue({
           data: {
             workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
             logDate: parseISO('2019-07-22'),
@@ -125,7 +125,7 @@ describe('PlanPage', () => {
 
   describe('delete', () => {
     beforeEach(() => {
-      alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'backdrop' }));
+      alert.onDidDismiss.mockResolvedValue({ role: 'backdrop' });
     });
 
     it('asks the user if they are sure', async () => {
@@ -143,7 +143,7 @@ describe('PlanPage', () => {
 
     describe('when the user says yes', () => {
       beforeEach(() => {
-        alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'confirm' }));
+        alert.onDidDismiss.mockResolvedValue({ role: 'confirm' });
       });
 
       it('deletes the log entry', async () => {
@@ -162,7 +162,7 @@ describe('PlanPage', () => {
 
     describe('when the user says no', () => {
       beforeEach(() => {
-        alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'cancel' }));
+        alert.onDidDismiss.mockResolvedValue({ role: 'cancel' });
       });
 
       it('does not delete the log entry', async () => {
@@ -207,7 +207,7 @@ describe('PlanPage', () => {
 
     describe('when the user saves the edit', () => {
       beforeEach(() => {
-        modal.onDidDismiss.and.returnValue({
+        modal.onDidDismiss.mockResolvedValue({
           data: {
             workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
             logDate: parseISO('2019-07-22'),
@@ -275,7 +275,7 @@ describe('PlanPage', () => {
     describe('with a workout log', () => {
       beforeEach(() => {
         const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
-        workoutLogEntries.getAllForLog.and.returnValue(logEntries);
+        workoutLogEntries.getAllForLog.mockResolvedValue(logEntries);
       });
 
       it('gets the workout log entries', () => {

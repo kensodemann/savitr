@@ -1,7 +1,7 @@
 export function createDateServiceMock() {
-  return jasmine.createSpyObj('DateService', {
-    currentBeginDate: new Date(),
-    beginDates: [],
-    format: ''
-  });
+  return {
+    currentBeginDate: jest.fn(() => new Date()),
+    beginDates: jest.fn(() => []),
+    format: jest.fn(() => '')
+  };
 }

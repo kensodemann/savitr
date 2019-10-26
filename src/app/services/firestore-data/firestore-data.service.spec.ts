@@ -12,7 +12,7 @@ import {
   createAngularFirestoreDocumentMock,
   createAngularFireAuthMock,
   createDocumentSnapshotMock
-} from 'test/mocks';
+} from '@test/mocks';
 
 interface DataType {
   id?: string;
@@ -46,7 +46,7 @@ describe('FirestoreDataService', () => {
     });
     const angularFirestore = TestBed.get(AngularFirestore);
     collection = createAngularFirestoreCollectionMock();
-    angularFirestore.collection.and.returnValue(collection);
+    angularFirestore.collection.mockReturnValue(collection);
   });
 
   beforeEach(inject([TestService], (service: TestService) => {
@@ -73,7 +73,7 @@ describe('FirestoreDataService', () => {
     });
 
     it('maps the changes', () => {
-      collection.snapshotChanges.and.returnValue(
+      collection.snapshotChanges.mockReturnValue(
         of([
           createAction('314PI', {
             name: `Baker's Square`,
@@ -110,7 +110,7 @@ describe('FirestoreDataService', () => {
     let document;
     beforeEach(() => {
       document = createAngularFirestoreDocumentMock();
-      collection.doc.and.returnValue(document);
+      collection.doc.mockReturnValue(document);
     });
 
     it('gets a references to the document', () => {
@@ -126,12 +126,12 @@ describe('FirestoreDataService', () => {
 
     it('returns the document with the ID', async () => {
       const snapshot = createDocumentSnapshotMock();
-      snapshot.data.and.returnValue({
+      snapshot.data.mockReturnValue({
         name: 'Joe',
         description: 'Some guy named Joe who sells week on my street corner',
         isActive: false
       });
-      document.ref.get.and.returnValue(snapshot);
+      document.ref.get.mockReturnValue(snapshot);
       expect(await dataService.get('199405fkkgi59')).toEqual({
         id: '199405fkkgi59',
         name: 'Joe',
@@ -161,7 +161,7 @@ describe('FirestoreDataService', () => {
     let document;
     beforeEach(() => {
       document = createAngularFirestoreDocumentMock();
-      collection.doc.and.returnValue(document);
+      collection.doc.mockReturnValue(document);
     });
 
     it('gets a reference to the document', () => {
@@ -190,7 +190,7 @@ describe('FirestoreDataService', () => {
     let document;
     beforeEach(() => {
       document = createAngularFirestoreDocumentMock();
-      collection.doc.and.returnValue(document);
+      collection.doc.mockReturnValue(document);
     });
 
     it('gets a reference to the document', () => {

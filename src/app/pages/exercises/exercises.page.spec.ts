@@ -9,7 +9,7 @@ import { ExercisesService } from '@app/services/firestore-data';
 
 import { createAuthenticationServiceMock } from 'src/app/services/authentication/authentication.service.mock';
 import { createExercisesServiceMock } from '@app/services/firestore-data/mocks';
-import { createOverlayControllerMock, createOverlayElementMock } from 'test/mocks';
+import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
 
 describe('ExercisesPage', () => {
   let alert;
@@ -18,18 +18,18 @@ describe('ExercisesPage', () => {
   let fixture: ComponentFixture<ExercisesPage>;
 
   beforeEach(async(() => {
-    alert = createOverlayElementMock('Alert');
-    editor = createOverlayElementMock('Modal');
+    alert = createOverlayElementMock();
+    editor = createOverlayElementMock();
     TestBed.configureTestingModule({
       declarations: [ExercisesPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: AlertController, useFactory: () => createOverlayControllerMock('AlertController', alert) },
+        { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
         { provide: AuthenticationService, useFactory: createAuthenticationServiceMock },
         { provide: ExercisesService, useFactory: createExercisesServiceMock },
         {
           provide: ModalController,
-          useFactory: () => createOverlayControllerMock('ModalController', editor)
+          useFactory: () => createOverlayControllerMock(editor)
         }
       ]
     }).compileComponents();
@@ -71,7 +71,7 @@ describe('ExercisesPage', () => {
     describe('if the "save" role was used', () => {
       it('updates the exercise', async () => {
         const service = TestBed.get(ExercisesService);
-        editor.onDidDismiss.and.returnValue({
+        editor.onDidDismiss.mockResolvedValue({
           data: {
             name: 'Squats',
             description: 'Not to be confused with squirts',
@@ -130,7 +130,7 @@ describe('ExercisesPage', () => {
     describe('if the "save" role was used', () => {
       it('updates the exercise', async () => {
         const service = TestBed.get(ExercisesService);
-        editor.onDidDismiss.and.returnValue({
+        editor.onDidDismiss.mockResolvedValue({
           data: {
             id: '420059399405',
             name: 'Squats',
@@ -171,7 +171,7 @@ describe('ExercisesPage', () => {
     };
 
     beforeEach(() => {
-      alert.onDidDismiss.and.returnValue(Promise.resolve({}));
+      alert.onDidDismiss.mockResolvedValue({});
     });
 
     it('asks the user if they actually want to delete', () => {
@@ -193,7 +193,7 @@ describe('ExercisesPage', () => {
 
     it('does the delete if the "confirm" button is pressed', async () => {
       const svc = TestBed.get(ExercisesService);
-      alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'confirm' }));
+      alert.onDidDismiss.mockResolvedValue({ role: 'confirm' });
       await component.delete(exercise);
       expect(svc.delete).toHaveBeenCalledTimes(1);
       expect(svc.delete).toHaveBeenCalledWith({
@@ -207,7 +207,7 @@ describe('ExercisesPage', () => {
 
     it('does not do the delete if the "confirm" button is pressed', async () => {
       const svc = TestBed.get(ExercisesService);
-      alert.onDidDismiss.and.returnValue(Promise.resolve({ role: 'cancel' }));
+      alert.onDidDismiss.mockResolvedValue({ role: 'cancel' });
       await component.delete(exercise);
       expect(svc.delete).not.toHaveBeenCalled();
     });

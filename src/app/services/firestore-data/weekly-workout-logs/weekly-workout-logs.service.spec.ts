@@ -8,7 +8,7 @@ import {
   createAngularFirestoreDocumentMock,
   createAngularFireAuthMock,
   createDocumentSnapshotMock
-} from 'test/mocks';
+} from '@test/mocks';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 describe('WeeklyWorkoutLogsService', () => {
@@ -26,13 +26,13 @@ describe('WeeklyWorkoutLogsService', () => {
     });
     const angularFirestore = TestBed.get(AngularFirestore);
     userCollection = createAngularFirestoreCollectionMock();
-    angularFirestore.collection.and.returnValue(userCollection);
+    angularFirestore.collection.mockReturnValue(userCollection);
     userDoc = createAngularFirestoreDocumentMock();
     userCollection = createAngularFirestoreCollectionMock();
-    userCollection.doc.and.returnValue(userDoc);
+    userCollection.doc.mockReturnValue(userDoc);
     logsCollection = createAngularFirestoreCollectionMock();
-    userDoc.collection.and.returnValue(logsCollection);
-    angularFirestore.collection.and.returnValue(userCollection);
+    userDoc.collection.mockReturnValue(logsCollection);
+    angularFirestore.collection.mockReturnValue(userCollection);
   });
 
   beforeEach(inject([WeeklyWorkoutLogsService], (service: WeeklyWorkoutLogsService) => {
@@ -55,7 +55,7 @@ describe('WeeklyWorkoutLogsService', () => {
       expect(userCollection.doc).toHaveBeenCalledTimes(1);
       expect(userCollection.doc).toHaveBeenCalledWith('123abc');
       expect(userDoc.collection).toHaveBeenCalledTimes(1);
-      expect(userDoc.collection.calls.argsFor(0)[0]).toEqual('weekly-workout-logs');
+      expect(userDoc.collection.mock.calls[0][0]).toEqual('weekly-workout-logs');
     });
   });
 
@@ -63,19 +63,19 @@ describe('WeeklyWorkoutLogsService', () => {
     let document;
     beforeEach(() => {
       document = createAngularFirestoreDocumentMock();
-      logsCollection.doc.and.returnValue(document);
+      logsCollection.doc.mockReturnValue(document);
     });
 
     it('translates from Firestore Timestamp to Date', async () => {
       const date = new Date('2019-08-14T00:00:00.000000');
       const seconds = date.getTime() / 1000;
       const snapshot = createDocumentSnapshotMock();
-      snapshot.data.and.returnValue({
+      snapshot.data.mockReturnValue({
         beginDate: {
           seconds
         }
       });
-      document.ref.get.and.returnValue(snapshot);
+      document.ref.get.mockReturnValue(snapshot);
       expect(await weeklyWorkoutLogs.get('123abc')).toEqual({
         id: '123abc',
         beginDate: date

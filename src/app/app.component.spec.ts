@@ -5,7 +5,7 @@ import { NavController } from '@ionic/angular';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { ApplicationService } from '@app/services';
-import { createAngularFireAuthMock, createNavControllerMock } from 'test/mocks';
+import { createAngularFireAuthMock, createNavControllerMock } from '@test/mocks';
 import { createApplicationServiceMock } from '@app/services/mocks';
 
 import { AppComponent } from './app.component';
@@ -51,18 +51,10 @@ describe('AppComponent', () => {
     const app = fixture.nativeElement;
     const menuItems = app.querySelectorAll('ion-item');
     expect(menuItems.length).toEqual(4);
-    expect(menuItems[0].getAttribute('ng-reflect-router-link')).toEqual(
-      '/workout/current'
-    );
-    expect(menuItems[1].getAttribute('ng-reflect-router-link')).toEqual(
-      '/workout/history'
-    );
-    expect(menuItems[2].getAttribute('ng-reflect-router-link')).toEqual(
-      '/exercises'
-    );
-    expect(menuItems[3].getAttribute('ng-reflect-router-link')).toEqual(
-      '/about'
-    );
+    expect(menuItems[0].getAttribute('ng-reflect-router-link')).toEqual('/workout/current');
+    expect(menuItems[1].getAttribute('ng-reflect-router-link')).toEqual('/workout/history');
+    expect(menuItems[2].getAttribute('ng-reflect-router-link')).toEqual('/exercises');
+    expect(menuItems[3].getAttribute('ng-reflect-router-link')).toEqual('/about');
   });
 
   describe('on init', () => {

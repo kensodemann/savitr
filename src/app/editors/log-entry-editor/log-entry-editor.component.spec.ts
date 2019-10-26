@@ -15,13 +15,11 @@ describe('LogEntryEditorComponent', () => {
   let modal;
 
   beforeEach(async(() => {
-    modal = createOverlayElementMock('Modal');
+    modal = createOverlayElementMock();
     TestBed.configureTestingModule({
       declarations: [LogEntryEditorComponent],
       imports: [FormsModule, IonicModule],
-      providers: [
-        { provide: ModalController, useFactory: () => createOverlayControllerMock('ModalController', modal) }
-      ],
+      providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock(modal) }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   }));
@@ -92,7 +90,7 @@ describe('LogEntryEditorComponent', () => {
 
   describe('finding an exercise', () => {
     beforeEach(() => {
-      modal.onDidDismiss.and.returnValue(Promise.resolve({}));
+      modal.onDidDismiss.mockResolvedValue({});
     });
 
     it('creates the search modal', async () => {
@@ -113,18 +111,16 @@ describe('LogEntryEditorComponent', () => {
     });
 
     it('sets the exercise if the role is "select"', async () => {
-      modal.onDidDismiss.and.returnValue(
-        Promise.resolve({
-          data: {
-            id: '9930408A3',
-            name: 'Elliptical',
-            description: 'Low impact glide-running',
-            area: 'Cardio',
-            type: 'Machine'
-          },
-          role: 'select'
-        })
-      );
+      modal.onDidDismiss.mockResolvedValue({
+        data: {
+          id: '9930408A3',
+          name: 'Elliptical',
+          description: 'Low impact glide-running',
+          area: 'Cardio',
+          type: 'Machine'
+        },
+        role: 'select'
+      });
       await component.findExercise();
       expect(component.exercise).toEqual({
         id: '9930408A3',
@@ -136,18 +132,16 @@ describe('LogEntryEditorComponent', () => {
     });
 
     it('does not set the exercise if the role is not "select"', async () => {
-      modal.onDidDismiss.and.returnValue(
-        Promise.resolve({
-          data: {
-            id: '9930408A3',
-            name: 'Elliptical',
-            description: 'Low impact glide-running',
-            area: 'Cardio',
-            type: 'Machine'
-          },
-          role: 'not-select'
-        })
-      );
+      modal.onDidDismiss.mockResolvedValue({
+        data: {
+          id: '9930408A3',
+          name: 'Elliptical',
+          description: 'Low impact glide-running',
+          area: 'Cardio',
+          type: 'Machine'
+        },
+        role: 'not-select'
+      });
       await component.findExercise();
       expect(component.exercise).toEqual(undefined);
     });
