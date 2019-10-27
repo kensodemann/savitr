@@ -12,6 +12,7 @@ import { TodayComponent } from './today/today.component';
 import { AuthGuardService } from '@app/services';
 
 import { NoWorkoutComponentModule } from '@app/shared';
+import { WeeklyWorkoutComponentModule } from '@app/pages/workout/shared/weekly-workout/weekly-workout.module';
 
 const routes: Routes = [
   {
@@ -22,7 +23,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, NoWorkoutComponentModule, RouterModule.forChild(routes)],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    NoWorkoutComponentModule,
+    RouterModule.forChild(routes),
+    WeeklyWorkoutComponentModule
+  ],
   declarations: [CurrentPage, ThisWeekComponent, TodayComponent]
 })
 export class CurrentPageModule {}
