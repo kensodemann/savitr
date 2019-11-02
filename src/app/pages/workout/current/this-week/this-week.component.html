@@ -1,8 +1,8 @@
 <div class="ion-text-center">
   <app-weekly-workout
     [exerciseLogs]="logEntries"
-    (add)="add($event)"
-    (edit)="edit($event)"
-    (delete)="delete($event)"
+    (add)="add.emit($event)"
+    (edit)="edit.emit($event)"
+    (delete)="delete.emit($event)"
   ></app-weekly-workout>
 </div>

@@ -22,6 +22,12 @@
     </ion-segment-button>
   </ion-segment>
 
-  <app-this-week *ngIf="currentView === 'this-week'"></app-this-week>
+  <app-this-week
+    *ngIf="currentView === 'this-week'"
+    [logEntries]="logEntries"
+    (add)="add($event)"
+    (edit)="edit($event)"
+    (delete)="delete($event)"
+  ></app-this-week>
   <app-today *ngIf="currentView === 'today'"></app-today>
 </ion-content>
