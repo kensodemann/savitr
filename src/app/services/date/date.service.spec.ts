@@ -33,6 +33,18 @@ describe('DateService', () => {
     });
   });
 
+  describe('current day', () => {
+    it('returns the proper day of the week as a number', () => {
+      const service: DateService = TestBed.get(DateService);
+      (Date.now as any).mockReturnValue(new Date('2019-11-03T14:23:35').getTime());
+      expect(service.currentDay()).toEqual(0);
+      (Date.now as any).mockReturnValue(new Date('2019-11-06T14:23:35').getTime());
+      expect(service.currentDay()).toEqual(3);
+      (Date.now as any).mockReturnValue(new Date('2019-11-08T14:23:35').getTime());
+      expect(service.currentDay()).toEqual(5);
+    });
+  });
+
   describe('beginDates', () => {
     it('returns the current begin date plus 4 more', () => {
       const service: DateService = TestBed.get(DateService);

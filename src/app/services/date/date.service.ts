@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addWeeks, format, setDay, startOfDay } from 'date-fns';
+import { addWeeks, format, getDay, setDay, startOfDay } from 'date-fns';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,12 @@ export class DateService {
     // The "Date.now()" bit just makes testing easier
     const d = new Date(Date.now());
     return startOfDay(setDay(d, 0));
+  }
+
+  currentDay(): number {
+    // The "Date.now()" bit just makes testing easier
+    const d = new Date(Date.now());
+    return getDay(d);
   }
 
   beginDates(): Array<Date> {
