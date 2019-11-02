@@ -62,4 +62,89 @@ describe('ThisWeekComponent', () => {
     expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
     expect(workoutPageService.logEntries).toHaveBeenCalledWith(log);
   });
+
+  describe('CRUD operation', () => {
+    let workoutPageService;
+    let entry;
+    beforeEach(() => {
+      workoutPageService = TestBed.get(WorkoutPageService);
+      workoutPageService.logEntries.mockClear();
+      entry = {
+        id: 'ifiifiigifi',
+        logDate: parseISO('2019-07-22'),
+        workoutLog: log,
+        exercise: {
+          id: 'iifgiifdie',
+          name: 'Bench Press',
+          description: 'Basic Press',
+          type: 'Free Weight',
+          area: 'Upper Body'
+        },
+        completed: false
+      };
+    });
+
+    describe('add', () => {
+      it('calls the page service add', async () => {
+        await component.add(3);
+        expect(workoutPageService.add).toHaveBeenCalledTimes(1);
+        expect(workoutPageService.add).toHaveBeenCalledWith(log, parseISO('2019-10-30'));
+      });
+
+      it('refreshes the data if the add occurs', async () => {
+        workoutPageService.add.mockResolvedValue(true);
+        await component.add(3);
+        expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
+        expect(workoutPageService.logEntries).toHaveBeenCalledWith(log);
+      });
+
+      it('does not refresh the data if the add did not happen', async () => {
+        workoutPageService.add.mockResolvedValue(false);
+        await component.add(3);
+        expect(workoutPageService.logEntries).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('edit', () => {
+      it('calls the page service edit', async () => {
+        await component.edit(entry);
+        expect(workoutPageService.edit).toHaveBeenCalledTimes(1);
+        expect(workoutPageService.edit).toHaveBeenCalledWith(entry);
+      });
+
+      it('refreshes the data if the edit occured', async () => {
+        workoutPageService.edit.mockResolvedValue(true);
+        await component.edit(entry);
+        expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
+        expect(workoutPageService.logEntries).toHaveBeenCalledWith(log);
+      });
+
+      it('does not refresh the data if the edit did not occur', async () => {
+        workoutPageService.add.mockResolvedValue(false);
+        await component.edit(entry);
+        expect(workoutPageService.logEntries).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('delete', () => {
+      it('calls the page service delete', async () => {
+        await component.delete(entry);
+        expect(workoutPageService.delete).toHaveBeenCalledTimes(1);
+        expect(workoutPageService.delete).toHaveBeenCalledWith(entry);
+      });
+
+      it('refreshes the data if the edit occured', async () => {
+        workoutPageService.delete.mockResolvedValue(true);
+        await component.delete(entry);
+        expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
+        expect(workoutPageService.logEntries).toHaveBeenCalledWith(log);
+      });
+
+      it('does not refresh the data if the edit did not occur', async () => {
+        workoutPageService.delete.mockResolvedValue(false);
+        await component.delete(entry);
+        expect(workoutPageService.logEntries).not.toHaveBeenCalled();
+      });
+    });
+  });
 });

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { addDays } from 'date-fns';
+
 import { DateService } from '@app/services';
 import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
 import { WorkoutLog, WorkoutLogEntry } from '@app/models';
@@ -25,5 +27,23 @@ export class ThisWeekComponent implements OnInit {
     const dt = this.dateService.currentBeginDate();
     this.log = await this.weeklyWorkoutLogs.getForDate(dt);
     this.logEntries = await this.workoutPageService.logEntries(this.log);
+  }
+
+  async add(offset: number): Promise<void> {
+    if (await this.workoutPageService.add(this.log, addDays(this.log.beginDate, offset))) {
+      this.logEntries = await this.workoutPageService.logEntries(this.log);
+    }
+  }
+
+  async edit(entry: WorkoutLogEntry): Promise<void> {
+    if (await this.workoutPageService.edit(entry)) {
+      this.logEntries = await this.workoutPageService.logEntries(this.log);
+    }
+  }
+
+  async delete(entry: WorkoutLogEntry): Promise<void> {
+    if (await this.workoutPageService.delete(entry)) {
+      this.logEntries = await this.workoutPageService.logEntries(this.log);
+    }
   }
 }
