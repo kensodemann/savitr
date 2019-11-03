@@ -3,7 +3,7 @@ import { addDays } from 'date-fns';
 
 import { AuthenticationService, DateService } from '@app/services';
 import { WorkoutLog, WorkoutLogEntry } from '@app/models';
-import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
+import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
 import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
 
 @Component({
@@ -14,12 +14,14 @@ import { WorkoutPageService } from '@app/pages/workout/services/workout-page/wor
 export class CurrentPage implements OnInit {
   private log: WorkoutLog;
   currentView: string;
+  day: number;
   logEntries: Array<Array<WorkoutLogEntry>>;
 
   constructor(
     public authentication: AuthenticationService,
     private dateService: DateService,
     private weeklyWorkoutLogs: WeeklyWorkoutLogsService,
+    private workoutLogEntries: WorkoutLogEntriesService,
     private workoutPageService: WorkoutPageService
   ) {
     this.logEntries = [[], [], [], [], [], [], []];
@@ -27,6 +29,7 @@ export class CurrentPage implements OnInit {
 
   async ngOnInit() {
     this.currentView = 'today';
+    this.day = this.dateService.currentDay();
     const dt = this.dateService.currentBeginDate();
     this.log = await this.weeklyWorkoutLogs.getForDate(dt);
     this.logEntries = await this.workoutPageService.logEntries(this.log);
@@ -48,5 +51,9 @@ export class CurrentPage implements OnInit {
     if (await this.workoutPageService.delete(entry)) {
       this.logEntries = await this.workoutPageService.logEntries(this.log);
     }
+  }
+
+  save(entry: WorkoutLogEntry): void {
+    this.workoutLogEntries.update(entry);
   }
 }

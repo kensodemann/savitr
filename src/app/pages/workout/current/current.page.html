@@ -29,5 +29,14 @@
     (edit)="edit($event)"
     (delete)="delete($event)"
   ></app-this-week>
-  <app-today *ngIf="currentView === 'today'"></app-today>
+  <app-today
+    *ngIf="currentView === 'today'"
+    [logEntries]="logEntries[day]"
+    [day]="day"
+    (add)="add($event)"
+    (edit)="edit($event)"
+    (delete)="delete($event)"
+    (toggle)="save($event)"
+  >
+  </app-today>
 </ion-content>

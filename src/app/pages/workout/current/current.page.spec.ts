@@ -5,8 +5,11 @@ import { parseISO } from 'date-fns';
 import { CurrentPage } from './current.page';
 import { AuthenticationService, DateService } from '@app/services';
 import { createAuthenticationServiceMock, createDateServiceMock } from '@app/services/mocks';
-import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
-import { createWeeklyWorkoutLogsServiceMock } from '@app/services/firestore-data/mocks';
+import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
+import {
+  createWeeklyWorkoutLogsServiceMock,
+  createWorkoutLogEntriesServiceMock
+} from '@app/services/firestore-data/mocks';
 import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
 import { createWorkoutPageServiceMock } from '@app/pages/workout/services/workout-page/workout-page.service.mock';
 import { WorkoutLog } from '@app/models';
@@ -26,6 +29,7 @@ describe('CurrentPage', () => {
           useFactory: createDateServiceMock
         },
         { provide: WeeklyWorkoutLogsService, useFactory: createWeeklyWorkoutLogsServiceMock },
+        { provide: WorkoutLogEntriesService, useFactory: createWorkoutLogEntriesServiceMock },
         { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -36,6 +40,7 @@ describe('CurrentPage', () => {
     log = { id: '715WI920', beginDate: parseISO('2019-10-27') };
     const dateService = TestBed.get(DateService);
     dateService.currentBeginDate.mockReturnValue(parseISO('2019-10-27'));
+    dateService.currentDay.mockReturnValue(4);
     const weeklyWorkoutLogs = TestBed.get(WeeklyWorkoutLogsService);
     weeklyWorkoutLogs.getForDate.mockResolvedValue(log);
     fixture = TestBed.createComponent(CurrentPage);
@@ -45,6 +50,12 @@ describe('CurrentPage', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('gets the day of the week', () => {
+    const dateService = TestBed.get(DateService);
+    expect(dateService.currentDay).toHaveBeenCalledTimes(1);
+    expect(component.day).toEqual(4);
   });
 
   it('gets the current end date', () => {
@@ -145,6 +156,39 @@ describe('CurrentPage', () => {
         workoutPageService.delete.mockResolvedValue(false);
         await component.delete(entry);
         expect(workoutPageService.logEntries).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('save', () => {
+    it('saves the passed in log entry', () => {
+      const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+      component.save({
+        id: 'ifiifiigifi',
+        logDate: parseISO('2019-07-22'),
+        workoutLog: log,
+        exercise: {
+          id: 'iifgiifdie',
+          name: 'Bench Press',
+          description: 'Basic Press',
+          type: 'Free Weight',
+          area: 'Upper Body'
+        },
+        completed: true
+      });
+      expect(workoutLogEntries.update).toHaveBeenCalledTimes(1);
+      expect(workoutLogEntries.update).toHaveBeenCalledWith({
+        id: 'ifiifiigifi',
+        logDate: parseISO('2019-07-22'),
+        workoutLog: log,
+        exercise: {
+          id: 'iifgiifdie',
+          name: 'Bench Press',
+          description: 'Basic Press',
+          type: 'Free Weight',
+          area: 'Upper Body'
+        },
+        completed: true
       });
     });
   });

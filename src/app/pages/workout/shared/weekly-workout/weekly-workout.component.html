@@ -1,58 +1,58 @@
 <ion-list>
-  <app-day-header (click)="this.add.emit(0)">Sunday</app-day-header>
+  <app-day-header (click)="add.emit(0)">Sunday</app-day-header>
   <app-workout-log-entry-list-item
     *ngFor="let log of exerciseLogs[0]"
     [workoutLogEntry]="log"
-    (delete)="this.delete.emit(log)"
-    (edit)="this.edit.emit(log)"
+    (delete)="delete.emit($event)"
+    (edit)="edit.emit($event)"
   >
   </app-workout-log-entry-list-item>
-  <app-day-header (click)="this.add.emit(1)">Monday</app-day-header>
+  <app-day-header (click)="add.emit(1)">Monday</app-day-header>
   <app-workout-log-entry-list-item
     *ngFor="let log of exerciseLogs[1]"
     [workoutLogEntry]="log"
-    (delete)="this.delete.emit(log)"
-    (edit)="this.edit.emit(log)"
+    (delete)="delete.emit($event)"
+    (edit)="edit.emit($event)"
   >
   </app-workout-log-entry-list-item>
-  <app-day-header (click)="this.add.emit(2)">Tuesday</app-day-header>
+  <app-day-header (click)="add.emit(2)">Tuesday</app-day-header>
   <app-workout-log-entry-list-item
     *ngFor="let log of exerciseLogs[2]"
     [workoutLogEntry]="log"
-    (delete)="this.delete.emit(log)"
-    (edit)="this.edit.emit(log)"
+    (delete)="delete.emit($event)"
+    (edit)="edit.emit($event)"
   >
   </app-workout-log-entry-list-item>
-  <app-day-header (click)="this.add.emit(3)">Wednesday</app-day-header>
+  <app-day-header (click)="add.emit(3)">Wednesday</app-day-header>
   <app-workout-log-entry-list-item
     *ngFor="let log of exerciseLogs[3]"
     [workoutLogEntry]="log"
-    (delete)="this.delete.emit(log)"
-    (edit)="this.edit.emit(log)"
+    (delete)="delete.emit($event)"
+    (edit)="edit.emit($event)"
   >
   </app-workout-log-entry-list-item>
-  <app-day-header (click)="this.add.emit(4)">Thursday</app-day-header>
+  <app-day-header (click)="add.emit(4)">Thursday</app-day-header>
   <app-workout-log-entry-list-item
     *ngFor="let log of exerciseLogs[4]"
     [workoutLogEntry]="log"
-    (delete)="this.delete.emit(log)"
-    (edit)="this.edit.emit(log)"
+    (delete)="delete.emit($event)"
+    (edit)="edit.emit($event)"
   >
   </app-workout-log-entry-list-item>
-  <app-day-header (click)="this.add.emit(5)">Friday</app-day-header>
+  <app-day-header (click)="add.emit(5)">Friday</app-day-header>
   <app-workout-log-entry-list-item
     *ngFor="let log of exerciseLogs[5]"
     [workoutLogEntry]="log"
-    (delete)="this.delete.emit(log)"
-    (edit)="this.edit.emit(log)"
+    (delete)="delete.emit($event)"
+    (edit)="edit.emit($event)"
   >
   </app-workout-log-entry-list-item>
-  <app-day-header (click)="this.add.emit(6)">Saturday</app-day-header>
+  <app-day-header (click)="add.emit(6)">Saturday</app-day-header>
   <app-workout-log-entry-list-item
     *ngFor="let log of exerciseLogs[6]"
     [workoutLogEntry]="log"
-    (delete)="this.delete.emit(log)"
-    (edit)="this.edit.emit(log)"
+    (delete)="delete.emit($event)"
+    (edit)="edit.emit($event)"
   >
   </app-workout-log-entry-list-item>
 </ion-list>

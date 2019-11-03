@@ -1,3 +1,20 @@
-<div class="ion-text-center">
+<div *ngIf="logEntries && logEntries.length === 0" class="ion-text-center">
   <app-no-workout timeframe="day"></app-no-workout>
 </div>
+
+<ion-list>
+  <app-workout-log-entry-list-item
+    *ngFor="let entry of logEntries"
+    showCompletion="true"
+    [workoutLogEntry]="entry"
+    (delete)="delete.emit($event)"
+    (edit)="edit.emit($event)"
+    (toggle)="onToggle(entry, $event)"
+  ></app-workout-log-entry-list-item>
+</ion-list>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button id="add-button" color="tertiary" (click)="add.emit(day)">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

@@ -11,7 +11,7 @@ import { TodayComponent } from './today/today.component';
 
 import { AuthGuardService } from '@app/services';
 
-import { NoWorkoutComponentModule } from '@app/shared';
+import { NoWorkoutComponentModule, WorkoutLogEntryListItemComponentModule } from '@app/shared';
 import { WeeklyWorkoutComponentModule } from '@app/pages/workout/shared/weekly-workout/weekly-workout.module';
 
 const routes: Routes = [
@@ -29,7 +29,8 @@ const routes: Routes = [
     IonicModule,
     NoWorkoutComponentModule,
     RouterModule.forChild(routes),
-    WeeklyWorkoutComponentModule
+    WeeklyWorkoutComponentModule,
+    WorkoutLogEntryListItemComponentModule
   ],
   declarations: [CurrentPage, ThisWeekComponent, TodayComponent]
 })
