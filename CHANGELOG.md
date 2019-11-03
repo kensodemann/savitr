@@ -1,3 +1,30 @@
+# [1.0.0](https://github.com/kensodemann/savitr/compare/v0.0.4...v1.0.0) (2019-11-03)
+
+
+### Bug Fixes
+
+* **app:** replace deprecated constructs ([7005bdf](https://github.com/kensodemann/savitr/commit/7005bdf3732089feff46bbefd39228e4cae578a8))
+* **tests:** fix the date test failures ([b47c27e](https://github.com/kensodemann/savitr/commit/b47c27e98cf766e9fe4f3b6580377249a2095ba4))
+* **tests:** increase coverage ([dbadd53](https://github.com/kensodemann/savitr/commit/dbadd53e8314e7a8e97f8e0b2aa415ae1392ac03))
+
+
+### Features
+
+* **test:** convert to using Jest ([c773208](https://github.com/kensodemann/savitr/commit/c77320876520501bfa0615816b99f225cbb0a308))
+* **workout:** abstract the weekly workout list into a component ([f46e249](https://github.com/kensodemann/savitr/commit/f46e249d9199e442afe0efc3aed8a99a8b320195))
+* **workout:** add a component to display when there is no workout ([845f439](https://github.com/kensodemann/savitr/commit/845f4391ab1982b32eaddbf018b262a9c2554633))
+* **workout:** add a workout page service ([89bf0d6](https://github.com/kensodemann/savitr/commit/89bf0d606c661490afa775437f279ec048497c9e))
+* **workout:** add method to get current day ([947bae0](https://github.com/kensodemann/savitr/commit/947bae042d8f987009b62aaa9e26f9eba53c216a))
+* **workout:** add the add, edit, and delete methods to the weekly component ([10a1ff7](https://github.com/kensodemann/savitr/commit/10a1ff7e70dd73a678dcfe9030ce6e7e583adb2f))
+* **workout:** allow log entries to be completed ([673bc3b](https://github.com/kensodemann/savitr/commit/673bc3b780b1599b0383737e9b7a18d9f24223d4))
+* **workout:** display exercises for current day ([e6c2bda](https://github.com/kensodemann/savitr/commit/e6c2bda8a2b3369eb1f4af1d5c77d290d8bfcfd1))
+* **workout:** display the workouts for this week ([41b0990](https://github.com/kensodemann/savitr/commit/41b0990db6246bddf62704310e9258ad3649f01a))
+* **workout:** fix the weekly workout component test ([9a436e4](https://github.com/kensodemann/savitr/commit/9a436e4df000eb05f65c0bbdfd39b1a469f3defe))
+* **workout:** move the logic down to the page ([c105b64](https://github.com/kensodemann/savitr/commit/c105b64becfdc396f4f2e0e5f39f95016ec4db8e))
+* **workout:** use the workout page service ([dc52957](https://github.com/kensodemann/savitr/commit/dc52957d28db946884fa64c1c8c0b51fc3a47e28))
+
+
+
 ## 0.0.4 (2019-10-13)
 
 
