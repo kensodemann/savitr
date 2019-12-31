@@ -1,7 +1,7 @@
 {
   "name": "Savitr Workouts",
   "short_name": "Savitr",
-  "theme_color": "#2f7c9c",
+  "theme_color": "#156080",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",
