@@ -46,7 +46,7 @@
     "@angular/language-service": "~8.2.14",
     "@ionic/angular-toolkit": "~2.1.1",
     "@types/jest": "~24.0.25",
-    "@types/node": "~13.1.1",
+    "@types/node": "~13.1.2",
     "adj-noun": "~0.1.1",
     "chalk": "~3.0.0",
     "codelyzer": "~5.2.1",
