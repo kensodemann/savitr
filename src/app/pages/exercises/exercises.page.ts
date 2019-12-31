@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { Exercise } from 'src/app/models/exercise';
 import { ExerciseEditorComponent } from 'src/app/editors/exercise-editor/exercise-editor.component';
 import { ExercisesService } from '@app/services/firestore-data';
 import { yesNoButtons } from '@app/util';
+import { Store } from '@ngrx/store';
+import { State } from '@app/store';
+import { logout } from '@app/store/actions/auth.actions';
 
 @Component({
   selector: 'app-exercises',
@@ -18,9 +20,9 @@ export class ExercisesPage implements OnInit {
 
   constructor(
     private alertController: AlertController,
-    public authentication: AuthenticationService,
     private exercisesService: ExercisesService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private store: Store<State>
   ) {}
 
   ngOnInit() {
@@ -64,5 +66,9 @@ export class ExercisesPage implements OnInit {
     if (result.role === 'confirm') {
       this.exercisesService.delete(exercise);
     }
+  }
+
+  logout() {
+    this.store.dispatch(logout());
   }
 }

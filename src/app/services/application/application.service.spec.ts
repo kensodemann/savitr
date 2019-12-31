@@ -44,7 +44,6 @@ describe('ApplicationService', () => {
       expect(alertController.create).not.toHaveBeenCalled();
       update.available.next();
       expect(alertController.create).toHaveBeenCalledTimes(1);
-      expect(alertController.create).toHaveBeenCalled();
     });
   });
 });

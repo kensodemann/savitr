@@ -1,10 +1,12 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { parseISO } from 'date-fns';
+import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 
 import { CurrentPage } from './current.page';
-import { AuthenticationService, DateService } from '@app/services';
-import { createAuthenticationServiceMock, createDateServiceMock } from '@app/services/mocks';
+import { DateService } from '@app/services';
+import { createDateServiceMock } from '@app/services/mocks';
 import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
 import {
   createWeeklyWorkoutLogsServiceMock,
@@ -13,6 +15,7 @@ import {
 import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
 import { createWorkoutPageServiceMock } from '@app/pages/workout/services/workout-page/workout-page.service.mock';
 import { WorkoutLog } from '@app/models';
+import { logout } from '@app/store/actions/auth.actions';
 
 describe('CurrentPage', () => {
   let component: CurrentPage;
@@ -23,14 +26,14 @@ describe('CurrentPage', () => {
     TestBed.configureTestingModule({
       declarations: [CurrentPage],
       providers: [
-        { provide: AuthenticationService, useFactory: createAuthenticationServiceMock },
         {
           provide: DateService,
           useFactory: createDateServiceMock
         },
         { provide: WeeklyWorkoutLogsService, useFactory: createWeeklyWorkoutLogsServiceMock },
         { provide: WorkoutLogEntriesService, useFactory: createWorkoutLogEntriesServiceMock },
-        { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock }
+        { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock },
+        provideMockStore()
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
@@ -190,6 +193,16 @@ describe('CurrentPage', () => {
         },
         completed: true
       });
+    });
+  });
+
+  describe('logout', () => {
+    it('dispatches the logout action', () => {
+      const store = TestBed.get(Store);
+      store.dispatch = jest.fn();
+      component.logout();
+      expect(store.dispatch).toHaveBeenCalledTimes(1);
+      expect(store.dispatch).toHaveBeenCalledWith(logout());
     });
   });
 });

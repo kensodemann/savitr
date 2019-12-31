@@ -1,15 +1,16 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalController, AlertController } from '@ionic/angular';
+import { provideMockStore } from '@ngrx/store/testing';
+import { Store } from '@ngrx/store';
 
 import { ExercisesPage } from './exercises.page';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { ExerciseEditorComponent } from 'src/app/editors/exercise-editor/exercise-editor.component';
 import { ExercisesService } from '@app/services/firestore-data';
 
-import { createAuthenticationServiceMock } from 'src/app/services/authentication/authentication.service.mock';
 import { createExercisesServiceMock } from '@app/services/firestore-data/mocks';
 import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
+import { logout } from '@app/store/actions/auth.actions';
 
 describe('ExercisesPage', () => {
   let alert;
@@ -25,12 +26,12 @@ describe('ExercisesPage', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
-        { provide: AuthenticationService, useFactory: createAuthenticationServiceMock },
         { provide: ExercisesService, useFactory: createExercisesServiceMock },
         {
           provide: ModalController,
           useFactory: () => createOverlayControllerMock(editor)
-        }
+        },
+        provideMockStore()
       ]
     }).compileComponents();
   }));
@@ -182,7 +183,10 @@ describe('ExercisesPage', () => {
         header: 'Remove Exercise?',
         subHeader: exercise.name,
         message: 'This action cannot be undone. Are you sure you want to continue?',
-        buttons: [{ text: 'Yes', role: 'confirm' }, { text: 'No', role: 'cancel' }]
+        buttons: [
+          { text: 'Yes', role: 'confirm' },
+          { text: 'No', role: 'cancel' }
+        ]
       });
     });
 
@@ -210,6 +214,16 @@ describe('ExercisesPage', () => {
       alert.onDidDismiss.mockResolvedValue({ role: 'cancel' });
       await component.delete(exercise);
       expect(svc.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('logout', () => {
+    it('dispatches the logout action', () => {
+      const store = TestBed.get(Store);
+      store.dispatch = jest.fn();
+      component.logout();
+      expect(store.dispatch).toHaveBeenCalledTimes(1);
+      expect(store.dispatch).toHaveBeenCalledWith(logout());
     });
   });
 });

@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { addDays } from 'date-fns';
+import { Store } from '@ngrx/store';
 
-import { AuthenticationService, DateService } from '@app/services';
+import { DateService } from '@app/services';
 import { WorkoutLog, WorkoutLogEntry } from '@app/models';
 import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
 import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
+import { State } from '@app/store';
+import { logout } from '@app/store/actions/auth.actions';
 
 @Component({
   selector: 'app-current',
@@ -18,8 +21,8 @@ export class CurrentPage implements OnInit {
   logEntries: Array<Array<WorkoutLogEntry>>;
 
   constructor(
-    public authentication: AuthenticationService,
     private dateService: DateService,
+    private store: Store<State>,
     private weeklyWorkoutLogs: WeeklyWorkoutLogsService,
     private workoutLogEntries: WorkoutLogEntriesService,
     private workoutPageService: WorkoutPageService
@@ -55,5 +58,9 @@ export class CurrentPage implements OnInit {
 
   save(entry: WorkoutLogEntry): void {
     this.workoutLogEntries.update(entry);
+  }
+
+  logout() {
+    this.store.dispatch(logout());
   }
 }

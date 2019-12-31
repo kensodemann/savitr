@@ -3,8 +3,12 @@ import { TestBed, async } from '@angular/core/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { NavController } from '@ionic/angular';
 import { RouterTestingModule } from '@angular/router/testing';
+import { provideMockStore } from '@ngrx/store/testing';
+import { Store } from '@ngrx/store';
 
 import { ApplicationService } from '@app/services';
+import { loginChanged } from './store/actions/auth.actions';
+import { State } from './store/reducers';
 import { createAngularFireAuthMock, createNavControllerMock } from '@test/mocks';
 import { createApplicationServiceMock } from '@app/services/mocks';
 
@@ -21,7 +25,8 @@ describe('AppComponent', () => {
           provide: ApplicationService,
           useFactory: createApplicationServiceMock
         },
-        { provide: NavController, useFactory: createNavControllerMock }
+        { provide: NavController, useFactory: createNavControllerMock },
+        provideMockStore<State>()
       ],
       imports: [RouterTestingModule.withRoutes([])]
     }).compileComponents();
@@ -68,24 +73,46 @@ describe('AppComponent', () => {
   });
 
   describe('changing the user', () => {
+    let store;
     beforeEach(() => {
+      store = TestBed.get(Store);
+      store.dispatch = jest.fn();
       const fixture = TestBed.createComponent(AppComponent);
       fixture.detectChanges();
+      store.dispatch.mockClear();
     });
 
-    it('does not navigate if there is a user', () => {
-      const angularFireAuth = TestBed.get(AngularFireAuth);
-      const navController = TestBed.get(NavController);
-      angularFireAuth.authState.next({ id: 42 });
-      expect(navController.navigateRoot).not.toHaveBeenCalled();
+    describe('on login', () => {
+      it('does not navigate', () => {
+        const angularFireAuth = TestBed.get(AngularFireAuth);
+        const navController = TestBed.get(NavController);
+        angularFireAuth.authState.next({ id: 42, email: 'test@testty.com' });
+        expect(navController.navigateRoot).not.toHaveBeenCalled();
+      });
+
+      it('dispatches the user change and load', () => {
+        const angularFireAuth = TestBed.get(AngularFireAuth);
+        angularFireAuth.authState.next({ id: 42, email: 'test@testty.com' });
+        expect(store.dispatch).toHaveBeenCalledTimes(1);
+        expect(store.dispatch).toHaveBeenCalledWith(loginChanged({ email: 'test@testty.com' }));
+      });
     });
 
-    it('navigates to login if there is no user', () => {
-      const angularFireAuth = TestBed.get(AngularFireAuth);
-      const navController = TestBed.get(NavController);
-      angularFireAuth.authState.next();
-      expect(navController.navigateRoot).toHaveBeenCalledTimes(1);
-      expect(navController.navigateRoot).toHaveBeenCalledWith(['login']);
+    describe('on logout', () => {
+      it('navigates to login', () => {
+        const angularFireAuth = TestBed.get(AngularFireAuth);
+        const navController = TestBed.get(NavController);
+        angularFireAuth.authState.next(null);
+        expect(navController.navigateRoot).toHaveBeenCalledTimes(1);
+        expect(navController.navigateRoot).toHaveBeenCalledWith(['login']);
+      });
+
+      it('dispatches the user change', () => {
+        const angularFireAuth = TestBed.get(AngularFireAuth);
+        angularFireAuth.authState.next(null);
+        expect(store.dispatch).toHaveBeenCalledTimes(1);
+        expect(store.dispatch).toHaveBeenCalledWith(loginChanged({ email: null }));
+      });
     });
   });
 });
