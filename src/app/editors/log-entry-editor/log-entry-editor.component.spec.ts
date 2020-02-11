@@ -94,7 +94,7 @@ describe('LogEntryEditorComponent', () => {
     });
 
     it('creates the search modal', async () => {
-      const modalController = TestBed.get(ModalController);
+      const modalController = TestBed.inject(ModalController);
       await component.findExercise();
       expect(modalController.create).toHaveBeenCalledTimes(1);
       expect(modalController.create).toHaveBeenCalledWith({ component: ExerciseFinderComponent });
@@ -153,13 +153,13 @@ describe('LogEntryEditorComponent', () => {
     });
 
     it('dismisses the modal', () => {
-      const modalController = TestBed.get(ModalController);
+      const modalController = TestBed.inject(ModalController);
       component.close();
       expect(modalController.dismiss).toHaveBeenCalledTimes(1);
     });
 
     it('does not return any data', () => {
-      const modalController = TestBed.get(ModalController);
+      const modalController = TestBed.inject(ModalController);
       component.close();
       expect(modalController.dismiss).toHaveBeenCalledWith();
     });
@@ -257,19 +257,19 @@ describe('LogEntryEditorComponent', () => {
         fixture.detectChanges();
       });
       it('dismisses the modal', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.save();
         expect(modalController.dismiss).toHaveBeenCalledTimes(1);
       });
 
       it('uses the "save" role', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.save();
         expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
       });
 
       it('returns the exercise / time data', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.exercise = {
           id: '39940AB39',
           name: 'Barbell Bench Press',
@@ -305,7 +305,7 @@ describe('LogEntryEditorComponent', () => {
       });
 
       it('returns the exercise / set / rep / weight data', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.exercise = {
           id: '39940AB39',
           name: 'Barbell Bench Press',
@@ -354,19 +354,19 @@ describe('LogEntryEditorComponent', () => {
       });
 
       it('dismisses the modal', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.save();
         expect(modalController.dismiss).toHaveBeenCalledTimes(1);
       });
 
       it('uses the "save" role', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.save();
         expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
       });
 
       it('returns the exercise / time data', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.exercise = {
           id: '773758FC3',
           name: 'Dumbbell Bench Press',
@@ -398,7 +398,7 @@ describe('LogEntryEditorComponent', () => {
       });
 
       it('returns the exercise / set / rep / weight data', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.exercise = {
           id: '773758FC3',
           name: 'Dumbbell Bench Press',

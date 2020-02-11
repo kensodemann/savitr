@@ -29,7 +29,7 @@ describe('WeeklyWorkoutLogsService', () => {
         { provide: AngularFirestore, useFactory: createAngularFirestoreMock }
       ]
     });
-    const angularFirestore = TestBed.get(AngularFirestore);
+    const angularFirestore = TestBed.inject(AngularFirestore);
     userCollection = createAngularFirestoreCollectionMock();
     angularFirestore.collection.mockReturnValue(userCollection);
     userDoc = createAngularFirestoreDocumentMock();
@@ -37,14 +37,14 @@ describe('WeeklyWorkoutLogsService', () => {
     userCollection.doc.mockReturnValue(userDoc);
     logsCollection = createAngularFirestoreCollectionMock();
     userDoc.collection.mockReturnValue(logsCollection);
-    angularFirestore.collection.mockReturnValue(userCollection);
+    (angularFirestore.collection as any).mockReturnValue(userCollection);
   });
 
   beforeEach(inject([WeeklyWorkoutLogsService], (service: WeeklyWorkoutLogsService) => {
     weeklyWorkoutLogs = service;
     // NOTE: User needs to be logged in for this service to be useful
-    const afAuth = TestBed.get(AngularFireAuth);
-    afAuth.auth.currentUser = { uid: '123abc' };
+    const afAuth = TestBed.inject(AngularFireAuth);
+    (afAuth as any).auth.currentUser = { uid: '123abc' };
   }));
 
   it('should be created', () => {
@@ -53,7 +53,7 @@ describe('WeeklyWorkoutLogsService', () => {
 
   describe('all', () => {
     it('grabs a references to the daily-exercises collection for the user', () => {
-      const angularFirestore = TestBed.get(AngularFirestore);
+      const angularFirestore = TestBed.inject(AngularFirestore);
       weeklyWorkoutLogs.all();
       expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
       expect(angularFirestore.collection).toHaveBeenCalledWith('users');

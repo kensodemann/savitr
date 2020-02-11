@@ -87,7 +87,7 @@ describe('ExerciseEditorComponent', () => {
 
   describe('close', () => {
     it('closes the editor', () => {
-      const modalController = TestBed.get(ModalController);
+      const modalController = TestBed.inject(ModalController);
       component.close();
       expect(modalController.dismiss).toHaveBeenCalledTimes(1);
     });
@@ -100,13 +100,13 @@ describe('ExerciseEditorComponent', () => {
       });
 
       it('closes the editor', async () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         await component.save();
         expect(modalController.dismiss).toHaveBeenCalledTimes(1);
       });
 
       it('returns the editted exercise', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.area = component.areas[2];
         component.type = component.types[1];
         component.name = 'Bench Press';
@@ -124,7 +124,7 @@ describe('ExerciseEditorComponent', () => {
       });
 
       it('uses the "save" role', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.save();
         expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
       });
@@ -143,13 +143,13 @@ describe('ExerciseEditorComponent', () => {
       });
 
       it('closes the editor', async () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         await component.save();
         expect(modalController.dismiss).toHaveBeenCalledTimes(1);
       });
 
       it('returns the editted exercise', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.area = component.areas[1];
         component.type = component.types[2];
         component.name = 'Bench Press';
@@ -168,7 +168,7 @@ describe('ExerciseEditorComponent', () => {
       });
 
       it('uses the "save" role', () => {
-        const modalController = TestBed.get(ModalController);
+        const modalController = TestBed.inject(ModalController);
         component.save();
         expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
       });

@@ -30,7 +30,7 @@ describe('AboutPage', () => {
 
   describe('logout', () => {
     it('dispatches the logout action', () => {
-      const store = TestBed.get(Store);
+      const store = TestBed.inject(Store);
       store.dispatch = jest.fn();
       page.logout();
       expect(store.dispatch).toHaveBeenCalledTimes(1);

@@ -64,7 +64,7 @@ describe('AppComponent', () => {
 
   describe('on init', () => {
     it('registers for updates', () => {
-      const application = TestBed.get(ApplicationService);
+      const application = TestBed.inject(ApplicationService);
       const fixture = TestBed.createComponent(AppComponent);
       expect(application.registerForUpdates).not.toHaveBeenCalled();
       fixture.detectChanges();
@@ -75,7 +75,7 @@ describe('AppComponent', () => {
   describe('changing the user', () => {
     let store;
     beforeEach(() => {
-      store = TestBed.get(Store);
+      store = TestBed.inject(Store);
       store.dispatch = jest.fn();
       const fixture = TestBed.createComponent(AppComponent);
       fixture.detectChanges();
@@ -84,15 +84,15 @@ describe('AppComponent', () => {
 
     describe('on login', () => {
       it('does not navigate', () => {
-        const angularFireAuth = TestBed.get(AngularFireAuth);
-        const navController = TestBed.get(NavController);
-        angularFireAuth.authState.next({ id: 42, email: 'test@testty.com' });
+        const angularFireAuth = TestBed.inject(AngularFireAuth);
+        const navController = TestBed.inject(NavController);
+        (angularFireAuth.authState as any).next({ id: 42, email: 'test@testty.com' });
         expect(navController.navigateRoot).not.toHaveBeenCalled();
       });
 
       it('dispatches the user change and load', () => {
-        const angularFireAuth = TestBed.get(AngularFireAuth);
-        angularFireAuth.authState.next({ id: 42, email: 'test@testty.com' });
+        const angularFireAuth = TestBed.inject(AngularFireAuth);
+        (angularFireAuth.authState as any).next({ id: 42, email: 'test@testty.com' });
         expect(store.dispatch).toHaveBeenCalledTimes(1);
         expect(store.dispatch).toHaveBeenCalledWith(loginChanged({ email: 'test@testty.com' }));
       });
@@ -100,16 +100,16 @@ describe('AppComponent', () => {
 
     describe('on logout', () => {
       it('navigates to login', () => {
-        const angularFireAuth = TestBed.get(AngularFireAuth);
-        const navController = TestBed.get(NavController);
-        angularFireAuth.authState.next(null);
+        const angularFireAuth = TestBed.inject(AngularFireAuth);
+        const navController = TestBed.inject(NavController);
+        (angularFireAuth.authState as any).next(null);
         expect(navController.navigateRoot).toHaveBeenCalledTimes(1);
         expect(navController.navigateRoot).toHaveBeenCalledWith(['login']);
       });
 
       it('dispatches the user change', () => {
-        const angularFireAuth = TestBed.get(AngularFireAuth);
-        angularFireAuth.authState.next(null);
+        const angularFireAuth = TestBed.inject(AngularFireAuth);
+        (angularFireAuth.authState as any).next(null);
         expect(store.dispatch).toHaveBeenCalledTimes(1);
         expect(store.dispatch).toHaveBeenCalledWith(loginChanged({ email: null }));
       });

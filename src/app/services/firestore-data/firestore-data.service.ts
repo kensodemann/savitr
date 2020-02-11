@@ -1,7 +1,6 @@
 import { AngularFirestoreCollection, DocumentChangeAction, DocumentReference } from '@angular/fire/firestore';
-import { User } from 'firebase';
 
-import { Observable, EMPTY } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export abstract class FirestoreDataService<T extends { id?: string }> {

@@ -48,14 +48,14 @@ describe('ExercisesPage', () => {
 
   describe('initialization', () => {
     it('sets up an observable on the exercises', () => {
-      const svc = TestBed.get(ExercisesService);
+      const svc = TestBed.inject(ExercisesService);
       expect(svc.all).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('add', () => {
     it('creates a modal editor', () => {
-      const modalController = TestBed.get(ModalController);
+      const modalController = TestBed.inject(ModalController);
       component.add();
       expect(modalController.create).toHaveBeenCalledTimes(1);
       expect(modalController.create).toHaveBeenCalledWith({
@@ -71,7 +71,7 @@ describe('ExercisesPage', () => {
 
     describe('if the "save" role was used', () => {
       it('updates the exercise', async () => {
-        const service = TestBed.get(ExercisesService);
+        const service = TestBed.inject(ExercisesService);
         editor.onDidDismiss.mockResolvedValue({
           data: {
             name: 'Squats',
@@ -94,7 +94,7 @@ describe('ExercisesPage', () => {
 
     describe('if editing was cancelled without saving', () => {
       it('does not update the exercise', async () => {
-        const service = TestBed.get(ExercisesService);
+        const service = TestBed.inject(ExercisesService);
         await component.add();
         expect(service.add).not.toHaveBeenCalled();
       });
@@ -111,7 +111,7 @@ describe('ExercisesPage', () => {
     };
 
     it('creates a modal editor', () => {
-      const modalController = TestBed.get(ModalController);
+      const modalController = TestBed.inject(ModalController);
       component.edit(exercise);
       expect(modalController.create).toHaveBeenCalledTimes(1);
       expect(modalController.create).toHaveBeenCalledWith({
@@ -130,7 +130,7 @@ describe('ExercisesPage', () => {
 
     describe('if the "save" role was used', () => {
       it('updates the exercise', async () => {
-        const service = TestBed.get(ExercisesService);
+        const service = TestBed.inject(ExercisesService);
         editor.onDidDismiss.mockResolvedValue({
           data: {
             id: '420059399405',
@@ -155,7 +155,7 @@ describe('ExercisesPage', () => {
 
     describe('if editing was cancelled without saving', () => {
       it('does not update the exercise', async () => {
-        const service = TestBed.get(ExercisesService);
+        const service = TestBed.inject(ExercisesService);
         await component.edit(exercise);
         expect(service.update).not.toHaveBeenCalled();
       });
@@ -176,7 +176,7 @@ describe('ExercisesPage', () => {
     });
 
     it('asks the user if they actually want to delete', () => {
-      const alertController = TestBed.get(AlertController);
+      const alertController = TestBed.inject(AlertController);
       component.delete(exercise);
       expect(alertController.create).toHaveBeenCalledTimes(1);
       expect(alertController.create).toHaveBeenCalledWith({
@@ -196,7 +196,7 @@ describe('ExercisesPage', () => {
     });
 
     it('does the delete if the "confirm" button is pressed', async () => {
-      const svc = TestBed.get(ExercisesService);
+      const svc = TestBed.inject(ExercisesService);
       alert.onDidDismiss.mockResolvedValue({ role: 'confirm' });
       await component.delete(exercise);
       expect(svc.delete).toHaveBeenCalledTimes(1);
@@ -210,7 +210,7 @@ describe('ExercisesPage', () => {
     });
 
     it('does not do the delete if the "confirm" button is pressed', async () => {
-      const svc = TestBed.get(ExercisesService);
+      const svc = TestBed.inject(ExercisesService);
       alert.onDidDismiss.mockResolvedValue({ role: 'cancel' });
       await component.delete(exercise);
       expect(svc.delete).not.toHaveBeenCalled();
@@ -219,7 +219,7 @@ describe('ExercisesPage', () => {
 
   describe('logout', () => {
     it('dispatches the logout action', () => {
-      const store = TestBed.get(Store);
+      const store = TestBed.inject(Store);
       store.dispatch = jest.fn();
       component.logout();
       expect(store.dispatch).toHaveBeenCalledTimes(1);

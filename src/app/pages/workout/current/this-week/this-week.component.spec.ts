@@ -33,10 +33,10 @@ describe('ThisWeekComponent', () => {
 
   beforeEach(() => {
     log = { id: '715WI920', beginDate: parseISO('2019-10-27') };
-    const dateService = TestBed.get(DateService);
-    dateService.currentBeginDate.mockReturnValue(parseISO('2019-10-27'));
-    const weeklyWorkoutLogs = TestBed.get(WeeklyWorkoutLogsService);
-    weeklyWorkoutLogs.getForDate.mockResolvedValue(log);
+    const dateService = TestBed.inject(DateService);
+    (dateService.currentBeginDate as any).mockReturnValue(parseISO('2019-10-27'));
+    const weeklyWorkoutLogs = TestBed.inject(WeeklyWorkoutLogsService);
+    (weeklyWorkoutLogs.getForDate as any).mockResolvedValue(log);
     fixture = TestBed.createComponent(ThisWeekComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

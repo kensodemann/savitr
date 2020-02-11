@@ -38,8 +38,8 @@ describe('ExerciseFinderComponent', () => {
 
   describe('filtering', () => {
     beforeEach(() => {
-      const srv = TestBed.get(ExercisesService);
-      srv.all.mockReturnValue(of(exercises));
+      const srv = TestBed.inject(ExercisesService);
+      (srv.all as any).mockReturnValue(of(exercises));
     });
 
     it('defaults to all exercises', () => {
@@ -78,13 +78,13 @@ describe('ExerciseFinderComponent', () => {
 
   describe('selecting an exercise', () => {
     it('dismisses the modal', () => {
-      const modalController = TestBed.get(ModalController);
+      const modalController = TestBed.inject(ModalController);
       component.select(exercises[1]);
       expect(modalController.dismiss).toHaveBeenCalledTimes(1);
     });
 
     it('passes back the selected exercise', () => {
-      const modalController = TestBed.get(ModalController);
+      const modalController = TestBed.inject(ModalController);
       component.select(exercises[1]);
       expect(modalController.dismiss).toHaveBeenCalledWith(exercises[1], 'select');
     });

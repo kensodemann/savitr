@@ -40,13 +40,13 @@ describe('HistoryPage', () => {
   });
 
   it('gets the work logs', () => {
-    const workoutLogs = TestBed.get(WeeklyWorkoutLogsService);
+    const workoutLogs = TestBed.inject(WeeklyWorkoutLogsService);
     expect(workoutLogs.all).toHaveBeenCalledTimes(1);
   });
 
   describe('logout', () => {
     it('dispatches the logout action', () => {
-      const store = TestBed.get(Store);
+      const store = TestBed.inject(Store);
       store.dispatch = jest.fn();
       component.logout();
       expect(store.dispatch).toHaveBeenCalledTimes(1);

@@ -20,15 +20,15 @@ describe('ExercisesService', () => {
         { provide: AngularFirestore, useFactory: createAngularFirestoreMock }
       ]
     });
-    const angularFirestore = TestBed.get(AngularFirestore);
+    const angularFirestore = TestBed.inject(AngularFirestore);
     collection = createAngularFirestoreCollectionMock();
-    angularFirestore.collection.mockReturnValue(collection);
+    (angularFirestore.collection as any).mockReturnValue(collection);
   });
 
   beforeEach(inject([ExercisesService], (service: ExercisesService) => {
     exercises = service;
-    const afAuth = TestBed.get(AngularFireAuth);
-    afAuth.authState.next();
+    const afAuth = TestBed.inject(AngularFireAuth);
+    (afAuth as any).authState.next();
   }));
 
   it('should be created', () => {
@@ -36,7 +36,7 @@ describe('ExercisesService', () => {
   });
 
   it('grabs a references to the exercises collection', () => {
-    const angularFirestore = TestBed.get(AngularFirestore);
+    const angularFirestore = TestBed.inject(AngularFirestore);
     exercises.all();
     expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
     expect(angularFirestore.collection).toHaveBeenCalledWith('exercises');

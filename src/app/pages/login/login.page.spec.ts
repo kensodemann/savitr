@@ -56,7 +56,7 @@ describe('LoginPage', () => {
     });
 
     it('dispatches the login action', () => {
-      const store = TestBed.get(Store);
+      const store = TestBed.inject(Store);
       store.dispatch = jest.fn();
       page.login();
       expect(store.dispatch).toHaveBeenCalledTimes(1);
@@ -68,7 +68,7 @@ describe('LoginPage', () => {
     let store: MockStore<State>;
     let mockAuthLoadingSelector;
     beforeEach(() => {
-      store = TestBed.get(Store);
+      store = TestBed.inject(Store) as MockStore<State>;
       mockAuthLoadingSelector = store.overrideSelector(selectAuthLoading, false);
       fixture.detectChanges();
       loading.dismiss.mockClear();
@@ -93,13 +93,13 @@ describe('LoginPage', () => {
     let store: MockStore<State>;
     let mockAuthEmailSelector;
     beforeEach(() => {
-      store = TestBed.get(Store);
+      store = TestBed.inject(Store) as MockStore<State>;
       mockAuthEmailSelector = store.overrideSelector(selectAuthEmail, undefined);
       fixture.detectChanges();
     });
 
     it('navigates to the app when the email is set', () => {
-      const navController = TestBed.get(NavController);
+      const navController = TestBed.inject(NavController);
       mockAuthEmailSelector.setResult(null);
       store.refreshState();
       fixture.detectChanges();
@@ -116,7 +116,7 @@ describe('LoginPage', () => {
     let store: MockStore<State>;
     let mockAuthErrorSelector;
     beforeEach(() => {
-      store = TestBed.get(Store);
+      store = TestBed.inject(Store) as MockStore<State>;
       mockAuthErrorSelector = store.overrideSelector(selectAuthError, undefined);
       fixture.detectChanges();
     });
@@ -150,7 +150,7 @@ describe('LoginPage', () => {
     let store: MockStore<State>;
     let mockAuthMessageSelector;
     beforeEach(() => {
-      store = TestBed.get(Store);
+      store = TestBed.inject(Store) as MockStore<State>;
       mockAuthMessageSelector = store.overrideSelector(selectAuthMessage, undefined);
       fixture.detectChanges();
     });
@@ -169,7 +169,7 @@ describe('LoginPage', () => {
 
   describe('password reset', () => {
     it('creates an alert', () => {
-      const alertController = TestBed.get(AlertController);
+      const alertController = TestBed.inject(AlertController);
       page.handlePasswordReset();
       expect(alertController.create).toHaveBeenCalledTimes(1);
     });
@@ -177,9 +177,9 @@ describe('LoginPage', () => {
     describe('the alert', () => {
       let params;
       beforeEach(async () => {
-        const alertController = TestBed.get(AlertController);
+        const alertController = TestBed.inject(AlertController);
         await page.handlePasswordReset();
-        params = alertController.create.mock.calls[0][0];
+        params = (alertController.create as any).mock.calls[0][0];
       });
 
       it('asks for the user e-mail', () => {
@@ -216,7 +216,7 @@ describe('LoginPage', () => {
     describe('on alert dismiss', () => {
       let store: MockStore<State>;
       beforeEach(() => {
-        store = TestBed.get(Store);
+        store = TestBed.inject(Store) as MockStore<State>;
         store.dispatch = jest.fn();
       });
 

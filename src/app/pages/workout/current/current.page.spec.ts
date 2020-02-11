@@ -41,11 +41,11 @@ describe('CurrentPage', () => {
 
   beforeEach(() => {
     log = { id: '715WI920', beginDate: parseISO('2019-10-27') };
-    const dateService = TestBed.get(DateService);
-    dateService.currentBeginDate.mockReturnValue(parseISO('2019-10-27'));
-    dateService.currentDay.mockReturnValue(4);
-    const weeklyWorkoutLogs = TestBed.get(WeeklyWorkoutLogsService);
-    weeklyWorkoutLogs.getForDate.mockResolvedValue(log);
+    const dateService = TestBed.inject(DateService);
+    (dateService.currentBeginDate as any).mockReturnValue(parseISO('2019-10-27'));
+    (dateService.currentDay as any).mockReturnValue(4);
+    const weeklyWorkoutLogs = TestBed.inject(WeeklyWorkoutLogsService);
+    (weeklyWorkoutLogs.getForDate as any).mockResolvedValue(log);
     fixture = TestBed.createComponent(CurrentPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -56,24 +56,24 @@ describe('CurrentPage', () => {
   });
 
   it('gets the day of the week', () => {
-    const dateService = TestBed.get(DateService);
+    const dateService = TestBed.inject(DateService);
     expect(dateService.currentDay).toHaveBeenCalledTimes(1);
     expect(component.day).toEqual(4);
   });
 
   it('gets the current end date', () => {
-    const dateService = TestBed.get(DateService);
+    const dateService = TestBed.inject(DateService);
     expect(dateService.currentBeginDate).toHaveBeenCalledTimes(1);
   });
 
   it('gets the log for that end date', () => {
-    const weeklyWorkoutLogs = TestBed.get(WeeklyWorkoutLogsService);
+    const weeklyWorkoutLogs = TestBed.inject(WeeklyWorkoutLogsService);
     expect(weeklyWorkoutLogs.getForDate).toHaveBeenCalledTimes(1);
     expect(weeklyWorkoutLogs.getForDate).toHaveBeenCalledWith(parseISO('2019-10-27'));
   });
 
   it('gets the entries for the log', () => {
-    const workoutPageService = TestBed.get(WorkoutPageService);
+    const workoutPageService = TestBed.inject(WorkoutPageService);
     expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
     expect(workoutPageService.logEntries).toHaveBeenCalledWith(log);
   });
@@ -82,7 +82,7 @@ describe('CurrentPage', () => {
     let workoutPageService;
     let entry;
     beforeEach(() => {
-      workoutPageService = TestBed.get(WorkoutPageService);
+      workoutPageService = TestBed.inject(WorkoutPageService);
       workoutPageService.logEntries.mockClear();
       entry = {
         id: 'ifiifiigifi',
@@ -165,7 +165,7 @@ describe('CurrentPage', () => {
 
   describe('save', () => {
     it('saves the passed in log entry', () => {
-      const workoutLogEntries = TestBed.get(WorkoutLogEntriesService);
+      const workoutLogEntries = TestBed.inject(WorkoutLogEntriesService);
       component.save({
         id: 'ifiifiigifi',
         logDate: parseISO('2019-07-22'),
@@ -198,7 +198,7 @@ describe('CurrentPage', () => {
 
   describe('logout', () => {
     it('dispatches the logout action', () => {
-      const store = TestBed.get(Store);
+      const store = TestBed.inject(Store);
       store.dispatch = jest.fn();
       component.logout();
       expect(store.dispatch).toHaveBeenCalledTimes(1);

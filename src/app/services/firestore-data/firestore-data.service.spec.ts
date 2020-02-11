@@ -44,15 +44,15 @@ describe('FirestoreDataService', () => {
         TestService
       ]
     });
-    const angularFirestore = TestBed.get(AngularFirestore);
+    const angularFirestore = TestBed.inject(AngularFirestore);
     collection = createAngularFirestoreCollectionMock();
-    angularFirestore.collection.mockReturnValue(collection);
+    (angularFirestore.collection as any).mockReturnValue(collection);
   });
 
   beforeEach(inject([TestService], (service: TestService) => {
     dataService = service;
-    const afAuth = TestBed.get(AngularFireAuth);
-    afAuth.authState.next();
+    const afAuth = TestBed.inject(AngularFireAuth);
+    (afAuth.authState as any).next();
   }));
 
   it('should be created', () => {
@@ -61,7 +61,7 @@ describe('FirestoreDataService', () => {
 
   describe('all', () => {
     it('grabs a references to the data collection', () => {
-      const angularFirestore = TestBed.get(AngularFirestore);
+      const angularFirestore = TestBed.inject(AngularFirestore);
       dataService.all();
       expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
       expect(angularFirestore.collection).toHaveBeenCalledWith('data-collection');

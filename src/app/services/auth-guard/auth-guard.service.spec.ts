@@ -28,8 +28,8 @@ describe('AuthGuardService', () => {
   describe('canActivate', () => {
     describe('with a current user', () => {
       beforeEach(() => {
-        const af = TestBed.get(AngularFireAuth);
-        af.user = of({ email: 'test@test.com' });
+        const af = TestBed.inject(AngularFireAuth);
+        (af as any).user = of({ email: 'test@test.com' });
       });
 
       it('allows navigation', async () => {
@@ -39,8 +39,8 @@ describe('AuthGuardService', () => {
 
     describe('without a current user', () => {
       beforeEach(() => {
-        const af = TestBed.get(AngularFireAuth);
-        af.user = of(null);
+        const af = TestBed.inject(AngularFireAuth);
+        (af as any).user = of(null);
       });
 
       it('does not allow navigation', async () => {
@@ -48,7 +48,7 @@ describe('AuthGuardService', () => {
       });
 
       it('navigates to the login page', async () => {
-        const nav = TestBed.get(NavController);
+        const nav = TestBed.inject(NavController);
         await authGuard.canActivate();
         expect(nav.navigateRoot).toHaveBeenCalledTimes(1);
         expect(nav.navigateRoot).toHaveBeenCalledWith(['login']);

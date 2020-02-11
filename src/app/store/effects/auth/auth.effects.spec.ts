@@ -19,7 +19,7 @@ beforeEach(() => {
     ]
   });
 
-  effects = TestBed.get<AuthEffects>(AuthEffects);
+  effects = TestBed.inject(AuthEffects);
 });
 
 it('exists', () => {
@@ -28,14 +28,14 @@ it('exists', () => {
 
 describe('login$', () => {
   it('calls the login', () => {
-    const authenticationService = TestBed.get(AuthenticationService);
+    const authenticationService = TestBed.inject(AuthenticationService);
     actions$ = of(login({ email: 'test@testty.com', password: 'mysecret' }));
     effects.login$.subscribe(() => {});
     expect(authenticationService.login).toHaveBeenCalledTimes(1);
   });
 
   it('passes the email and password', () => {
-    const authenticationService = TestBed.get(AuthenticationService);
+    const authenticationService = TestBed.inject(AuthenticationService);
     actions$ = of(login({ email: 'test@testty.com', password: 'mysecret' }));
     effects.login$.subscribe(() => {});
     expect(authenticationService.login).toHaveBeenCalledWith('test@testty.com', 'mysecret');
@@ -50,8 +50,8 @@ describe('login$', () => {
   });
 
   it('dispatches login errors', done => {
-    const authenticationService = TestBed.get(AuthenticationService);
-    authenticationService.login.mockRejectedValue(new Error('The login failed'));
+    const authenticationService = TestBed.inject(AuthenticationService);
+    (authenticationService.login as any).mockRejectedValue(new Error('The login failed'));
     actions$ = of(login({ email: 'test@testty.com', password: 'mysecret' }));
     effects.login$.subscribe(action => {
       expect(action).toEqual({ type: AuthActionTypes.LoginFailure, error: new Error('The login failed') });
@@ -60,7 +60,7 @@ describe('login$', () => {
   });
 
   it('does nothing for other actions', () => {
-    const authenticationService = TestBed.get(AuthenticationService);
+    const authenticationService = TestBed.inject(AuthenticationService);
     actions$ = of(logout());
     effects.login$.subscribe(() => {});
     expect(authenticationService.login).not.toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe('login$', () => {
 
 describe('logout$', () => {
   it('calls the logout', () => {
-    const authenticationService = TestBed.get(AuthenticationService);
+    const authenticationService = TestBed.inject(AuthenticationService);
     actions$ = of(logout());
     effects.logout$.subscribe(() => {});
     expect(authenticationService.logout).toHaveBeenCalledTimes(1);
@@ -84,8 +84,8 @@ describe('logout$', () => {
   });
 
   it('dispatches login errors', done => {
-    const authenticationService = TestBed.get(AuthenticationService);
-    authenticationService.logout.mockRejectedValue(new Error('The logout failed'));
+    const authenticationService = TestBed.inject(AuthenticationService);
+    (authenticationService.logout as any).mockRejectedValue(new Error('The logout failed'));
     actions$ = of(logout());
     effects.logout$.subscribe(action => {
       expect(action).toEqual({ type: AuthActionTypes.LogoutFailure, error: new Error('The logout failed') });
@@ -94,7 +94,7 @@ describe('logout$', () => {
   });
 
   it('does nothing for other actions', () => {
-    const authenticationService = TestBed.get(AuthenticationService);
+    const authenticationService = TestBed.inject(AuthenticationService);
     actions$ = of(login({ email: 'test@testty.com', password: 'mysecret' }));
     effects.logout$.subscribe(() => {});
     expect(authenticationService.logout).not.toHaveBeenCalled();
@@ -103,14 +103,14 @@ describe('logout$', () => {
 
 describe('resetPassword$', () => {
   it('calls resetPassword', () => {
-    const authenticationService = TestBed.get(AuthenticationService);
+    const authenticationService = TestBed.inject(AuthenticationService);
     actions$ = of(resetPassword({ email: 'test@testty.com' }));
     effects.resetPassword$.subscribe(() => {});
     expect(authenticationService.sendPasswordResetEmail).toHaveBeenCalledTimes(1);
   });
 
   it('passes the email', () => {
-    const authenticationService = TestBed.get(AuthenticationService);
+    const authenticationService = TestBed.inject(AuthenticationService);
     actions$ = of(resetPassword({ email: 'test@testty.com' }));
     effects.resetPassword$.subscribe(() => {});
     expect(authenticationService.sendPasswordResetEmail).toHaveBeenCalledWith('test@testty.com');
@@ -125,8 +125,8 @@ describe('resetPassword$', () => {
   });
 
   it('dispatches errors', done => {
-    const authenticationService = TestBed.get(AuthenticationService);
-    authenticationService.sendPasswordResetEmail.mockRejectedValue(new Error('The reset failed'));
+    const authenticationService = TestBed.inject(AuthenticationService);
+    (authenticationService.sendPasswordResetEmail as any).mockRejectedValue(new Error('The reset failed'));
     actions$ = of(resetPassword({ email: 'test@testty.com' }));
     effects.resetPassword$.subscribe(action => {
       expect(action).toEqual({ type: AuthActionTypes.ResetPasswordFailure, error: new Error('The reset failed') });
@@ -135,7 +135,7 @@ describe('resetPassword$', () => {
   });
 
   it('does nothing for other actions', () => {
-    const authenticationService = TestBed.get(AuthenticationService);
+    const authenticationService = TestBed.inject(AuthenticationService);
     actions$ = of(logout());
     effects.resetPassword$.subscribe(() => {});
     expect(authenticationService.sendPasswordResetEmail).not.toHaveBeenCalled();

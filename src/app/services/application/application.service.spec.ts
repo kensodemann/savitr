@@ -27,22 +27,22 @@ describe('ApplicationService', () => {
   });
 
   it('should be created', () => {
-    const service: ApplicationService = TestBed.get(ApplicationService);
+    const service: ApplicationService = TestBed.inject(ApplicationService);
     expect(service).toBeTruthy();
   });
 
   describe('registered for updates', () => {
     beforeEach(() => {
       alert.onDidDismiss.mockResolvedValue({ role: 'cancel' });
-      const service: ApplicationService = TestBed.get(ApplicationService);
+      const service: ApplicationService = TestBed.inject(ApplicationService);
       service.registerForUpdates();
     });
 
     it('asks the user if they would like an update', () => {
-      const update = TestBed.get(SwUpdate);
-      const alertController = TestBed.get(AlertController);
+      const update = TestBed.inject(SwUpdate);
+      const alertController = TestBed.inject(AlertController);
       expect(alertController.create).not.toHaveBeenCalled();
-      update.available.next();
+      (update.available as any).next();
       expect(alertController.create).toHaveBeenCalledTimes(1);
     });
   });
