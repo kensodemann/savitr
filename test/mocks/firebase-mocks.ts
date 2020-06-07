@@ -6,12 +6,10 @@ export function createAngularFireAuthMock() {
     user: of(null),
     idToken: of(null),
     idTokenResult: of(null),
-    auth: {
-      sendPasswordResetEmail: jest.fn(() => Promise.resolve()),
-      signInWithEmailAndPassword: jest.fn(() => Promise.resolve()),
-      signInWithPopup: jest.fn(() => Promise.resolve()),
-      signOut: jest.fn(() => Promise.resolve())
-    }
+    sendPasswordResetEmail: jest.fn(() => Promise.resolve()),
+    signInWithEmailAndPassword: jest.fn(() => Promise.resolve()),
+    signInWithPopup: jest.fn(() => Promise.resolve()),
+    signOut: jest.fn(() => Promise.resolve())
   };
 }
 

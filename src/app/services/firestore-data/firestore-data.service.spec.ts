@@ -23,11 +23,11 @@ interface DataType {
 
 @Injectable()
 class TestService extends FirestoreDataService<DataType> {
-  constructor(private firestore: AngularFirestore) {
-    super();
+  constructor(private firestore: AngularFirestore, afAuth: AngularFireAuth) {
+    super(afAuth);
   }
 
-  protected getCollection(): AngularFirestoreCollection<DataType> {
+  protected getCollection(user?: firebase.User): AngularFirestoreCollection<DataType> {
     return this.firestore.collection('data-collection');
   }
 }
@@ -52,6 +52,8 @@ describe('FirestoreDataService', () => {
   beforeEach(inject([TestService], (service: TestService) => {
     dataService = service;
     const afAuth = TestBed.inject(AngularFireAuth);
+    (afAuth as any).currentUser = Promise.resolve({ uid: '123abc' });
+    (afAuth as any).user = of({ uid: '123abc' });
     (afAuth.authState as any).next();
   }));
 
@@ -62,13 +64,13 @@ describe('FirestoreDataService', () => {
   describe('all', () => {
     it('grabs a references to the data collection', () => {
       const angularFirestore = TestBed.inject(AngularFirestore);
-      dataService.all();
+      dataService.all().subscribe();
       expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
       expect(angularFirestore.collection).toHaveBeenCalledWith('data-collection');
     });
 
     it('looks for snapshot changes', () => {
-      dataService.all();
+      dataService.all().subscribe();
       expect(collection.snapshotChanges).toHaveBeenCalledTimes(1);
     });
 
@@ -114,14 +116,14 @@ describe('FirestoreDataService', () => {
       collection.doc.mockReturnValue(document);
     });
 
-    it('gets a references to the document', () => {
-      dataService.get('199405fkkgi59');
+    it('gets a references to the document', async () => {
+      await dataService.get('199405fkkgi59');
       expect(collection.doc).toHaveBeenCalledTimes(1);
       expect(collection.doc).toHaveBeenCalledWith('199405fkkgi59');
     });
 
-    it('gets the value of the document', () => {
-      dataService.get('199405fkkgi59');
+    it('gets the value of the document', async () => {
+      await dataService.get('199405fkkgi59');
       expect(document.ref.get).toHaveBeenCalledTimes(1);
     });
 
@@ -143,8 +145,8 @@ describe('FirestoreDataService', () => {
   });
 
   describe('add', () => {
-    it('adds the item to the collection', () => {
-      dataService.add({
+    it('adds the item to the collection', async () => {
+      await dataService.add({
         name: 'Fred Flintstone',
         description: 'Head of a modnern stone-age family',
         isActive: true
@@ -165,8 +167,8 @@ describe('FirestoreDataService', () => {
       collection.doc.mockReturnValue(document);
     });
 
-    it('gets a reference to the document', () => {
-      dataService.delete({
+    it('gets a reference to the document', async () => {
+      await dataService.delete({
         id: '49950399KT',
         name: 'shiny',
         description: 'Make them extra shiny',
@@ -176,8 +178,8 @@ describe('FirestoreDataService', () => {
       expect(collection.doc).toHaveBeenCalledWith('49950399KT');
     });
 
-    it('deletes the document', () => {
-      dataService.delete({
+    it('deletes the document', async () => {
+      await dataService.delete({
         id: '49950399KT',
         name: 'shiny',
         description: 'Make them extra shiny',
@@ -194,8 +196,8 @@ describe('FirestoreDataService', () => {
       collection.doc.mockReturnValue(document);
     });
 
-    it('gets a reference to the document', () => {
-      dataService.update({
+    it('gets a reference to the document', async () => {
+      await dataService.update({
         id: '49950399KT',
         name: 'Kyle',
         description: 'some kid in South Park',
@@ -205,8 +207,8 @@ describe('FirestoreDataService', () => {
       expect(collection.doc).toHaveBeenCalledWith('49950399KT');
     });
 
-    it('sets the document data', () => {
-      dataService.update({
+    it('sets the document data', async () => {
+      await dataService.update({
         id: '49950399KT',
         name: 'Kyle',
         description: 'some kid in South Park',

@@ -10,15 +10,15 @@ import { AngularFireAuth } from '@angular/fire/auth';
   providedIn: 'root'
 })
 export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
-  constructor(private ngFirestore: AngularFirestore, private afAuth: AngularFireAuth) {
-    super();
+  constructor(private ngFirestore: AngularFirestore, afAuth: AngularFireAuth) {
+    super(afAuth);
   }
 
-  protected getCollection(): AngularFirestoreCollection<WorkoutLog> {
-    if (this.afAuth.auth.currentUser) {
+  protected getCollection(user?: firebase.User): AngularFirestoreCollection<WorkoutLog> {
+    if (user) {
       return this.ngFirestore
         .collection('users')
-        .doc(this.afAuth.auth.currentUser.uid)
+        .doc(user.uid)
         .collection('weekly-workout-logs', ref => ref.orderBy('beginDate', 'desc'));
     }
   }
@@ -43,8 +43,11 @@ export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
   }
 
   async getForDate(dt: Date): Promise<WorkoutLog> {
+    const user = await this.afAuth.currentUser;
     let doc;
-    const value = await this.collection.ref.where('beginDate', '==', dt).get();
+    const value = await this.getCollection(user)
+      .ref.where('beginDate', '==', dt)
+      .get();
 
     if (value.size === 0) {
       const ref = await this.add({ beginDate: dt });

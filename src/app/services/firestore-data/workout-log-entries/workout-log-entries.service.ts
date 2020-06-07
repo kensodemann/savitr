@@ -9,21 +9,24 @@ import { WorkoutLogEntry } from '@app/models';
   providedIn: 'root'
 })
 export class WorkoutLogEntriesService extends FirestoreDataService<WorkoutLogEntry> {
-  constructor(private firestore: AngularFirestore, private afAuth: AngularFireAuth) {
-    super();
+  constructor(private firestore: AngularFirestore, afAuth: AngularFireAuth) {
+    super(afAuth);
   }
 
-  protected getCollection(): AngularFirestoreCollection<WorkoutLogEntry> {
-    if (this.afAuth.auth.currentUser) {
+  protected getCollection(user?: firebase.User): AngularFirestoreCollection<WorkoutLogEntry> {
+    if (user) {
       return this.firestore
         .collection('users')
-        .doc(this.afAuth.auth.currentUser.uid)
+        .doc(user.uid)
         .collection('workout-log-entries');
     }
   }
 
   async getAllForLog(id: string): Promise<Array<WorkoutLogEntry>> {
-    const value = await this.collection.ref.where('workoutLog.id', '==', id).get();
+    const user = await this.afAuth.currentUser;
+    const value = await this.getCollection(user)
+      .ref.where('workoutLog.id', '==', id)
+      .get();
     return value.docs.map(doc => {
       const d: WorkoutLogEntry = {
         id: doc.id,

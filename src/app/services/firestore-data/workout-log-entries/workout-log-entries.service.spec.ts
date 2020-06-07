@@ -1,6 +1,7 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { firestore } from 'firebase/app';
+import { of } from 'rxjs';
 
 import { WorkoutLogEntriesService } from './workout-log-entries.service';
 import {
@@ -37,7 +38,8 @@ describe('DailyExercisesService', () => {
     workoutLogEntries = service;
     // NOTE: User needs to be logged in for this service to be useful
     const afAuth = TestBed.inject(AngularFireAuth);
-    (afAuth as any).auth.currentUser = { uid: '123abc' };
+    (afAuth as any).currentUser = Promise.resolve({ uid: '123abc' });
+    (afAuth as any).user = of({ uid: '123abc' });
   }));
 
   it('should be created', () => {
@@ -47,7 +49,7 @@ describe('DailyExercisesService', () => {
   describe('all', () => {
     it('grabs a reference to the daily-exercises collection for the user', () => {
       const angularFirestore = TestBed.inject(AngularFirestore);
-      workoutLogEntries.all();
+      workoutLogEntries.all().subscribe();
       expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
       expect(angularFirestore.collection).toHaveBeenCalledWith('users');
       expect(collection.doc).toHaveBeenCalledTimes(1);

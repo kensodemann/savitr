@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection
-} from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 import { Exercise } from '@app/models/exercise';
 import { FirestoreDataService } from '../firestore-data.service';
@@ -11,8 +9,8 @@ import { FirestoreDataService } from '../firestore-data.service';
   providedIn: 'root'
 })
 export class ExercisesService extends FirestoreDataService<Exercise> {
-  constructor(private firestore: AngularFirestore) {
-    super();
+  constructor(private firestore: AngularFirestore, afAuth: AngularFireAuth) {
+    super(afAuth);
   }
 
   protected getCollection(): AngularFirestoreCollection<Exercise> {

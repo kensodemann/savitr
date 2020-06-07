@@ -1,36 +1,49 @@
 import { AngularFirestoreCollection, DocumentChangeAction, DocumentReference } from '@angular/fire/firestore';
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { flatMap, map } from 'rxjs/operators';
+import { AngularFireAuth } from '@angular/fire/auth/auth';
 
 export abstract class FirestoreDataService<T extends { id?: string }> {
-  get collection(): AngularFirestoreCollection<T> {
-    return this.getCollection();
-  }
-
-  constructor() {}
+  constructor(protected afAuth: AngularFireAuth) {}
 
   all(): Observable<Array<T>> {
-    return this.collection.snapshotChanges().pipe(map(this.actionsToData));
+    return this.afAuth.user.pipe(
+      flatMap(user =>
+        this.getCollection(user)
+          .snapshotChanges()
+          .pipe(map(this.actionsToData))
+      )
+    );
   }
 
   async get(id: string): Promise<T> {
-    const doc = await this.collection.doc<T>(id).ref.get();
+    const user = await this.afAuth.currentUser;
+    const doc = await this.getCollection(user)
+      .doc<T>(id)
+      .ref.get();
     return { id, ...(doc && doc.data()) } as T;
   }
 
-  add(item: T): Promise<DocumentReference> {
-    return this.collection.add(item);
+  async add(item: T): Promise<DocumentReference> {
+    const user = await this.afAuth.currentUser;
+    return this.getCollection(user).add(item);
   }
 
-  delete(item: T): Promise<void> {
-    return this.collection.doc(item.id).delete();
+  async delete(item: T): Promise<void> {
+    const user = await this.afAuth.currentUser;
+    return this.getCollection(user)
+      .doc(item.id)
+      .delete();
   }
 
-  update(item: T): Promise<void> {
+  async update(item: T): Promise<void> {
+    const user = await this.afAuth.currentUser;
     const data = { ...(item as object) } as T;
     delete data.id;
-    return this.collection.doc(item.id).set(data);
+    return this.getCollection(user)
+      .doc(item.id)
+      .set(data);
   }
 
   protected actionsToData(actions: Array<DocumentChangeAction<T>>): Array<T> {
@@ -41,5 +54,5 @@ export abstract class FirestoreDataService<T extends { id?: string }> {
     });
   }
 
-  protected abstract getCollection(): AngularFirestoreCollection<T>;
+  protected abstract getCollection(user?: firebase.User): AngularFirestoreCollection<T>;
 }
