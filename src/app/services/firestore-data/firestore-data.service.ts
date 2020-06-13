@@ -9,19 +9,17 @@ export abstract class FirestoreDataService<T extends { id?: string }> {
 
   all(): Observable<Array<T>> {
     return this.afAuth.user.pipe(
-      flatMap(user =>
-        this.getCollection(user)
-          .snapshotChanges()
-          .pipe(map(this.actionsToData))
-      )
+      flatMap(user => this.getCollection(user).snapshotChanges().pipe(map(this.actionsToData)))
     );
+  }
+
+  observeChanges(): Observable<Array<DocumentChangeAction<T>>> {
+    return this.afAuth.user.pipe(flatMap(user => this.getCollection(user).stateChanges()));
   }
 
   async get(id: string): Promise<T> {
     const user = await this.afAuth.currentUser;
-    const doc = await this.getCollection(user)
-      .doc<T>(id)
-      .ref.get();
+    const doc = await this.getCollection(user).doc<T>(id).ref.get();
     return { id, ...(doc && doc.data()) } as T;
   }
 
@@ -32,18 +30,14 @@ export abstract class FirestoreDataService<T extends { id?: string }> {
 
   async delete(item: T): Promise<void> {
     const user = await this.afAuth.currentUser;
-    return this.getCollection(user)
-      .doc(item.id)
-      .delete();
+    return this.getCollection(user).doc(item.id).delete();
   }
 
   async update(item: T): Promise<void> {
     const user = await this.afAuth.currentUser;
     const data = { ...(item as object) } as T;
     delete data.id;
-    return this.getCollection(user)
-      .doc(item.id)
-      .set(data);
+    return this.getCollection(user).doc(item.id).set(data);
   }
 
   protected actionsToData(actions: Array<DocumentChangeAction<T>>): Array<T> {

@@ -2,23 +2,29 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalController, AlertController } from '@ionic/angular';
 import { provideMockStore } from '@ngrx/store/testing';
+import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 
 import { ExercisesPage } from './exercises.page';
 import { ExerciseEditorComponent } from 'src/app/editors/exercise-editor/exercise-editor.component';
-import { ExercisesService } from '@app/services/firestore-data';
+import { ExercisesState } from '@app/store/reducers/exercise/exercise.reducer';
+import { Exercise } from '@app/models';
 
-import { createExercisesServiceMock } from '@app/services/firestore-data/mocks';
 import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
 import { logout } from '@app/store/actions/auth.actions';
+import { remove } from '@app/store/actions/exercise.actions';
 
 describe('ExercisesPage', () => {
-  let alert;
+  let alert: any;
   let component: ExercisesPage;
-  let editor;
+  let editor: any;
   let fixture: ComponentFixture<ExercisesPage>;
 
+  let testExercises: Dictionary<Exercise>;
+  let testExerciseIds: Array<string>;
+
   beforeEach(async(() => {
+    initializeTestData();
     alert = createOverlayElementMock();
     editor = createOverlayElementMock();
     TestBed.configureTestingModule({
@@ -26,12 +32,13 @@ describe('ExercisesPage', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
-        { provide: ExercisesService, useFactory: createExercisesServiceMock },
         {
           provide: ModalController,
           useFactory: () => createOverlayControllerMock(editor)
         },
-        provideMockStore()
+        provideMockStore<{ exercises: ExercisesState }>({
+          initialState: { exercises: { ids: testExerciseIds, entities: testExercises, loading: false } }
+        })
       ]
     }).compileComponents();
   }));
@@ -47,9 +54,46 @@ describe('ExercisesPage', () => {
   });
 
   describe('initialization', () => {
-    it('sets up an observable on the exercises', () => {
-      const svc = TestBed.inject(ExercisesService);
-      expect(svc.all).toHaveBeenCalledTimes(1);
+    it('observes the exercises', () => {
+      let exercises: Array<Exercise>;
+      component.exercises$.subscribe(e => (exercises = e));
+      expect(exercises).toEqual([
+        {
+          id: '388495883',
+          name: 'Bench Press',
+          description: 'Standard bench press with a barbell',
+          area: 'Upper Body',
+          type: 'Free Weight'
+        },
+        {
+          id: 'A98503BEF',
+          name: 'Sit-up',
+          description: 'Lay on back with legs bent, sit up fully',
+          area: 'Core',
+          type: 'Body Weight'
+        },
+        {
+          id: '9930408A3',
+          name: 'Elliptical',
+          description: 'Low impact glide-running',
+          area: 'Cardio',
+          type: 'Machine'
+        },
+        {
+          id: '3885723475',
+          name: 'Matrix Bench Press',
+          description: 'Bench press using a machine',
+          area: 'Upper Body',
+          type: 'Machine'
+        },
+        {
+          id: '773758FC3',
+          name: 'Dumbbell Bench Press',
+          description: 'Bench press using two dumbbells',
+          area: 'Upper Body',
+          type: 'Free Weight'
+        }
+      ]);
     });
   });
 
@@ -67,37 +111,6 @@ describe('ExercisesPage', () => {
     it('presents the editor', async () => {
       await component.add();
       expect(editor.present).toHaveBeenCalledTimes(1);
-    });
-
-    describe('if the "save" role was used', () => {
-      it('updates the exercise', async () => {
-        const service = TestBed.inject(ExercisesService);
-        editor.onDidDismiss.mockResolvedValue({
-          data: {
-            name: 'Squats',
-            description: 'Not to be confused with squirts',
-            area: 'Lower Body',
-            type: 'Free Weights'
-          },
-          role: 'save'
-        });
-        await component.add();
-        expect(service.add).toHaveBeenCalledTimes(1);
-        expect(service.add).toHaveBeenCalledWith({
-          name: 'Squats',
-          description: 'Not to be confused with squirts',
-          area: 'Lower Body',
-          type: 'Free Weights'
-        });
-      });
-    });
-
-    describe('if editing was cancelled without saving', () => {
-      it('does not update the exercise', async () => {
-        const service = TestBed.inject(ExercisesService);
-        await component.add();
-        expect(service.add).not.toHaveBeenCalled();
-      });
     });
   });
 
@@ -126,39 +139,6 @@ describe('ExercisesPage', () => {
     it('presents the editor', async () => {
       await component.edit(exercise);
       expect(editor.present).toHaveBeenCalledTimes(1);
-    });
-
-    describe('if the "save" role was used', () => {
-      it('updates the exercise', async () => {
-        const service = TestBed.inject(ExercisesService);
-        editor.onDidDismiss.mockResolvedValue({
-          data: {
-            id: '420059399405',
-            name: 'Squats',
-            description: 'Not to be confused with squirts',
-            area: 'Lower Body',
-            type: 'Free Weights'
-          },
-          role: 'save'
-        });
-        await component.edit(exercise);
-        expect(service.update).toHaveBeenCalledTimes(1);
-        expect(service.update).toHaveBeenCalledWith({
-          id: '420059399405',
-          name: 'Squats',
-          description: 'Not to be confused with squirts',
-          area: 'Lower Body',
-          type: 'Free Weights'
-        });
-      });
-    });
-
-    describe('if editing was cancelled without saving', () => {
-      it('does not update the exercise', async () => {
-        const service = TestBed.inject(ExercisesService);
-        await component.edit(exercise);
-        expect(service.update).not.toHaveBeenCalled();
-      });
     });
   });
 
@@ -195,25 +175,23 @@ describe('ExercisesPage', () => {
       expect(alert.present).toHaveBeenCalledTimes(1);
     });
 
-    it('does the delete if the "confirm" button is pressed', async () => {
-      const svc = TestBed.inject(ExercisesService);
+    it('dispatches the remove if the "confirm" button is pressed', async () => {
+      const store = TestBed.inject(Store);
+      store.dispatch = jest.fn();
       alert.onDidDismiss.mockResolvedValue({ role: 'confirm' });
       await component.delete(exercise);
-      expect(svc.delete).toHaveBeenCalledTimes(1);
-      expect(svc.delete).toHaveBeenCalledWith({
-        id: '420059399405',
-        name: 'Push Back',
-        description: 'Find something you do not like, rebel against it',
-        type: 'Body Weight',
-        area: 'Core'
-      });
+      expect(store.dispatch).toHaveBeenCalledTimes(1);
+      expect(store.dispatch).toHaveBeenCalledWith(remove({ exercise }));
+      (store.dispatch as any).mockRestore();
     });
 
-    it('does not do the delete if the "confirm" button is pressed', async () => {
-      const svc = TestBed.inject(ExercisesService);
+    it('does not dispatch the remove delete if the "confirm" button is not pressed', async () => {
+      const store = TestBed.inject(Store);
+      store.dispatch = jest.fn();
       alert.onDidDismiss.mockResolvedValue({ role: 'cancel' });
       await component.delete(exercise);
-      expect(svc.delete).not.toHaveBeenCalled();
+      expect(store.dispatch).not.toHaveBeenCalled();
+      (store.dispatch as any).mockRestore();
     });
   });
 
@@ -224,6 +202,48 @@ describe('ExercisesPage', () => {
       component.logout();
       expect(store.dispatch).toHaveBeenCalledTimes(1);
       expect(store.dispatch).toHaveBeenCalledWith(logout());
+      (store.dispatch as any).mockRestore();
     });
   });
+
+  function initializeTestData() {
+    testExercises = {
+      388495883: {
+        id: '388495883',
+        name: 'Bench Press',
+        description: 'Standard bench press with a barbell',
+        area: 'Upper Body',
+        type: 'Free Weight'
+      },
+      A98503BEF: {
+        id: 'A98503BEF',
+        name: 'Sit-up',
+        description: 'Lay on back with legs bent, sit up fully',
+        area: 'Core',
+        type: 'Body Weight'
+      },
+      '9930408A3': {
+        id: '9930408A3',
+        name: 'Elliptical',
+        description: 'Low impact glide-running',
+        area: 'Cardio',
+        type: 'Machine'
+      },
+      3885723475: {
+        id: '3885723475',
+        name: 'Matrix Bench Press',
+        description: 'Bench press using a machine',
+        area: 'Upper Body',
+        type: 'Machine'
+      },
+      '773758FC3': {
+        id: '773758FC3',
+        name: 'Dumbbell Bench Press',
+        description: 'Bench press using two dumbbells',
+        area: 'Upper Body',
+        type: 'Free Weight'
+      }
+    };
+    testExerciseIds = ['388495883', 'A98503BEF', '9930408A3', '3885723475', '773758FC3'];
+  }
 });

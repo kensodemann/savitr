@@ -2,9 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 
 import { ExerciseEditorComponent } from './exercise-editor.component';
 import { exerciseFocusAreas, exerciseTypes } from '@app/default-data';
+import { create, update } from '@app/store/actions/exercise.actions';
 
 import { createOverlayControllerMock } from '@test/mocks';
 
@@ -16,7 +19,7 @@ describe('ExerciseEditorComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ExerciseEditorComponent],
       imports: [FormsModule, IonicModule],
-      providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock() }],
+      providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock() }, provideMockStore()],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   }));
@@ -99,34 +102,39 @@ describe('ExerciseEditorComponent', () => {
         fixture.detectChanges();
       });
 
-      it('closes the editor', async () => {
-        const modalController = TestBed.inject(ModalController);
-        await component.save();
-        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
+      it('dispatches an action', () => {
+        const store = TestBed.inject(Store);
+        store.dispatch = jest.fn();
+        component.save();
+        expect(store.dispatch).toHaveBeenCalledTimes(1);
+        (store.dispatch as any).mockRestore();
       });
 
-      it('returns the editted exercise', () => {
-        const modalController = TestBed.inject(ModalController);
+      it('passes the exercise to the create action', () => {
+        const store = TestBed.inject(Store);
+        store.dispatch = jest.fn();
         component.area = component.areas[2];
         component.type = component.types[1];
         component.name = 'Bench Press';
         component.description = 'Lay down, push weight off chest to prevent crushing';
         component.save();
-        expect(modalController.dismiss).toHaveBeenCalledWith(
-          {
-            name: 'Bench Press',
-            description: 'Lay down, push weight off chest to prevent crushing',
-            area: component.areas[2],
-            type: component.types[1]
-          },
-          jasmine.any(String)
+        expect(store.dispatch).toHaveBeenCalledWith(
+          create({
+            exercise: {
+              name: 'Bench Press',
+              description: 'Lay down, push weight off chest to prevent crushing',
+              area: component.areas[2],
+              type: component.types[1]
+            }
+          })
         );
+        (store.dispatch as any).mockRestore();
       });
 
-      it('uses the "save" role', () => {
+      it('closes the editor', async () => {
         const modalController = TestBed.inject(ModalController);
-        component.save();
-        expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
+        await component.save();
+        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -142,35 +150,40 @@ describe('ExerciseEditorComponent', () => {
         fixture.detectChanges();
       });
 
-      it('closes the editor', async () => {
-        const modalController = TestBed.inject(ModalController);
-        await component.save();
-        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
+      it('dispatches an action', () => {
+        const store = TestBed.inject(Store);
+        store.dispatch = jest.fn();
+        component.save();
+        expect(store.dispatch).toHaveBeenCalledTimes(1);
+        (store.dispatch as any).mockRestore();
       });
 
-      it('returns the editted exercise', () => {
-        const modalController = TestBed.inject(ModalController);
+      it('passes the edited exercise to the update action', () => {
+        const store = TestBed.inject(Store);
+        store.dispatch = jest.fn();
         component.area = component.areas[1];
         component.type = component.types[2];
         component.name = 'Bench Press';
         component.description = 'Lay down, push weight off chest to prevent crushing';
         component.save();
-        expect(modalController.dismiss).toHaveBeenCalledWith(
-          {
-            id: '428588494',
-            name: 'Bench Press',
-            description: 'Lay down, push weight off chest to prevent crushing',
-            area: component.areas[1],
-            type: component.types[2]
-          },
-          jasmine.any(String)
+        expect(store.dispatch).toHaveBeenCalledWith(
+          update({
+            exercise: {
+              id: '428588494',
+              name: 'Bench Press',
+              description: 'Lay down, push weight off chest to prevent crushing',
+              area: component.areas[1],
+              type: component.types[2]
+            }
+          })
         );
+        (store.dispatch as any).mockRestore();
       });
 
-      it('uses the "save" role', () => {
+      it('closes the editor', async () => {
         const modalController = TestBed.inject(ModalController);
-        component.save();
-        expect(modalController.dismiss).toHaveBeenCalledWith(jasmine.any(Object), 'save');
+        await component.save();
+        expect(modalController.dismiss).toHaveBeenCalledTimes(1);
       });
     });
   });

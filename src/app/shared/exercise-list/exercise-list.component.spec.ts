@@ -1,13 +1,9 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Subject } from 'rxjs';
 
 import { Exercise } from '@app/models';
 import { ExerciseFocusAreas } from '@app/default-data';
 import { ExerciseListComponent } from './exercise-list.component';
-import { ExercisesService } from '@app/services/firestore-data';
-
-import { createExercisesServiceMock } from '@app/services/firestore-data/mocks';
 
 describe('ExerciseListComponent', () => {
   let component: ExerciseListComponent;
@@ -20,7 +16,6 @@ describe('ExerciseListComponent', () => {
     initiailzeTestData();
     TestBed.configureTestingModule({
       declarations: [ExerciseListComponent],
-      providers: [{ provide: ExercisesService, useFactory: createExercisesServiceMock }],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   }));

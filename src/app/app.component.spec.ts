@@ -7,6 +7,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 
 import { ApplicationService } from '@app/services';
+import { load as loadExercises } from './store/actions/exercise.actions';
 import { loginChanged } from './store/actions/auth.actions';
 import { State } from './store/reducers';
 import { createAngularFireAuthMock, createNavControllerMock } from '@test/mocks';
@@ -38,9 +39,9 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should have menu labels', async () => {
-    const fixture = await TestBed.createComponent(AppComponent);
-    await fixture.detectChanges();
+  it('should have menu labels', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
     const app = fixture.nativeElement;
     const menuItems = app.querySelectorAll('ion-label');
     expect(menuItems.length).toEqual(4);
@@ -50,9 +51,9 @@ describe('AppComponent', () => {
     expect(menuItems[3].textContent).toContain('About');
   });
 
-  it('should have urls', async () => {
-    const fixture = await TestBed.createComponent(AppComponent);
-    await fixture.detectChanges();
+  it('should have urls', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
     const app = fixture.nativeElement;
     const menuItems = app.querySelectorAll('ion-item');
     expect(menuItems.length).toEqual(4);
@@ -70,16 +71,25 @@ describe('AppComponent', () => {
       fixture.detectChanges();
       expect(application.registerForUpdates).toHaveBeenCalledTimes(1);
     });
+
+    it('dispatches the load of the exercises', () => {
+      const store = TestBed.inject(Store);
+      store.dispatch = jest.fn();
+      const fixture = TestBed.createComponent(AppComponent);
+      fixture.detectChanges();
+      expect(store.dispatch).toHaveBeenCalledTimes(1);
+      expect(store.dispatch).toHaveBeenCalledWith(loadExercises());
+    });
   });
 
   describe('changing the user', () => {
-    let store;
+    let store: Store;
     beforeEach(() => {
       store = TestBed.inject(Store);
       store.dispatch = jest.fn();
       const fixture = TestBed.createComponent(AppComponent);
       fixture.detectChanges();
-      store.dispatch.mockClear();
+      (store.dispatch as any).mockClear();
     });
 
     describe('on login', () => {

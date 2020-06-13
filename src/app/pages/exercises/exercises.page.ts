@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { select, Store } from '@ngrx/store';
 
 import { Exercise } from 'src/app/models/exercise';
 import { ExerciseEditorComponent } from 'src/app/editors/exercise-editor/exercise-editor.component';
-import { ExercisesService } from '@app/services/firestore-data';
 import { yesNoButtons } from '@app/util';
-import { Store } from '@ngrx/store';
-import { State } from '@app/store';
+import { State, selectAllExercises } from '@app/store';
 import { logout } from '@app/store/actions/auth.actions';
+import { remove } from '@app/store/actions/exercise.actions';
 
 @Component({
   selector: 'app-exercises',
@@ -20,13 +20,12 @@ export class ExercisesPage implements OnInit {
 
   constructor(
     private alertController: AlertController,
-    private exercisesService: ExercisesService,
     private modalController: ModalController,
     private store: Store<State>
   ) {}
 
   ngOnInit() {
-    this.exercises$ = this.exercisesService.all();
+    this.exercises$ = this.store.pipe(select(selectAllExercises));
   }
 
   async add(): Promise<void> {
@@ -35,10 +34,6 @@ export class ExercisesPage implements OnInit {
       component: ExerciseEditorComponent
     });
     modal.present();
-    const res = await modal.onDidDismiss();
-    if (res && res.role === 'save') {
-      this.exercisesService.add(res.data);
-    }
   }
 
   async edit(exercise: Exercise): Promise<void> {
@@ -48,10 +43,6 @@ export class ExercisesPage implements OnInit {
       componentProps: { exercise }
     });
     modal.present();
-    const res = await modal.onDidDismiss();
-    if (res && res.role === 'save') {
-      this.exercisesService.update(res.data);
-    }
   }
 
   async delete(exercise: Exercise): Promise<void> {
@@ -64,7 +55,7 @@ export class ExercisesPage implements OnInit {
     alert.present();
     const result = await alert.onDidDismiss();
     if (result.role === 'confirm') {
-      this.exercisesService.delete(exercise);
+      this.store.dispatch(remove({ exercise }));
     }
   }
 

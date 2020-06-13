@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
 
 import { exerciseFocusAreas, exerciseTypes } from '@app/default-data';
 import { Exercise } from '@app/models';
+import { State } from '@app/store';
+import { create, update } from '@app/store/actions/exercise.actions';
 
 @Component({
   selector: 'app-exercise-editor',
@@ -25,7 +28,7 @@ export class ExerciseEditorComponent implements OnInit {
   errorMessage: string;
   warningMessage: string;
 
-  constructor(private modalController: ModalController) {}
+  constructor(private modalController: ModalController, private store: Store<State>) {}
 
   ngOnInit() {
     this.initializeTitle();
@@ -38,7 +41,13 @@ export class ExerciseEditorComponent implements OnInit {
   }
 
   async save() {
-    this.modalController.dismiss(this.exerciseObject(), 'save');
+    const exercise = this.exerciseObject();
+    if (this.exercise) {
+      this.store.dispatch(update({ exercise }));
+    } else {
+      this.store.dispatch(create({ exercise }));
+    }
+    this.modalController.dismiss();
   }
 
   private exerciseObject(): Exercise {

@@ -40,7 +40,7 @@ describe('ExercisesService', () => {
 
   it('grabs a references to the exercises collection', () => {
     const angularFirestore = TestBed.inject(AngularFirestore);
-    exercises.all().subscribe();
+    exercises.observeChanges().subscribe();
     expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
     expect(angularFirestore.collection).toHaveBeenCalledWith('exercises');
   });

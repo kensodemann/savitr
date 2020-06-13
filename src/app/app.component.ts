@@ -4,8 +4,9 @@ import { Store } from '@ngrx/store';
 import { NavController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ApplicationService } from '@app/services';
-import { State } from './store';
+import { load as loadExercises } from './store/actions/exercise.actions';
 import { loginChanged } from './store/actions/auth.actions';
+import { State } from './store';
 
 @Component({
   selector: 'app-root',
@@ -45,6 +46,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.application.registerForUpdates();
+    this.store.dispatch(loadExercises());
     this.afAuth.authState.subscribe(u => {
       this.store.dispatch(loginChanged({ email: u && u.email }));
       if (!u) {

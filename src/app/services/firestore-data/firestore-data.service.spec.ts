@@ -33,7 +33,7 @@ class TestService extends FirestoreDataService<DataType> {
 }
 
 describe('FirestoreDataService', () => {
-  let collection;
+  let collection: any;
   let dataService: FirestoreDataService<DataType>;
 
   beforeEach(() => {
@@ -109,8 +109,22 @@ describe('FirestoreDataService', () => {
     });
   });
 
+  describe('observe changes', () => {
+    it('grabs a references to the data collection', () => {
+      const angularFirestore = TestBed.inject(AngularFirestore);
+      dataService.observeChanges().subscribe();
+      expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
+      expect(angularFirestore.collection).toHaveBeenCalledWith('data-collection');
+    });
+
+    it('looks for state changes', () => {
+      dataService.observeChanges().subscribe();
+      expect(collection.stateChanges).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('get', () => {
-    let document;
+    let document: any;
     beforeEach(() => {
       document = createAngularFirestoreDocumentMock();
       collection.doc.mockReturnValue(document);
@@ -161,7 +175,7 @@ describe('FirestoreDataService', () => {
   });
 
   describe('delete', () => {
-    let document;
+    let document: any;
     beforeEach(() => {
       document = createAngularFirestoreDocumentMock();
       collection.doc.mockReturnValue(document);
@@ -190,7 +204,7 @@ describe('FirestoreDataService', () => {
   });
 
   describe('update', () => {
-    let document;
+    let document: any;
     beforeEach(() => {
       document = createAngularFirestoreDocumentMock();
       collection.doc.mockReturnValue(document);
