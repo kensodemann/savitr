@@ -9,7 +9,7 @@ import { WorkoutLogEntriesService } from '@app/services/firestore-data';
 import { yesNoButtons } from '@app/util';
 
 @Injectable({
-  providedIn: WorkoutModule
+  providedIn: WorkoutModule,
 })
 export class WorkoutPageService {
   constructor(
@@ -21,7 +21,7 @@ export class WorkoutPageService {
   async add(workoutLog: WorkoutLog, logDate: Date): Promise<boolean> {
     const modal = await this.modalController.create({
       component: LogEntryEditorComponent,
-      componentProps: { logDate, workoutLog }
+      componentProps: { logDate, workoutLog },
     });
     modal.present();
     const res = await modal.onDidDismiss();
@@ -36,7 +36,7 @@ export class WorkoutPageService {
     const alert = await this.alertController.create({
       header: 'Remove Entry?',
       message: 'Are you sure you would like to remove this exercise from the workout log?',
-      buttons: yesNoButtons
+      buttons: yesNoButtons,
     });
     alert.present();
     const res = await alert.onDidDismiss();
@@ -50,7 +50,7 @@ export class WorkoutPageService {
   async edit(workoutLogEntry: WorkoutLogEntry): Promise<boolean> {
     const modal = await this.modalController.create({
       component: LogEntryEditorComponent,
-      componentProps: { workoutLogEntry }
+      componentProps: { workoutLogEntry },
     });
     modal.present();
     const res = await modal.onDidDismiss();
@@ -65,7 +65,7 @@ export class WorkoutPageService {
     const exerciseLogs: Array<Array<WorkoutLogEntry>> = [[], [], [], [], [], [], []];
     if (workoutLog) {
       const logs = await this.workoutLogEntries.getAllForLog(workoutLog.id);
-      logs.forEach(log => {
+      logs.forEach((log) => {
         const day = getDay(log.logDate);
         exerciseLogs[day].push(log);
       });

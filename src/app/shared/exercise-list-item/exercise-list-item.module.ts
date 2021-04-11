@@ -10,6 +10,6 @@ import { ExerciseListItemComponent } from './exercise-list-item.component';
   imports: [CommonModule, FormsModule, IonicModule],
   declarations: [ExerciseListItemComponent],
   entryComponents: [ExerciseListItemComponent],
-  exports: [ExerciseListItemComponent]
+  exports: [ExerciseListItemComponent],
 })
 export class ExerciseListItemComponentModule {}

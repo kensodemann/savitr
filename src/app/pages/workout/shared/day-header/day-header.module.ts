@@ -10,6 +10,6 @@ import { DayHeaderComponent } from './day-header.component';
   imports: [CommonModule, FormsModule, IonicModule],
   declarations: [DayHeaderComponent],
   entryComponents: [DayHeaderComponent],
-  exports: [DayHeaderComponent]
+  exports: [DayHeaderComponent],
 })
 export class DayHeaderComponentModule {}

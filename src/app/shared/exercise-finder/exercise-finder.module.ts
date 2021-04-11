@@ -11,6 +11,6 @@ import { ExerciseListComponentModule } from '../exercise-list/exercise-list.modu
   imports: [CommonModule, ExerciseListComponentModule, FormsModule, IonicModule],
   declarations: [ExerciseFinderComponent],
   entryComponents: [ExerciseFinderComponent],
-  exports: [ExerciseFinderComponent]
+  exports: [ExerciseFinderComponent],
 })
 export class ExerciseFinderComponentModule {}

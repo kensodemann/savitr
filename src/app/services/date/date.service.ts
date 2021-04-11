@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { addWeeks, format, getDay, setDay, startOfDay } from 'date-fns';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DateService {
   constructor() {}
@@ -36,7 +36,7 @@ export class DateService {
       startOfDay(setDay(dt, 3)),
       startOfDay(setDay(dt, 4)),
       startOfDay(setDay(dt, 5)),
-      startOfDay(setDay(dt, 6))
+      startOfDay(setDay(dt, 6)),
     ];
   }
 

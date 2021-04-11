@@ -9,21 +9,21 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'current',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     canActivate: [AuthGuardService],
     path: 'current',
-    loadChildren: () => import('./current/current.module').then(m => m.CurrentPageModule)
+    loadChildren: () => import('./current/current.module').then((m) => m.CurrentPageModule),
   },
   {
     canActivate: [AuthGuardService],
     path: 'history',
-    loadChildren: () => import('./history/history.module').then(m => m.HistoryPageModule)
-  }
+    loadChildren: () => import('./history/history.module').then((m) => m.HistoryPageModule),
+  },
 ];
 
 @NgModule({
-  imports: [CommonModule, LogEntryEditorComponentModule, RouterModule.forChild(routes)]
+  imports: [CommonModule, LogEntryEditorComponentModule, RouterModule.forChild(routes)],
 })
 export class WorkoutModule {}

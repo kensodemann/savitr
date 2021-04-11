@@ -18,8 +18,8 @@ const routes: Routes = [
   {
     canActivate: [AuthGuardService],
     path: '',
-    component: CurrentPage
-  }
+    component: CurrentPage,
+  },
 ];
 
 @NgModule({
@@ -30,8 +30,8 @@ const routes: Routes = [
     NoWorkoutComponentModule,
     RouterModule.forChild(routes),
     WeeklyWorkoutComponentModule,
-    WorkoutLogEntryListItemComponentModule
+    WorkoutLogEntryListItemComponentModule,
   ],
-  declarations: [CurrentPage, ThisWeekComponent, TodayComponent]
+  declarations: [CurrentPage, ThisWeekComponent, TodayComponent],
 })
 export class CurrentPageModule {}

@@ -6,7 +6,7 @@ import { Exercise, WorkoutLog, WorkoutLogEntry } from '@app/models';
 @Component({
   selector: 'app-log-entry-editor',
   templateUrl: './log-entry-editor.component.html',
-  styleUrls: ['./log-entry-editor.component.scss']
+  styleUrls: ['./log-entry-editor.component.scss'],
 })
 export class LogEntryEditorComponent implements OnInit {
   title: string;
@@ -65,7 +65,7 @@ export class LogEntryEditorComponent implements OnInit {
       workoutLog: this.workoutLog || this.workoutLogEntry.workoutLog,
       logDate: this.logDate || this.workoutLogEntry.logDate,
       exercise: this.exercise,
-      completed: this.workoutLogEntry ? this.workoutLogEntry.completed : false
+      completed: this.workoutLogEntry ? this.workoutLogEntry.completed : false,
     };
     if (this.workoutLogEntry) {
       entry.id = this.workoutLogEntry.id;

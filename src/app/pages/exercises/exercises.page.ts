@@ -13,7 +13,7 @@ import { logout } from '@app/store/actions/auth.actions';
 @Component({
   selector: 'app-exercises',
   templateUrl: './exercises.page.html',
-  styleUrls: ['./exercises.page.scss']
+  styleUrls: ['./exercises.page.scss'],
 })
 export class ExercisesPage implements OnInit {
   exercises$: Observable<Array<Exercise>>;
@@ -32,7 +32,7 @@ export class ExercisesPage implements OnInit {
   async add(): Promise<void> {
     const modal = await this.modalController.create({
       backdropDismiss: false,
-      component: ExerciseEditorComponent
+      component: ExerciseEditorComponent,
     });
     modal.present();
     const res = await modal.onDidDismiss();
@@ -45,7 +45,7 @@ export class ExercisesPage implements OnInit {
     const modal = await this.modalController.create({
       backdropDismiss: false,
       component: ExerciseEditorComponent,
-      componentProps: { exercise }
+      componentProps: { exercise },
     });
     modal.present();
     const res = await modal.onDidDismiss();
@@ -59,7 +59,7 @@ export class ExercisesPage implements OnInit {
       header: 'Remove Exercise?',
       subHeader: exercise.name,
       message: 'This action cannot be undone. Are you sure you want to continue?',
-      buttons: yesNoButtons
+      buttons: yesNoButtons,
     });
     alert.present();
     const result = await alert.onDidDismiss();

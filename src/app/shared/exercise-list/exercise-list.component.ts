@@ -12,7 +12,7 @@ interface AreaExercises {
 @Component({
   selector: 'app-exercise-list',
   templateUrl: './exercise-list.component.html',
-  styleUrls: ['./exercise-list.component.scss']
+  styleUrls: ['./exercise-list.component.scss'],
 })
 export class ExerciseListComponent {
   @Input() editable: boolean;
@@ -35,14 +35,14 @@ export class ExerciseListComponent {
   private processExercises(all: Array<Exercise>) {
     this.exercisesByArea = [];
     if (all) {
-      exerciseFocusAreas.forEach(area => this.exercisesByArea.push(this.exercisesForArea(all, area)));
+      exerciseFocusAreas.forEach((area) => this.exercisesByArea.push(this.exercisesForArea(all, area)));
     }
   }
 
   private exercisesForArea(all: Array<Exercise>, area: string): AreaExercises {
     return {
       area,
-      exercises: all.filter(e => e.area === area).sort(byName)
+      exercises: all.filter((e) => e.area === area).sort(byName),
     };
   }
 }

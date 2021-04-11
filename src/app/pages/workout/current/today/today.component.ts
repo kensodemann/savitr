@@ -4,7 +4,7 @@ import { WorkoutLogEntry } from '@app/models';
 @Component({
   selector: 'app-today',
   templateUrl: './today.component.html',
-  styleUrls: ['./today.component.scss']
+  styleUrls: ['./today.component.scss'],
 })
 export class TodayComponent {
   @Input() logEntries: Array<WorkoutLogEntry>;

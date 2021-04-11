@@ -3,5 +3,5 @@
 export const version = {
   version: '1.0.1',
   name: 'quantitative roundup',
-  date: '2019-12-31'
+  date: '2019-12-31',
 };

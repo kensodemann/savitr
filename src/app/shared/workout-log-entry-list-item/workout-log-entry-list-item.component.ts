@@ -4,7 +4,7 @@ import { WorkoutLogEntry } from '@app/models';
 @Component({
   selector: 'app-workout-log-entry-list-item',
   templateUrl: './workout-log-entry-list-item.component.html',
-  styleUrls: ['./workout-log-entry-list-item.component.scss']
+  styleUrls: ['./workout-log-entry-list-item.component.scss'],
 })
 export class WorkoutLogEntryListItemComponent implements OnInit {
   @Input() workoutLogEntry: WorkoutLogEntry;

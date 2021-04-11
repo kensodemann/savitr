@@ -12,6 +12,6 @@ import { WorkoutLogEntryListItemComponentModule } from '@app/shared';
   imports: [CommonModule, DayHeaderComponentModule, FormsModule, IonicModule, WorkoutLogEntryListItemComponentModule],
   declarations: [WeeklyWorkoutComponent],
   entryComponents: [WeeklyWorkoutComponent],
-  exports: [WeeklyWorkoutComponent]
+  exports: [WeeklyWorkoutComponent],
 })
 export class WeeklyWorkoutComponentModule {}

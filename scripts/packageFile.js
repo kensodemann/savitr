@@ -11,5 +11,5 @@ module.exports = {
   write: function (pkg) {
     fs.writeFileSync(packageFile, JSON.stringify(pkg, null, 2));
     fs.appendFileSync(packageFile, '\n');
-  }
-}
+  },
+};

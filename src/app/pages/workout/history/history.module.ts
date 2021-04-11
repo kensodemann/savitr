@@ -12,22 +12,17 @@ const routes: Routes = [
   {
     canActivate: [AuthGuardService],
     path: '',
-    component: HistoryPage
+    component: HistoryPage,
   },
   {
     canActivate: [AuthGuardService],
     path: 'plan',
-    loadChildren: () => import('./plan/plan.module').then(m => m.PlanPageModule)
-  }
+    loadChildren: () => import('./plan/plan.module').then((m) => m.PlanPageModule),
+  },
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes)
-  ],
-  declarations: [HistoryPage]
+  imports: [CommonModule, FormsModule, IonicModule, RouterModule.forChild(routes)],
+  declarations: [HistoryPage],
 })
 export class HistoryPageModule {}

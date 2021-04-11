@@ -9,7 +9,7 @@ import { ExercisesService } from '@app/services/firestore-data';
 @Component({
   selector: 'app-exercise-finder',
   templateUrl: './exercise-finder.component.html',
-  styleUrls: ['./exercise-finder.component.scss']
+  styleUrls: ['./exercise-finder.component.scss'],
 })
 export class ExerciseFinderComponent implements OnInit {
   private filterBy: BehaviorSubject<string>;
@@ -22,10 +22,10 @@ export class ExerciseFinderComponent implements OnInit {
 
   ngOnInit() {
     this.exercises$ = this.filterBy.pipe(
-      flatMap(filter =>
+      flatMap((filter) =>
         this.exercisesService.all().pipe(
-          map(exercises =>
-            exercises.filter(exercise => {
+          map((exercises) =>
+            exercises.filter((exercise) => {
               return exercise.name.toLocaleLowerCase().includes(filter);
             })
           )

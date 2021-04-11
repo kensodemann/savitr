@@ -5,7 +5,7 @@ import { SwUpdate } from '@angular/service-worker';
 import { yesNoButtons } from '@app/util';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApplicationService {
   constructor(private alert: AlertController, private update: SwUpdate) {}
@@ -19,7 +19,7 @@ export class ApplicationService {
       header: 'Update Available',
       message:
         'An update is available for this application. Would you like to restart this application to get the update?',
-      buttons: yesNoButtons
+      buttons: yesNoButtons,
     });
     await alert.present();
     const result = await alert.onDidDismiss();

@@ -10,7 +10,7 @@ import { logout } from '@app/store/actions/auth.actions';
 @Component({
   selector: 'app-history',
   templateUrl: './history.page.html',
-  styleUrls: ['./history.page.scss']
+  styleUrls: ['./history.page.scss'],
 })
 export class HistoryPage implements OnInit {
   logs$: Observable<Array<WorkoutLog>>;

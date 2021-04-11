@@ -13,9 +13,7 @@
   <form #logEntryForm="ngForm">
     <ion-list>
       <ion-item (click)="findExercise()" *ngIf="!exercise">
-        <ion-label color="danger">
-          Select an Exercise
-        </ion-label>
+        <ion-label color="danger"> Select an Exercise </ion-label>
       </ion-item>
       <app-exercise-list-item [exercise]="exercise" *ngIf="exercise" (view)="findExercise()"></app-exercise-list-item>
       <ion-item>

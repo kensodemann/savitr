@@ -7,7 +7,7 @@ import { Exercise } from '@app/models';
 @Component({
   selector: 'app-exercise-editor',
   templateUrl: './exercise-editor.component.html',
-  styleUrls: ['./exercise-editor.component.scss']
+  styleUrls: ['./exercise-editor.component.scss'],
 })
 export class ExerciseEditorComponent implements OnInit {
   title: string;
@@ -46,7 +46,7 @@ export class ExerciseEditorComponent implements OnInit {
       name: this.name,
       description: this.description,
       area: this.area,
-      type: this.type
+      type: this.type,
     };
 
     if (this.exercise) {

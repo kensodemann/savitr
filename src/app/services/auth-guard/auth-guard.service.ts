@@ -6,7 +6,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Subscription } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuardService implements CanActivate {
   constructor(private afAuth: AngularFireAuth, private navController: NavController) {}
@@ -21,9 +21,9 @@ export class AuthGuardService implements CanActivate {
   }
 
   private getUser(): Promise<any> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       let s: Subscription = null;
-      s = this.afAuth.user.subscribe(u => {
+      s = this.afAuth.user.subscribe((u) => {
         resolve(u);
         if (s) {
           s.unsubscribe();

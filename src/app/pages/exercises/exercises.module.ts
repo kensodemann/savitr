@@ -14,8 +14,8 @@ const routes: Routes = [
   {
     canActivate: [AuthGuardService],
     path: '',
-    component: ExercisesPage
-  }
+    component: ExercisesPage,
+  },
 ];
 
 @NgModule({
@@ -25,8 +25,8 @@ const routes: Routes = [
     ExerciseListComponentModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
-  declarations: [ExercisesPage]
+  declarations: [ExercisesPage],
 })
 export class ExercisesPageModule {}

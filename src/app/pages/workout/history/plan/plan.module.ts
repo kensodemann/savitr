@@ -13,17 +13,17 @@ const routes: Routes = [
   {
     canActivate: [AuthGuardService],
     path: '',
-    component: PlanPage
+    component: PlanPage,
   },
   {
     canActivate: [AuthGuardService],
     path: ':id',
-    component: PlanPage
-  }
+    component: PlanPage,
+  },
 ];
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, RouterModule.forChild(routes), WeeklyWorkoutComponentModule],
-  declarations: [PlanPage]
+  declarations: [PlanPage],
 })
 export class PlanPageModule {}

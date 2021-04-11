@@ -1,13 +1,13 @@
-  <ion-list *ngFor="let a of exercisesByArea">
-    <ion-list-header>
-      <ion-label>{{ a.area }}</ion-label>
-    </ion-list-header>
-    <app-exercise-list-item
-      *ngFor="let exercise of a.exercises"
-      [editable]="editable"
-      [exercise]="exercise"
-      (delete)="delete.emit(exercise)"
-      (edit)="edit.emit(exercise)"
-      (view)="view.emit(exercise)"
-    ></app-exercise-list-item>
-  </ion-list>
+<ion-list *ngFor="let a of exercisesByArea">
+  <ion-list-header>
+    <ion-label>{{ a.area }}</ion-label>
+  </ion-list-header>
+  <app-exercise-list-item
+    *ngFor="let exercise of a.exercises"
+    [editable]="editable"
+    [exercise]="exercise"
+    (delete)="delete.emit(exercise)"
+    (edit)="edit.emit(exercise)"
+    (view)="view.emit(exercise)"
+  ></app-exercise-list-item>
+</ion-list>

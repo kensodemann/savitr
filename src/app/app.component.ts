@@ -10,30 +10,30 @@ import { loginChanged } from './store/actions/auth.actions';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
   public appPages = [
     {
       title: 'Current',
       url: '/workout/current',
-      icon: 'home'
+      icon: 'home',
     },
     {
       title: 'History & Planning',
       url: '/workout/history',
-      icon: 'calendar'
+      icon: 'calendar',
     },
     {
       title: 'Exercises',
       url: '/exercises',
-      icon: 'bicycle'
+      icon: 'bicycle',
     },
     {
       title: 'About',
       url: '/about',
-      icon: 'information-circle-outline'
-    }
+      icon: 'information-circle-outline',
+    },
   ];
 
   constructor(
@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.application.registerForUpdates();
-    this.afAuth.authState.subscribe(u => {
+    this.afAuth.authState.subscribe((u) => {
       this.store.dispatch(loginChanged({ email: u && u.email }));
       if (!u) {
         this.navController.navigateRoot(['login']);

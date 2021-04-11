@@ -11,11 +11,7 @@
   </ion-item>
 
   <ion-item-options *ngIf="editable">
-    <ion-item-option color="danger" (click)="delete.emit()">
-      Delete
-    </ion-item-option>
-    <ion-item-option (click)="edit.emit()">
-      Edit
-    </ion-item-option>
+    <ion-item-option color="danger" (click)="delete.emit()"> Delete </ion-item-option>
+    <ion-item-option (click)="edit.emit()"> Edit </ion-item-option>
   </ion-item-options>
 </ion-item-sliding>

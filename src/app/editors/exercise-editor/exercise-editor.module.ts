@@ -10,6 +10,6 @@ import { ExerciseEditorComponent } from './exercise-editor.component';
   imports: [CommonModule, FormsModule, IonicModule],
   declarations: [ExerciseEditorComponent],
   entryComponents: [ExerciseEditorComponent],
-  exports: [ExerciseEditorComponent]
+  exports: [ExerciseEditorComponent],
 })
 export class ExerciseEditorComponentModule {}

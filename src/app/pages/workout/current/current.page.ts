@@ -12,7 +12,7 @@ import { logout } from '@app/store/actions/auth.actions';
 @Component({
   selector: 'app-current',
   templateUrl: './current.page.html',
-  styleUrls: ['./current.page.scss']
+  styleUrls: ['./current.page.scss'],
 })
 export class CurrentPage implements OnInit {
   private log: WorkoutLog;

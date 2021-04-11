@@ -10,17 +10,7 @@ const versionFile = './src/app/default-data/version.ts';
 
 function getBumpType() {
   const lastArg = process.argv[process.argv.length - 1];
-  if (
-    [
-      'prerelease',
-      'prepatch',
-      'preminor',
-      'premajor',
-      'patch',
-      'minor',
-      'major'
-    ].includes(lastArg)
-  ) {
+  if (['prerelease', 'prepatch', 'preminor', 'premajor', 'patch', 'minor', 'major'].includes(lastArg)) {
     return lastArg;
   }
   return 'prerelease';
@@ -33,10 +23,7 @@ function writeVersionFile(pkg) {
   fs.appendFileSync(versionFile, 'export const version = {\n');
   fs.appendFileSync(versionFile, `  version: '${pkg.version}',\n`);
   fs.appendFileSync(versionFile, `  name: '${adjNoun().join(' ')}',\n`);
-  fs.appendFileSync(
-    versionFile,
-    `  date: '${dateFns.format(new Date(), 'yyyy-MM-dd')}'\n`
-  );
+  fs.appendFileSync(versionFile, `  date: '${dateFns.format(new Date(), 'yyyy-MM-dd')}'\n`);
   fs.appendFileSync(versionFile, `};\n`);
 }
 

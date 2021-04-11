@@ -11,7 +11,7 @@ import { WorkoutPageService } from '@app/pages/workout/services/workout-page/wor
 @Component({
   selector: 'app-plan',
   templateUrl: './plan.page.html',
-  styleUrls: ['./plan.page.scss']
+  styleUrls: ['./plan.page.scss'],
 })
 export class PlanPage implements OnInit {
   private currentWorkoutLog: WorkoutLog;
@@ -70,7 +70,7 @@ export class PlanPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'No Date',
       message: 'Please select a begin date.',
-      buttons: ['OK']
+      buttons: ['OK'],
     });
     alert.present();
   }

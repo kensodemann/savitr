@@ -10,6 +10,6 @@ import { WorkoutLogEntryListItemComponent } from './workout-log-entry-list-item.
   imports: [CommonModule, FormsModule, IonicModule],
   declarations: [WorkoutLogEntryListItemComponent],
   entryComponents: [WorkoutLogEntryListItemComponent],
-  exports: [WorkoutLogEntryListItemComponent]
+  exports: [WorkoutLogEntryListItemComponent],
 })
 export class WorkoutLogEntryListItemComponentModule {}

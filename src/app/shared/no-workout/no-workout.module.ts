@@ -10,6 +10,6 @@ import { NoWorkoutComponent } from './no-workout.component';
   imports: [CommonModule, FormsModule, IonicModule],
   declarations: [NoWorkoutComponent],
   entryComponents: [NoWorkoutComponent],
-  exports: [NoWorkoutComponent]
+  exports: [NoWorkoutComponent],
 })
 export class NoWorkoutComponentModule {}

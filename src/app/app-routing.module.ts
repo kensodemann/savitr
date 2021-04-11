@@ -5,38 +5,28 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'workout',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'about',
-    loadChildren: () =>
-      import('./pages/about/about.module').then(m => m.AboutPageModule)
+    loadChildren: () => import('./pages/about/about.module').then((m) => m.AboutPageModule),
   },
   {
     path: 'exercises',
-    loadChildren: () =>
-      import('./pages/exercises/exercises.module').then(
-        m => m.ExercisesPageModule
-      )
+    loadChildren: () => import('./pages/exercises/exercises.module').then((m) => m.ExercisesPageModule),
   },
   {
     path: 'login',
-    loadChildren: () =>
-      import('./pages/login/login.module').then(m => m.LoginPageModule)
+    loadChildren: () => import('./pages/login/login.module').then((m) => m.LoginPageModule),
   },
   {
     path: 'workout',
-    loadChildren: () =>
-      import('./pages/workout/workout.module').then(
-        m => m.WorkoutModule
-      )
-  }
+    loadChildren: () => import('./pages/workout/workout.module').then((m) => m.WorkoutModule),
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
-  ],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

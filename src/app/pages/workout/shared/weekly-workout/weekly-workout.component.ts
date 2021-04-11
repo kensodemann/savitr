@@ -4,7 +4,7 @@ import { WorkoutLog } from '@app/models';
 @Component({
   selector: 'app-weekly-workout',
   templateUrl: './weekly-workout.component.html',
-  styleUrls: ['./weekly-workout.component.scss']
+  styleUrls: ['./weekly-workout.component.scss'],
 })
 export class WeeklyWorkoutComponent {
   @Input() exerciseLogs: Array<Array<WorkoutLog>>;

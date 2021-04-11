@@ -12,6 +12,6 @@ import { ExerciseListItemComponentModule } from '@app/shared';
   imports: [CommonModule, ExerciseFinderComponentModule, ExerciseListItemComponentModule, FormsModule, IonicModule],
   declarations: [LogEntryEditorComponent],
   entryComponents: [LogEntryEditorComponent],
-  exports: [LogEntryEditorComponent]
+  exports: [LogEntryEditorComponent],
 })
 export class LogEntryEditorComponentModule {}
