@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { flatMap, map } from 'rxjs/operators';
-import { ModalController } from '@ionic/angular';
-
 import { Exercise } from '@app/models';
 import { ExercisesService } from '@app/services/firestore-data';
+import { ModalController } from '@ionic/angular';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-exercise-finder',
@@ -22,7 +21,7 @@ export class ExerciseFinderComponent implements OnInit {
 
   ngOnInit() {
     this.exercises$ = this.filterBy.pipe(
-      flatMap((filter) =>
+      mergeMap((filter) =>
         this.exercisesService.all().pipe(
           map((exercises) =>
             exercises.filter((exercise) => {

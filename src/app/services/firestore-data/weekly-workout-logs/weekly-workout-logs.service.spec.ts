@@ -30,7 +30,7 @@ describe('WeeklyWorkoutLogsService', () => {
     });
     const angularFirestore = TestBed.inject(AngularFirestore);
     userCollection = createAngularFirestoreCollectionMock();
-    angularFirestore.collection.mockReturnValue(userCollection);
+    (angularFirestore.collection as any).mockReturnValue(userCollection);
     userDoc = createAngularFirestoreDocumentMock();
     userCollection = createAngularFirestoreCollectionMock();
     userCollection.doc.mockReturnValue(userDoc);
