@@ -1,46 +1,47 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Location } from '@angular/common';
-import { UrlSerializer, ActivatedRoute } from '@angular/router';
-import { AlertController, IonicModule } from '@ionic/angular';
-import { parseISO } from 'date-fns';
-
-import { PlanPage } from './plan.page';
-import { DateService } from '@app/services';
-import { createDateServiceMock } from '@app/services/mocks';
-import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
-import { createWeeklyWorkoutLogsServiceMock } from '@app/services/firestore-data/mocks';
-import { createActivatedRouteMock, createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, UrlSerializer } from '@angular/router';
 import { WorkoutLogEntry } from '@app/models';
 import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
 import { createWorkoutPageServiceMock } from '@app/pages/workout/services/workout-page/workout-page.service.mock';
+import { DateService } from '@app/services';
+import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
+import { createWeeklyWorkoutLogsServiceMock } from '@app/services/firestore-data/mocks';
+import { createDateServiceMock } from '@app/services/mocks';
+import { AlertController, IonicModule } from '@ionic/angular';
+import { createActivatedRouteMock, createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
+import { parseISO } from 'date-fns';
+import { PlanPage } from './plan.page';
 
 describe('PlanPage', () => {
-  let alert;
+  let alert: any;
   let logEntries: Array<WorkoutLogEntry>;
   let component: PlanPage;
   let fixture: ComponentFixture<PlanPage>;
-  let modal;
+  let modal: any;
 
-  beforeEach(async(() => {
-    alert = createOverlayElementMock();
-    modal = createOverlayElementMock();
-    TestBed.configureTestingModule({
-      declarations: [PlanPage],
-      imports: [FormsModule, IonicModule],
-      providers: [
-        { provide: ActivatedRoute, useFactory: createActivatedRouteMock },
-        { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
-        { provide: DateService, useFactory: createDateServiceMock },
-        { provide: Location, useValue: {} },
-        { provide: UrlSerializer, useValue: {} },
-        { provide: WeeklyWorkoutLogsService, useFactory: createWeeklyWorkoutLogsServiceMock },
-        { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      alert = createOverlayElementMock();
+      modal = createOverlayElementMock();
+      TestBed.configureTestingModule({
+        declarations: [PlanPage],
+        imports: [FormsModule, IonicModule],
+        providers: [
+          { provide: ActivatedRoute, useFactory: createActivatedRouteMock },
+          { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
+          { provide: DateService, useFactory: createDateServiceMock },
+          { provide: Location, useValue: {} },
+          { provide: UrlSerializer, useValue: {} },
+          { provide: WeeklyWorkoutLogsService, useFactory: createWeeklyWorkoutLogsServiceMock },
+          { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock },
+        ],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     initializeTestData();
@@ -50,7 +51,7 @@ describe('PlanPage', () => {
       parseISO('2019-07-14'),
       parseISO('2019-07-21'),
       parseISO('2019-07-28'),
-      parseISO('2019-08-04')
+      parseISO('2019-08-04'),
     ]);
     fixture = TestBed.createComponent(PlanPage);
     component = fixture.componentInstance;
@@ -78,7 +79,7 @@ describe('PlanPage', () => {
         parseISO('2019-07-14'),
         parseISO('2019-07-21'),
         parseISO('2019-07-28'),
-        parseISO('2019-08-04')
+        parseISO('2019-08-04'),
       ]);
     });
 
@@ -100,7 +101,7 @@ describe('PlanPage', () => {
       (route.snapshot.paramMap.get as any).mockReturnValue('314159PI');
       getPromise = Promise.resolve({
         id: '314159PI',
-        beginDate: parseISO('2019-05-14')
+        beginDate: parseISO('2019-05-14'),
       });
       (workoutLogs.get as any).mockReturnValue(getPromise);
       fixture.detectChanges();
@@ -133,7 +134,7 @@ describe('PlanPage', () => {
       const workoutLogs = TestBed.inject(WeeklyWorkoutLogsService);
       (workoutLogs.getForDate as any).mockResolvedValue({
         id: '12399goasdf9',
-        beginDate: parseISO('2019-07-21')
+        beginDate: parseISO('2019-07-21'),
       });
       fixture.detectChanges();
     });
@@ -153,7 +154,7 @@ describe('PlanPage', () => {
       expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
       expect(workoutPageService.logEntries).toHaveBeenCalledWith({
         id: '12399goasdf9',
-        beginDate: parseISO('2019-07-21')
+        beginDate: parseISO('2019-07-21'),
       });
     });
   });
@@ -194,7 +195,7 @@ describe('PlanPage', () => {
         expect(workoutPageService.add).toHaveBeenCalledWith(
           {
             id: '199g009d8a',
-            beginDate: parseISO('2019-07-21')
+            beginDate: parseISO('2019-07-21'),
           },
           parseISO('2019-07-22')
         );
@@ -213,7 +214,7 @@ describe('PlanPage', () => {
           expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
           expect(workoutPageService.logEntries).toHaveBeenCalledWith({
             id: '199g009d8a',
-            beginDate: parseISO('2019-07-21')
+            beginDate: parseISO('2019-07-21'),
           });
         });
       });
@@ -236,7 +237,7 @@ describe('PlanPage', () => {
       (route.snapshot.paramMap.get as any).mockReturnValue('12399goasdf9');
       (workoutLogs.get as any).mockResolvedValue({
         id: '12399goasdf9',
-        beginDate: parseISO('2019-07-21')
+        beginDate: parseISO('2019-07-21'),
       });
       fixture.detectChanges();
     });
@@ -260,7 +261,7 @@ describe('PlanPage', () => {
         expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
         expect(workoutPageService.logEntries).toHaveBeenCalledWith({
           id: '12399goasdf9',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         });
       });
     });
@@ -281,7 +282,7 @@ describe('PlanPage', () => {
       (route.snapshot.paramMap.get as any).mockReturnValue('12399goasdf9');
       (workoutLogs.get as any).mockResolvedValue({
         id: '12399goasdf9',
-        beginDate: parseISO('2019-07-21')
+        beginDate: parseISO('2019-07-21'),
       });
       fixture.detectChanges();
     });
@@ -305,7 +306,7 @@ describe('PlanPage', () => {
         expect(workoutPageService.logEntries).toHaveBeenCalledTimes(1);
         expect(workoutPageService.logEntries).toHaveBeenCalledWith({
           id: '12399goasdf9',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         });
       });
     });
@@ -326,113 +327,113 @@ describe('PlanPage', () => {
         logDate: parseISO('2019-07-22'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: '1149953',
           name: 'Curls',
           description: 'Basic Biscept Curls',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'fkkgiffoeid',
         logDate: parseISO('2019-07-21'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'jadfoibdk',
           name: 'Jog',
           description: 'Uhg',
           type: 'Body Weight',
-          area: 'Cardio'
+          area: 'Cardio',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'kfkafoig9f0ed',
         logDate: parseISO('2019-07-22'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'fkfvibdj',
           name: 'Exercise Bike',
           description: 'Basic Biking',
           type: 'Machine',
-          area: 'Cardio'
+          area: 'Cardio',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'fkfig09ekfek',
         logDate: parseISO('2019-07-24'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'kfkfigfid',
           name: 'Leg Curls',
           description: 'Basic Leg Curls',
           type: 'Machine',
-          area: 'Lower Body'
+          area: 'Lower Body',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'ifiifiigifi',
         logDate: parseISO('2019-07-22'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'iifgiifdie',
           name: 'Bench Press',
           description: 'Basic Press',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'firemyass',
         logDate: parseISO('2019-07-25'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'jadfoibdk',
           name: 'Jog',
           description: 'Uhg',
           type: 'Body Weight',
-          area: 'Cardio'
+          area: 'Cardio',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'fiifigofdive',
         logDate: parseISO('2019-07-25'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: '1149953',
           name: 'Curls',
           description: 'Basic Biscept Curls',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: false
-      }
+        completed: false,
+      },
     ];
   }
 });

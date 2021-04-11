@@ -1,20 +1,21 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { parseISO } from 'date-fns';
-
-import { TodayComponent } from './today.component';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { WorkoutLogEntry } from '@app/models';
+import { parseISO } from 'date-fns';
+import { TodayComponent } from './today.component';
 
 describe('TodayComponent', () => {
   let component: TodayComponent;
   let fixture: ComponentFixture<TodayComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [TodayComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [TodayComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TodayComponent);
@@ -29,7 +30,7 @@ describe('TodayComponent', () => {
   describe('on toggled', () => {
     it('emits a toggled event with the updated log entry', fakeAsync(() => {
       let entry: WorkoutLogEntry;
-      component.toggle.subscribe(e => (entry = e));
+      component.toggle.subscribe((e) => (entry = e));
       component.onToggle(
         {
           id: 'ifiifiigifi',
@@ -40,9 +41,9 @@ describe('TodayComponent', () => {
             name: 'Bench Press',
             description: 'Basic Press',
             type: 'Free Weight',
-            area: 'Upper Body'
+            area: 'Upper Body',
           },
-          completed: false
+          completed: false,
         },
         true
       );
@@ -56,9 +57,9 @@ describe('TodayComponent', () => {
           name: 'Bench Press',
           description: 'Basic Press',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: true
+        completed: true,
       });
     }));
   });

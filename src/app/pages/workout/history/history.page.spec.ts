@@ -1,33 +1,34 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NavController } from '@ionic/angular';
-import { Store } from '@ngrx/store';
-import { provideMockStore } from '@ngrx/store/testing';
-
-import { HistoryPage } from './history.page';
-import { createNavControllerMock } from '@test/mocks';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
 import { createWeeklyWorkoutLogsServiceMock } from '@app/services/firestore-data/mocks';
 import { logout } from '@app/store/actions/auth.actions';
+import { NavController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { createNavControllerMock } from '@test/mocks';
+import { HistoryPage } from './history.page';
 
 describe('HistoryPage', () => {
   let component: HistoryPage;
   let fixture: ComponentFixture<HistoryPage>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [HistoryPage],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        { provide: NavController, useFactory: createNavControllerMock },
-        {
-          provide: WeeklyWorkoutLogsService,
-          useFactory: createWeeklyWorkoutLogsServiceMock
-        },
-        provideMockStore()
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [HistoryPage],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        providers: [
+          { provide: NavController, useFactory: createNavControllerMock },
+          {
+            provide: WeeklyWorkoutLogsService,
+            useFactory: createWeeklyWorkoutLogsServiceMock,
+          },
+          provideMockStore(),
+        ],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HistoryPage);

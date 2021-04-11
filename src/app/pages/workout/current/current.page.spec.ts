@@ -1,43 +1,44 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { parseISO } from 'date-fns';
-import { Store } from '@ngrx/store';
-import { provideMockStore } from '@ngrx/store/testing';
-
-import { CurrentPage } from './current.page';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { WorkoutLog } from '@app/models';
+import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
+import { createWorkoutPageServiceMock } from '@app/pages/workout/services/workout-page/workout-page.service.mock';
 import { DateService } from '@app/services';
-import { createDateServiceMock } from '@app/services/mocks';
 import { WeeklyWorkoutLogsService, WorkoutLogEntriesService } from '@app/services/firestore-data';
 import {
   createWeeklyWorkoutLogsServiceMock,
-  createWorkoutLogEntriesServiceMock
+  createWorkoutLogEntriesServiceMock,
 } from '@app/services/firestore-data/mocks';
-import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
-import { createWorkoutPageServiceMock } from '@app/pages/workout/services/workout-page/workout-page.service.mock';
-import { WorkoutLog } from '@app/models';
+import { createDateServiceMock } from '@app/services/mocks';
 import { logout } from '@app/store/actions/auth.actions';
+import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { parseISO } from 'date-fns';
+import { CurrentPage } from './current.page';
 
 describe('CurrentPage', () => {
   let component: CurrentPage;
   let fixture: ComponentFixture<CurrentPage>;
   let log: WorkoutLog;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [CurrentPage],
-      providers: [
-        {
-          provide: DateService,
-          useFactory: createDateServiceMock
-        },
-        { provide: WeeklyWorkoutLogsService, useFactory: createWeeklyWorkoutLogsServiceMock },
-        { provide: WorkoutLogEntriesService, useFactory: createWorkoutLogEntriesServiceMock },
-        { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock },
-        provideMockStore()
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [CurrentPage],
+        providers: [
+          {
+            provide: DateService,
+            useFactory: createDateServiceMock,
+          },
+          { provide: WeeklyWorkoutLogsService, useFactory: createWeeklyWorkoutLogsServiceMock },
+          { provide: WorkoutLogEntriesService, useFactory: createWorkoutLogEntriesServiceMock },
+          { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock },
+          provideMockStore(),
+        ],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     log = { id: '715WI920', beginDate: parseISO('2019-10-27') };
@@ -93,9 +94,9 @@ describe('CurrentPage', () => {
           name: 'Bench Press',
           description: 'Basic Press',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: false
+        completed: false,
       };
     });
 
@@ -175,9 +176,9 @@ describe('CurrentPage', () => {
           name: 'Bench Press',
           description: 'Basic Press',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: true
+        completed: true,
       });
       expect(workoutLogEntries.update).toHaveBeenCalledTimes(1);
       expect(workoutLogEntries.update).toHaveBeenCalledWith({
@@ -189,9 +190,9 @@ describe('CurrentPage', () => {
           name: 'Bench Press',
           description: 'Basic Press',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: true
+        completed: true,
       });
     });
   });

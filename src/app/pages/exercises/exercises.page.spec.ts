@@ -1,40 +1,40 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ModalController, AlertController } from '@ionic/angular';
-import { provideMockStore } from '@ngrx/store/testing';
-import { Store } from '@ngrx/store';
-
-import { ExercisesPage } from './exercises.page';
-import { ExerciseEditorComponent } from 'src/app/editors/exercise-editor/exercise-editor.component';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ExercisesService } from '@app/services/firestore-data';
-
 import { createExercisesServiceMock } from '@app/services/firestore-data/mocks';
-import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
 import { logout } from '@app/store/actions/auth.actions';
+import { AlertController, ModalController } from '@ionic/angular';
+import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
+import { ExerciseEditorComponent } from 'src/app/editors/exercise-editor/exercise-editor.component';
+import { ExercisesPage } from './exercises.page';
 
 describe('ExercisesPage', () => {
-  let alert;
+  let alert: any;
   let component: ExercisesPage;
-  let editor;
+  let editor: any;
   let fixture: ComponentFixture<ExercisesPage>;
 
-  beforeEach(async(() => {
-    alert = createOverlayElementMock();
-    editor = createOverlayElementMock();
-    TestBed.configureTestingModule({
-      declarations: [ExercisesPage],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [
-        { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
-        { provide: ExercisesService, useFactory: createExercisesServiceMock },
-        {
-          provide: ModalController,
-          useFactory: () => createOverlayControllerMock(editor)
-        },
-        provideMockStore()
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      alert = createOverlayElementMock();
+      editor = createOverlayElementMock();
+      TestBed.configureTestingModule({
+        declarations: [ExercisesPage],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        providers: [
+          { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
+          { provide: ExercisesService, useFactory: createExercisesServiceMock },
+          {
+            provide: ModalController,
+            useFactory: () => createOverlayControllerMock(editor),
+          },
+          provideMockStore(),
+        ],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ExercisesPage);
@@ -60,7 +60,7 @@ describe('ExercisesPage', () => {
       expect(modalController.create).toHaveBeenCalledTimes(1);
       expect(modalController.create).toHaveBeenCalledWith({
         backdropDismiss: false,
-        component: ExerciseEditorComponent
+        component: ExerciseEditorComponent,
       });
     });
 
@@ -77,9 +77,9 @@ describe('ExercisesPage', () => {
             name: 'Squats',
             description: 'Not to be confused with squirts',
             area: 'Lower Body',
-            type: 'Free Weights'
+            type: 'Free Weights',
           },
-          role: 'save'
+          role: 'save',
         });
         await component.add();
         expect(service.add).toHaveBeenCalledTimes(1);
@@ -87,7 +87,7 @@ describe('ExercisesPage', () => {
           name: 'Squats',
           description: 'Not to be confused with squirts',
           area: 'Lower Body',
-          type: 'Free Weights'
+          type: 'Free Weights',
         });
       });
     });
@@ -107,7 +107,7 @@ describe('ExercisesPage', () => {
       name: 'Push Back',
       description: 'Find something you do not like, rebel against it',
       type: 'Body Weight',
-      area: 'Core'
+      area: 'Core',
     };
 
     it('creates a modal editor', () => {
@@ -118,8 +118,8 @@ describe('ExercisesPage', () => {
         backdropDismiss: false,
         component: ExerciseEditorComponent,
         componentProps: {
-          exercise
-        }
+          exercise,
+        },
       });
     });
 
@@ -137,9 +137,9 @@ describe('ExercisesPage', () => {
             name: 'Squats',
             description: 'Not to be confused with squirts',
             area: 'Lower Body',
-            type: 'Free Weights'
+            type: 'Free Weights',
           },
-          role: 'save'
+          role: 'save',
         });
         await component.edit(exercise);
         expect(service.update).toHaveBeenCalledTimes(1);
@@ -148,7 +148,7 @@ describe('ExercisesPage', () => {
           name: 'Squats',
           description: 'Not to be confused with squirts',
           area: 'Lower Body',
-          type: 'Free Weights'
+          type: 'Free Weights',
         });
       });
     });
@@ -168,7 +168,7 @@ describe('ExercisesPage', () => {
       name: 'Push Back',
       description: 'Find something you do not like, rebel against it',
       type: 'Body Weight',
-      area: 'Core'
+      area: 'Core',
     };
 
     beforeEach(() => {
@@ -185,8 +185,8 @@ describe('ExercisesPage', () => {
         message: 'This action cannot be undone. Are you sure you want to continue?',
         buttons: [
           { text: 'Yes', role: 'confirm' },
-          { text: 'No', role: 'cancel' }
-        ]
+          { text: 'No', role: 'cancel' },
+        ],
       });
     });
 
@@ -205,7 +205,7 @@ describe('ExercisesPage', () => {
         name: 'Push Back',
         description: 'Find something you do not like, rebel against it',
         type: 'Body Weight',
-        area: 'Core'
+        area: 'Core',
       });
     });
 

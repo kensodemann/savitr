@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { DateService } from './date.service';
 
 describe('DateService', () => {
@@ -54,7 +53,7 @@ describe('DateService', () => {
         new Date('2019-07-07T00:00:00'),
         new Date('2019-07-14T00:00:00'),
         new Date('2019-07-21T00:00:00'),
-        new Date('2019-07-28T00:00:00')
+        new Date('2019-07-28T00:00:00'),
       ]);
     });
 
@@ -66,7 +65,7 @@ describe('DateService', () => {
         new Date('2019-07-14T00:00:00'),
         new Date('2019-07-21T00:00:00'),
         new Date('2019-07-28T00:00:00'),
-        new Date('2019-08-04T00:00:00')
+        new Date('2019-08-04T00:00:00'),
       ]);
     });
   });
@@ -81,7 +80,7 @@ describe('DateService', () => {
         new Date('2019-07-17T00:00:00'),
         new Date('2019-07-18T00:00:00'),
         new Date('2019-07-19T00:00:00'),
-        new Date('2019-07-20T00:00:00')
+        new Date('2019-07-20T00:00:00'),
       ]);
     });
 
@@ -94,7 +93,7 @@ describe('DateService', () => {
         new Date('2019-08-07T00:00:00'),
         new Date('2019-08-08T00:00:00'),
         new Date('2019-08-09T00:00:00'),
-        new Date('2019-08-10T00:00:00')
+        new Date('2019-08-10T00:00:00'),
       ]);
     });
 
@@ -107,7 +106,7 @@ describe('DateService', () => {
         new Date('2019-07-17T00:00:00'),
         new Date('2019-07-18T00:00:00'),
         new Date('2019-07-19T00:00:00'),
-        new Date('2019-07-20T00:00:00')
+        new Date('2019-07-20T00:00:00'),
       ]);
     });
   });

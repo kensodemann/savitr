@@ -1,13 +1,12 @@
-import { fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
-import { AngularFirestore } from '@angular/fire/firestore';
-
-import { ExercisesService } from './exercises.service';
-import {
-  createAngularFirestoreMock,
-  createAngularFirestoreCollectionMock,
-  createAngularFireAuthMock
-} from '@test/mocks';
+import { inject, TestBed } from '@angular/core/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
+import {
+  createAngularFireAuthMock,
+  createAngularFirestoreCollectionMock,
+  createAngularFirestoreMock,
+} from '@test/mocks';
+import { ExercisesService } from './exercises.service';
 
 describe('ExercisesService', () => {
   let collection;
@@ -17,8 +16,8 @@ describe('ExercisesService', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: AngularFireAuth, useFactory: createAngularFireAuthMock },
-        { provide: AngularFirestore, useFactory: createAngularFirestoreMock }
-      ]
+        { provide: AngularFirestore, useFactory: createAngularFirestoreMock },
+      ],
     });
     const angularFirestore = TestBed.inject(AngularFirestore);
     collection = createAngularFirestoreCollectionMock();

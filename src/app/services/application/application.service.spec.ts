@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { AlertController } from '@ionic/angular';
 import { SwUpdate } from '@angular/service-worker';
-
-import { ApplicationService } from './application.service';
-import { Subject } from 'rxjs';
+import { AlertController } from '@ionic/angular';
 import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
+import { Subject } from 'rxjs';
+import { ApplicationService } from './application.service';
 
 describe('ApplicationService', () => {
-  let alert;
+  let alert: any;
+
   beforeEach(() => {
     alert = createOverlayElementMock();
     TestBed.configureTestingModule({
@@ -15,14 +15,14 @@ describe('ApplicationService', () => {
         {
           provide: SwUpdate,
           useFactory: () => ({
-            available: new Subject()
-          })
+            available: new Subject(),
+          }),
         },
         {
           provide: AlertController,
-          useFactory: () => createOverlayControllerMock(alert)
-        }
-      ]
+          useFactory: () => createOverlayControllerMock(alert),
+        },
+      ],
     });
   });
 

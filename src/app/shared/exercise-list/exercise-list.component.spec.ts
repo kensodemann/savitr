@@ -1,13 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Subject } from 'rxjs';
-
-import { Exercise } from '@app/models';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ExerciseFocusAreas } from '@app/default-data';
-import { ExerciseListComponent } from './exercise-list.component';
+import { Exercise } from '@app/models';
 import { ExercisesService } from '@app/services/firestore-data';
-
 import { createExercisesServiceMock } from '@app/services/firestore-data/mocks';
+import { ExerciseListComponent } from './exercise-list.component';
 
 describe('ExerciseListComponent', () => {
   let component: ExerciseListComponent;
@@ -16,14 +13,16 @@ describe('ExerciseListComponent', () => {
   let exercises: Array<Exercise>;
   let sortedExercises: Array<{ area: string; exercises: Array<Exercise> }>;
 
-  beforeEach(async(() => {
-    initiailzeTestData();
-    TestBed.configureTestingModule({
-      declarations: [ExerciseListComponent],
-      providers: [{ provide: ExercisesService, useFactory: createExercisesServiceMock }],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      initiailzeTestData();
+      TestBed.configureTestingModule({
+        declarations: [ExerciseListComponent],
+        providers: [{ provide: ExercisesService, useFactory: createExercisesServiceMock }],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ExerciseListComponent);
@@ -54,36 +53,36 @@ describe('ExerciseListComponent', () => {
         name: 'Bench Press',
         description: 'Standard bench press with a barbell',
         area: 'Upper Body',
-        type: 'Free Weight'
+        type: 'Free Weight',
       },
       {
         id: 'A98503BEF',
         name: 'Sit-up',
         description: 'Lay on back with legs bent, sit up fully',
         area: 'Core',
-        type: 'Body Weight'
+        type: 'Body Weight',
       },
       {
         id: '9930408A3',
         name: 'Elliptical',
         description: 'Low impact glide-running',
         area: 'Cardio',
-        type: 'Machine'
+        type: 'Machine',
       },
       {
         id: '3885723475',
         name: 'Matrix Bench Press',
         description: 'Bench press using a machine',
         area: 'Upper Body',
-        type: 'Machine'
+        type: 'Machine',
       },
       {
         id: '773758FC3',
         name: 'Dumbbell Bench Press',
         description: 'Bench press using two dumbbells',
         area: 'Upper Body',
-        type: 'Free Weight'
-      }
+        type: 'Free Weight',
+      },
     ];
     sortedExercises = [
       {
@@ -94,9 +93,9 @@ describe('ExerciseListComponent', () => {
             name: 'Elliptical',
             description: 'Low impact glide-running',
             area: 'Cardio',
-            type: 'Machine'
-          }
-        ]
+            type: 'Machine',
+          },
+        ],
       },
       {
         area: ExerciseFocusAreas.Core,
@@ -106,9 +105,9 @@ describe('ExerciseListComponent', () => {
             name: 'Sit-up',
             description: 'Lay on back with legs bent, sit up fully',
             area: 'Core',
-            type: 'Body Weight'
-          }
-        ]
+            type: 'Body Weight',
+          },
+        ],
       },
       {
         area: ExerciseFocusAreas.UpperBody,
@@ -118,26 +117,26 @@ describe('ExerciseListComponent', () => {
             name: 'Bench Press',
             description: 'Standard bench press with a barbell',
             area: 'Upper Body',
-            type: 'Free Weight'
+            type: 'Free Weight',
           },
           {
             id: '773758FC3',
             name: 'Dumbbell Bench Press',
             description: 'Bench press using two dumbbells',
             area: 'Upper Body',
-            type: 'Free Weight'
+            type: 'Free Weight',
           },
           {
             id: '3885723475',
             name: 'Matrix Bench Press',
             description: 'Bench press using a machine',
             area: 'Upper Body',
-            type: 'Machine'
-          }
-        ]
+            type: 'Machine',
+          },
+        ],
       },
       { area: ExerciseFocusAreas.LowerBody, exercises: [] },
-      { area: ExerciseFocusAreas.FullBody, exercises: [] }
+      { area: ExerciseFocusAreas.FullBody, exercises: [] },
     ];
   }
 });

@@ -1,15 +1,14 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { AngularFireAuth } from '@angular/fire/auth';
-
-import { AuthenticationService } from './authentication.service';
 import { createAngularFireAuthMock } from '@test/mocks';
+import { AuthenticationService } from './authentication.service';
 
 describe('AuthenticationService', () => {
   let authenticationService: AuthenticationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [{ provide: AngularFireAuth, useFactory: createAngularFireAuthMock }]
+      providers: [{ provide: AngularFireAuth, useFactory: createAngularFireAuthMock }],
     });
   });
 

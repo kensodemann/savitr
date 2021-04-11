@@ -1,28 +1,28 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
-import { parseISO } from 'date-fns';
-
-import { LogEntryEditorComponent } from './log-entry-editor.component';
-import { ModalController } from '@ionic/angular';
-import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
 import { ExerciseFinderComponent } from '@app/shared';
+import { IonicModule, ModalController } from '@ionic/angular';
+import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
+import { parseISO } from 'date-fns';
+import { LogEntryEditorComponent } from './log-entry-editor.component';
 
 describe('LogEntryEditorComponent', () => {
   let component: LogEntryEditorComponent;
   let fixture: ComponentFixture<LogEntryEditorComponent>;
-  let modal;
+  let modal: any;
 
-  beforeEach(async(() => {
-    modal = createOverlayElementMock();
-    TestBed.configureTestingModule({
-      declarations: [LogEntryEditorComponent],
-      imports: [FormsModule, IonicModule],
-      providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock(modal) }],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      modal = createOverlayElementMock();
+      TestBed.configureTestingModule({
+        declarations: [LogEntryEditorComponent],
+        imports: [FormsModule, IonicModule],
+        providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock(modal) }],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LogEntryEditorComponent);
@@ -39,7 +39,7 @@ describe('LogEntryEditorComponent', () => {
         component.workoutLogEntry = {
           workoutLog: {
             id: '1234j99g0d',
-            beginDate: parseISO('2019-09-08')
+            beginDate: parseISO('2019-09-08'),
           },
           logDate: parseISO('2019-09-10'),
           exercise: {
@@ -47,13 +47,13 @@ describe('LogEntryEditorComponent', () => {
             name: 'Dumbbell Bench Press',
             description: 'Bench press using two dumbbells',
             area: 'Upper Body',
-            type: 'Free Weight'
+            type: 'Free Weight',
           },
           time: '1:45',
           sets: 4,
           reps: 12,
           weight: 35,
-          completed: false
+          completed: false,
         };
         fixture.detectChanges();
       });
@@ -72,7 +72,7 @@ describe('LogEntryEditorComponent', () => {
           name: 'Dumbbell Bench Press',
           description: 'Bench press using two dumbbells',
           area: 'Upper Body',
-          type: 'Free Weight'
+          type: 'Free Weight',
         });
       });
     });
@@ -117,9 +117,9 @@ describe('LogEntryEditorComponent', () => {
           name: 'Elliptical',
           description: 'Low impact glide-running',
           area: 'Cardio',
-          type: 'Machine'
+          type: 'Machine',
         },
-        role: 'select'
+        role: 'select',
       });
       await component.findExercise();
       expect(component.exercise).toEqual({
@@ -127,7 +127,7 @@ describe('LogEntryEditorComponent', () => {
         name: 'Elliptical',
         description: 'Low impact glide-running',
         area: 'Cardio',
-        type: 'Machine'
+        type: 'Machine',
       });
     });
 
@@ -138,9 +138,9 @@ describe('LogEntryEditorComponent', () => {
           name: 'Elliptical',
           description: 'Low impact glide-running',
           area: 'Cardio',
-          type: 'Machine'
+          type: 'Machine',
         },
-        role: 'not-select'
+        role: 'not-select',
       });
       await component.findExercise();
       expect(component.exercise).toEqual(undefined);
@@ -176,7 +176,7 @@ describe('LogEntryEditorComponent', () => {
         name: 'Elliptical',
         description: 'Low impact glide-running',
         area: 'Cardio',
-        type: 'Machine'
+        type: 'Machine',
       };
       expect(component.canSave).toEqual(false);
     });
@@ -187,7 +187,7 @@ describe('LogEntryEditorComponent', () => {
         name: 'Elliptical',
         description: 'Low impact glide-running',
         area: 'Cardio',
-        type: 'Machine'
+        type: 'Machine',
       };
       component.sets = 4;
       expect(component.canSave).toEqual(false);
@@ -199,7 +199,7 @@ describe('LogEntryEditorComponent', () => {
         name: 'Elliptical',
         description: 'Low impact glide-running',
         area: 'Cardio',
-        type: 'Machine'
+        type: 'Machine',
       };
       component.weight = 150;
       expect(component.canSave).toEqual(false);
@@ -211,7 +211,7 @@ describe('LogEntryEditorComponent', () => {
         name: 'Elliptical',
         description: 'Low impact glide-running',
         area: 'Cardio',
-        type: 'Machine'
+        type: 'Machine',
       };
       component.time = '1:30';
       expect(component.canSave).toEqual(true);
@@ -223,7 +223,7 @@ describe('LogEntryEditorComponent', () => {
         name: 'Elliptical',
         description: 'Low impact glide-running',
         area: 'Cardio',
-        type: 'Machine'
+        type: 'Machine',
       };
       component.sets = 4;
       component.reps = 12;
@@ -238,7 +238,7 @@ describe('LogEntryEditorComponent', () => {
           id: 'sdfit9932530',
           workoutLog: {
             id: '3834995304',
-            beginDate: parseISO('2019-09-15')
+            beginDate: parseISO('2019-09-15'),
           },
           logDate: parseISO('2019-09-17'),
           exercise: {
@@ -246,13 +246,13 @@ describe('LogEntryEditorComponent', () => {
             name: 'Dumbbell Bench Press',
             description: 'Bench press using two dumbbells',
             area: 'Upper Body',
-            type: 'Free Weight'
+            type: 'Free Weight',
           },
           time: '1:45',
           sets: 4,
           reps: 12,
           weight: 35,
-          completed: true
+          completed: true,
         };
         fixture.detectChanges();
       });
@@ -275,7 +275,7 @@ describe('LogEntryEditorComponent', () => {
           name: 'Barbell Bench Press',
           description: 'Standard bench press',
           area: 'Upper Body',
-          type: 'Free Weight'
+          type: 'Free Weight',
         };
         component.time = '2:00';
         component.sets = undefined;
@@ -287,7 +287,7 @@ describe('LogEntryEditorComponent', () => {
             id: 'sdfit9932530',
             workoutLog: {
               id: '3834995304',
-              beginDate: parseISO('2019-09-15')
+              beginDate: parseISO('2019-09-15'),
             },
             logDate: parseISO('2019-09-17'),
             exercise: {
@@ -295,10 +295,10 @@ describe('LogEntryEditorComponent', () => {
               name: 'Barbell Bench Press',
               description: 'Standard bench press',
               area: 'Upper Body',
-              type: 'Free Weight'
+              type: 'Free Weight',
             },
             time: '2:00',
-            completed: true
+            completed: true,
           },
           jasmine.any(String)
         );
@@ -311,7 +311,7 @@ describe('LogEntryEditorComponent', () => {
           name: 'Barbell Bench Press',
           description: 'Standard bench press',
           area: 'Upper Body',
-          type: 'Free Weight'
+          type: 'Free Weight',
         };
         component.time = '';
         component.sets = 3;
@@ -323,7 +323,7 @@ describe('LogEntryEditorComponent', () => {
             id: 'sdfit9932530',
             workoutLog: {
               id: '3834995304',
-              beginDate: parseISO('2019-09-15')
+              beginDate: parseISO('2019-09-15'),
             },
             logDate: parseISO('2019-09-17'),
             exercise: {
@@ -331,12 +331,12 @@ describe('LogEntryEditorComponent', () => {
               name: 'Barbell Bench Press',
               description: 'Standard bench press',
               area: 'Upper Body',
-              type: 'Free Weight'
+              type: 'Free Weight',
             },
             sets: 3,
             reps: 15,
             weight: 85,
-            completed: true
+            completed: true,
           },
           jasmine.any(String)
         );
@@ -348,7 +348,7 @@ describe('LogEntryEditorComponent', () => {
         component.logDate = parseISO('2019-09-10');
         component.workoutLog = {
           id: '1234j99g0d',
-          beginDate: parseISO('2019-09-08')
+          beginDate: parseISO('2019-09-08'),
         };
         fixture.detectChanges();
       });
@@ -372,7 +372,7 @@ describe('LogEntryEditorComponent', () => {
           name: 'Dumbbell Bench Press',
           description: 'Bench press using two dumbbells',
           area: 'Upper Body',
-          type: 'Free Weight'
+          type: 'Free Weight',
         };
         component.time = '1:45';
         component.save();
@@ -380,7 +380,7 @@ describe('LogEntryEditorComponent', () => {
           {
             workoutLog: {
               id: '1234j99g0d',
-              beginDate: parseISO('2019-09-08')
+              beginDate: parseISO('2019-09-08'),
             },
             logDate: parseISO('2019-09-10'),
             exercise: {
@@ -388,10 +388,10 @@ describe('LogEntryEditorComponent', () => {
               name: 'Dumbbell Bench Press',
               description: 'Bench press using two dumbbells',
               area: 'Upper Body',
-              type: 'Free Weight'
+              type: 'Free Weight',
             },
             time: '1:45',
-            completed: false
+            completed: false,
           },
           jasmine.any(String)
         );
@@ -404,7 +404,7 @@ describe('LogEntryEditorComponent', () => {
           name: 'Dumbbell Bench Press',
           description: 'Bench press using two dumbbells',
           area: 'Upper Body',
-          type: 'Free Weight'
+          type: 'Free Weight',
         };
         component.sets = 4;
         component.reps = 12;
@@ -414,7 +414,7 @@ describe('LogEntryEditorComponent', () => {
           {
             workoutLog: {
               id: '1234j99g0d',
-              beginDate: parseISO('2019-09-08')
+              beginDate: parseISO('2019-09-08'),
             },
             logDate: parseISO('2019-09-10'),
             exercise: {
@@ -422,12 +422,12 @@ describe('LogEntryEditorComponent', () => {
               name: 'Dumbbell Bench Press',
               description: 'Bench press using two dumbbells',
               area: 'Upper Body',
-              type: 'Free Weight'
+              type: 'Free Weight',
             },
             sets: 4,
             reps: 12,
             weight: 50,
-            completed: false
+            completed: false,
           },
           jasmine.any(String)
         );

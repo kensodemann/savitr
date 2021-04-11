@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { AlertController, ModalController } from '@ionic/angular';
-import { parseISO } from 'date-fns';
-
-import { WorkoutLogEntriesService } from '@app/services/firestore-data';
-import { createWorkoutLogEntriesServiceMock } from '@app/services/firestore-data/mocks';
-import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
 import { LogEntryEditorComponent } from '@app/editors';
 import { WorkoutLogEntry } from '@app/models';
 import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
+import { WorkoutLogEntriesService } from '@app/services/firestore-data';
+import { createWorkoutLogEntriesServiceMock } from '@app/services/firestore-data/mocks';
+import { AlertController, ModalController } from '@ionic/angular';
+import { createOverlayControllerMock, createOverlayElementMock } from '@test/mocks';
+import { parseISO } from 'date-fns';
 
 describe('PlanPage', () => {
   let alert;
@@ -22,8 +21,8 @@ describe('PlanPage', () => {
         { provide: AlertController, useFactory: () => createOverlayControllerMock(alert) },
         { provide: ModalController, useFactory: () => createOverlayControllerMock(modal) },
         { provide: WorkoutLogEntriesService, useFactory: createWorkoutLogEntriesServiceMock },
-        WorkoutPageService
-      ]
+        WorkoutPageService,
+      ],
     });
     initializeTestData();
   });
@@ -49,8 +48,8 @@ describe('PlanPage', () => {
         component: LogEntryEditorComponent,
         componentProps: {
           logDate: parseISO('2019-10-15'),
-          workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') }
-        }
+          workoutLog: { id: '199g009d8a', beginDate: parseISO('2019-07-21') },
+        },
       });
     });
 
@@ -71,11 +70,11 @@ describe('PlanPage', () => {
               name: 'Dumbbell Bench Press',
               description: 'Bench press using two dumbbells',
               area: 'Upper Body',
-              type: 'Free Weight'
+              type: 'Free Weight',
             },
-            time: '1:45'
+            time: '1:45',
           },
-          role: 'save'
+          role: 'save',
         });
       });
 
@@ -92,9 +91,9 @@ describe('PlanPage', () => {
             name: 'Dumbbell Bench Press',
             description: 'Bench press using two dumbbells',
             area: 'Upper Body',
-            type: 'Free Weight'
+            type: 'Free Weight',
           },
-          time: '1:45'
+          time: '1:45',
         });
       });
 
@@ -138,8 +137,8 @@ describe('PlanPage', () => {
         message: 'Are you sure you would like to remove this exercise from the workout log?',
         buttons: [
           { text: 'Yes', role: 'confirm' },
-          { text: 'No', role: 'cancel' }
-        ]
+          { text: 'No', role: 'cancel' },
+        ],
       });
       expect(alert.present).toHaveBeenCalledTimes(1);
     });
@@ -197,8 +196,8 @@ describe('PlanPage', () => {
       expect(modalController.create).toHaveBeenCalledWith({
         component: LogEntryEditorComponent,
         componentProps: {
-          workoutLogEntry: logEntries[2]
-        }
+          workoutLogEntry: logEntries[2],
+        },
       });
     });
 
@@ -219,11 +218,11 @@ describe('PlanPage', () => {
               name: 'Dumbbell Bench Press',
               description: 'Bench press using two dumbbells',
               area: 'Upper Body',
-              type: 'Free Weight'
+              type: 'Free Weight',
             },
-            time: '1:45'
+            time: '1:45',
           },
-          role: 'save'
+          role: 'save',
         });
       });
 
@@ -240,9 +239,9 @@ describe('PlanPage', () => {
             name: 'Dumbbell Bench Press',
             description: 'Bench press using two dumbbells',
             area: 'Upper Body',
-            type: 'Free Weight'
+            type: 'Free Weight',
           },
-          time: '1:45'
+          time: '1:45',
         });
       });
 
@@ -311,113 +310,113 @@ describe('PlanPage', () => {
         logDate: parseISO('2019-07-22'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: '1149953',
           name: 'Curls',
           description: 'Basic Biscept Curls',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'fkkgiffoeid',
         logDate: parseISO('2019-07-21'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'jadfoibdk',
           name: 'Jog',
           description: 'Uhg',
           type: 'Body Weight',
-          area: 'Cardio'
+          area: 'Cardio',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'kfkafoig9f0ed',
         logDate: parseISO('2019-07-22'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'fkfvibdj',
           name: 'Exercise Bike',
           description: 'Basic Biking',
           type: 'Machine',
-          area: 'Cardio'
+          area: 'Cardio',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'fkfig09ekfek',
         logDate: parseISO('2019-07-24'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'kfkfigfid',
           name: 'Leg Curls',
           description: 'Basic Leg Curls',
           type: 'Machine',
-          area: 'Lower Body'
+          area: 'Lower Body',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'ifiifiigifi',
         logDate: parseISO('2019-07-22'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'iifgiifdie',
           name: 'Bench Press',
           description: 'Basic Press',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'firemyass',
         logDate: parseISO('2019-07-25'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: 'jadfoibdk',
           name: 'Jog',
           description: 'Uhg',
           type: 'Body Weight',
-          area: 'Cardio'
+          area: 'Cardio',
         },
-        completed: false
+        completed: false,
       },
       {
         id: 'fiifigofdive',
         logDate: parseISO('2019-07-25'),
         workoutLog: {
           id: '199g009d8a',
-          beginDate: parseISO('2019-07-21')
+          beginDate: parseISO('2019-07-21'),
         },
         exercise: {
           id: '1149953',
           name: 'Curls',
           description: 'Basic Biscept Curls',
           type: 'Free Weight',
-          area: 'Upper Body'
+          area: 'Upper Body',
         },
-        completed: false
-      }
+        completed: false,
+      },
     ];
   }
 });

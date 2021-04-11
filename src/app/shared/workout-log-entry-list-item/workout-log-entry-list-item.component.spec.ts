@@ -1,19 +1,20 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { parseISO } from 'date-fns';
-
 import { WorkoutLogEntryListItemComponent } from './workout-log-entry-list-item.component';
 
 describe('WorkoutLogEntryListItemComponent', () => {
   let component: WorkoutLogEntryListItemComponent;
   let fixture: ComponentFixture<WorkoutLogEntryListItemComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [WorkoutLogEntryListItemComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [WorkoutLogEntryListItemComponent],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WorkoutLogEntryListItemComponent);
@@ -25,14 +26,14 @@ describe('WorkoutLogEntryListItemComponent', () => {
         name: 'sit-up',
         description: 'lay on your back, sit up, crunching in the middle',
         type: 'Body Weight',
-        area: 'Core'
+        area: 'Core',
       },
       workoutLog: {
         id: '314159',
-        beginDate: parseISO('2019-07-21')
+        beginDate: parseISO('2019-07-21'),
       },
       logDate: parseISO('2019-07-23'),
-      completed: false
+      completed: false,
     };
   });
 
@@ -42,7 +43,7 @@ describe('WorkoutLogEntryListItemComponent', () => {
   });
 
   describe('initialization', () => {
-    [true, false].forEach(value => {
+    [true, false].forEach((value) => {
       it(`assigns the completed flag a value of ${value}`, () => {
         component.workoutLogEntry.completed = value;
         fixture.detectChanges();
@@ -56,9 +57,9 @@ describe('WorkoutLogEntryListItemComponent', () => {
       fixture.detectChanges();
     });
 
-    [true, false].forEach(value => {
-      it(`emits the current completed flag value of ${value}`, done => {
-        component.toggle.subscribe(x => {
+    [true, false].forEach((value) => {
+      it(`emits the current completed flag value of ${value}`, (done) => {
+        component.toggle.subscribe((x) => {
           expect(x).toEqual(value);
           done();
         });

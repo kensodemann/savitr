@@ -1,11 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable, of } from 'rxjs';
-
-import { AuthEffects } from './auth.effects';
 import { AuthenticationService } from '@app/services';
 import { createAuthenticationServiceMock } from '@app/services/mocks';
 import { AuthActionTypes, login, logout, resetPassword, resetPasswordSuccess } from '@app/store/actions/auth.actions';
+import { provideMockActions } from '@ngrx/effects/testing';
+import { Observable, of } from 'rxjs';
+import { AuthEffects } from './auth.effects';
 
 let actions$: Observable<any>;
 let effects: AuthEffects;
@@ -15,8 +14,8 @@ beforeEach(() => {
     providers: [
       AuthEffects,
       { provide: AuthenticationService, useFactory: createAuthenticationServiceMock },
-      provideMockActions(() => actions$)
-    ]
+      provideMockActions(() => actions$),
+    ],
   });
 
   effects = TestBed.inject(AuthEffects);
@@ -41,19 +40,19 @@ describe('login$', () => {
     expect(authenticationService.login).toHaveBeenCalledWith('test@testty.com', 'mysecret');
   });
 
-  it('dispatches login success', done => {
+  it('dispatches login success', (done) => {
     actions$ = of(login({ email: 'test@testty.com', password: 'mysecret' }));
-    effects.login$.subscribe(action => {
+    effects.login$.subscribe((action) => {
       expect(action).toEqual({ type: AuthActionTypes.LoginSuccess });
       done();
     });
   });
 
-  it('dispatches login errors', done => {
+  it('dispatches login errors', (done) => {
     const authenticationService = TestBed.inject(AuthenticationService);
     (authenticationService.login as any).mockRejectedValue(new Error('The login failed'));
     actions$ = of(login({ email: 'test@testty.com', password: 'mysecret' }));
-    effects.login$.subscribe(action => {
+    effects.login$.subscribe((action) => {
       expect(action).toEqual({ type: AuthActionTypes.LoginFailure, error: new Error('The login failed') });
       done();
     });
@@ -75,19 +74,19 @@ describe('logout$', () => {
     expect(authenticationService.logout).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatches logout success', done => {
+  it('dispatches logout success', (done) => {
     actions$ = of(logout());
-    effects.logout$.subscribe(action => {
+    effects.logout$.subscribe((action) => {
       expect(action).toEqual({ type: AuthActionTypes.LogoutSuccess });
       done();
     });
   });
 
-  it('dispatches login errors', done => {
+  it('dispatches login errors', (done) => {
     const authenticationService = TestBed.inject(AuthenticationService);
     (authenticationService.logout as any).mockRejectedValue(new Error('The logout failed'));
     actions$ = of(logout());
-    effects.logout$.subscribe(action => {
+    effects.logout$.subscribe((action) => {
       expect(action).toEqual({ type: AuthActionTypes.LogoutFailure, error: new Error('The logout failed') });
       done();
     });
@@ -116,19 +115,19 @@ describe('resetPassword$', () => {
     expect(authenticationService.sendPasswordResetEmail).toHaveBeenCalledWith('test@testty.com');
   });
 
-  it('dispatches reset password success', done => {
+  it('dispatches reset password success', (done) => {
     actions$ = of(resetPassword({ email: 'test@testty.com' }));
-    effects.resetPassword$.subscribe(action => {
+    effects.resetPassword$.subscribe((action) => {
       expect(action).toEqual(resetPasswordSuccess({ email: 'test@testty.com' }));
       done();
     });
   });
 
-  it('dispatches errors', done => {
+  it('dispatches errors', (done) => {
     const authenticationService = TestBed.inject(AuthenticationService);
     (authenticationService.sendPasswordResetEmail as any).mockRejectedValue(new Error('The reset failed'));
     actions$ = of(resetPassword({ email: 'test@testty.com' }));
-    effects.resetPassword$.subscribe(action => {
+    effects.resetPassword$.subscribe((action) => {
       expect(action).toEqual({ type: AuthActionTypes.ResetPasswordFailure, error: new Error('The reset failed') });
       done();
     });

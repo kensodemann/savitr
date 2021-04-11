@@ -1,35 +1,36 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ThisWeekComponent } from './this-week.component';
-import { DateService } from '@app/services';
-import { createDateServiceMock } from '@app/services/mocks';
-import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
-import { createWeeklyWorkoutLogsServiceMock } from '@app/services/firestore-data/mocks';
-import { parseISO } from 'date-fns';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { WorkoutLog } from '@app/models';
 import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
 import { createWorkoutPageServiceMock } from '@app/pages/workout/services/workout-page/workout-page.service.mock';
-import { WorkoutLog } from '@app/models';
+import { DateService } from '@app/services';
+import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
+import { createWeeklyWorkoutLogsServiceMock } from '@app/services/firestore-data/mocks';
+import { createDateServiceMock } from '@app/services/mocks';
+import { parseISO } from 'date-fns';
+import { ThisWeekComponent } from './this-week.component';
 
 describe('ThisWeekComponent', () => {
   let component: ThisWeekComponent;
   let fixture: ComponentFixture<ThisWeekComponent>;
   let log: WorkoutLog;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ThisWeekComponent],
-      providers: [
-        {
-          provide: DateService,
-          useFactory: createDateServiceMock
-        },
-        { provide: WeeklyWorkoutLogsService, useFactory: createWeeklyWorkoutLogsServiceMock },
-        { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ThisWeekComponent],
+        providers: [
+          {
+            provide: DateService,
+            useFactory: createDateServiceMock,
+          },
+          { provide: WeeklyWorkoutLogsService, useFactory: createWeeklyWorkoutLogsServiceMock },
+          { provide: WorkoutPageService, useFactory: createWorkoutPageServiceMock },
+        ],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     log = { id: '715WI920', beginDate: parseISO('2019-10-27') };

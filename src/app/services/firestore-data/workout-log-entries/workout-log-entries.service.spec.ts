@@ -1,17 +1,16 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { firestore } from 'firebase/app';
-
-import { WorkoutLogEntriesService } from './workout-log-entries.service';
-import {
-  createAngularFirestoreMock,
-  createAngularFirestoreCollectionMock,
-  createAngularFireAuthMock,
-  createAngularFirestoreDocumentMock,
-  createCollectionReferenceMock,
-  createDocumentSnapshotMock
-} from '@test/mocks';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
+import {
+  createAngularFireAuthMock,
+  createAngularFirestoreCollectionMock,
+  createAngularFirestoreDocumentMock,
+  createAngularFirestoreMock,
+  createCollectionReferenceMock,
+  createDocumentSnapshotMock,
+} from '@test/mocks';
+import { firestore } from 'firebase/app';
+import { WorkoutLogEntriesService } from './workout-log-entries.service';
 
 describe('DailyExercisesService', () => {
   let collection;
@@ -22,8 +21,8 @@ describe('DailyExercisesService', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: AngularFireAuth, useFactory: createAngularFireAuthMock },
-        { provide: AngularFirestore, useFactory: createAngularFirestoreMock }
-      ]
+        { provide: AngularFirestore, useFactory: createAngularFirestoreMock },
+      ],
     });
     const angularFirestore = TestBed.inject(AngularFirestore);
     doc = createAngularFirestoreDocumentMock();
@@ -75,13 +74,13 @@ describe('DailyExercisesService', () => {
               name: 'Squats',
               description: 'Not to be confused with squirts',
               area: 'Lower Body',
-              type: 'Free Weights'
+              type: 'Free Weights',
             },
             logDate: new firestore.Timestamp(1563512400, 0),
             reps: 12,
             sets: 4,
-            weight: 150
-          }
+            weight: 150,
+          },
         }),
         createDocumentSnapshotMock({
           id: '414608',
@@ -92,13 +91,13 @@ describe('DailyExercisesService', () => {
               name: 'Push Back',
               description: 'Find something you do not like, rebel against it',
               type: 'Body Weight',
-              area: 'Core'
+              area: 'Core',
             },
             logDate: new firestore.Timestamp(1563512400, 0),
             reps: 8,
-            sets: 6
-          }
-        })
+            sets: 6,
+          },
+        }),
       ]);
       const logs = await workoutLogEntries.getAllForLog('314PI159');
       expect(logs).toEqual([
@@ -110,12 +109,12 @@ describe('DailyExercisesService', () => {
             name: 'Squats',
             description: 'Not to be confused with squirts',
             area: 'Lower Body',
-            type: 'Free Weights'
+            type: 'Free Weights',
           },
           logDate: new Date(1563512400000),
           reps: 12,
           sets: 4,
-          weight: 150
+          weight: 150,
         },
         {
           id: '414608',
@@ -125,12 +124,12 @@ describe('DailyExercisesService', () => {
             name: 'Push Back',
             description: 'Find something you do not like, rebel against it',
             type: 'Body Weight',
-            area: 'Core'
+            area: 'Core',
           },
           logDate: new Date(1563512400000),
           reps: 8,
-          sets: 6
-        }
+          sets: 6,
+        },
       ]);
     });
   });

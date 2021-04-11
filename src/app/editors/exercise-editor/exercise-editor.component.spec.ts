@@ -1,25 +1,25 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController } from '@ionic/angular';
-
-import { ExerciseEditorComponent } from './exercise-editor.component';
 import { exerciseFocusAreas, exerciseTypes } from '@app/default-data';
-
+import { IonicModule, ModalController } from '@ionic/angular';
 import { createOverlayControllerMock } from '@test/mocks';
+import { ExerciseEditorComponent } from './exercise-editor.component';
 
 describe('ExerciseEditorComponent', () => {
   let component: ExerciseEditorComponent;
   let fixture: ComponentFixture<ExerciseEditorComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ExerciseEditorComponent],
-      imports: [FormsModule, IonicModule],
-      providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock() }],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ExerciseEditorComponent],
+        imports: [FormsModule, IonicModule],
+        providers: [{ provide: ModalController, useFactory: () => createOverlayControllerMock() }],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ExerciseEditorComponent);
@@ -67,7 +67,7 @@ describe('ExerciseEditorComponent', () => {
           name: 'Squats',
           description: 'Not to be confused with squirts',
           area: 'Lower Body',
-          type: 'Free Weights'
+          type: 'Free Weights',
         };
         fixture.detectChanges();
       });
@@ -117,7 +117,7 @@ describe('ExerciseEditorComponent', () => {
             name: 'Bench Press',
             description: 'Lay down, push weight off chest to prevent crushing',
             area: component.areas[2],
-            type: component.types[1]
+            type: component.types[1],
           },
           jasmine.any(String)
         );
@@ -137,7 +137,7 @@ describe('ExerciseEditorComponent', () => {
           name: 'Squats',
           description: 'Not to be confused with squirts',
           area: 'Lower Body',
-          type: 'Free Weights'
+          type: 'Free Weights',
         };
         fixture.detectChanges();
       });
@@ -161,7 +161,7 @@ describe('ExerciseEditorComponent', () => {
             name: 'Bench Press',
             description: 'Lay down, push weight off chest to prevent crushing',
             area: component.areas[1],
-            type: component.types[2]
+            type: component.types[2],
           },
           jasmine.any(String)
         );

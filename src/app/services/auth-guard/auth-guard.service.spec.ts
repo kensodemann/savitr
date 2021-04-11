@@ -3,7 +3,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { NavController } from '@ionic/angular';
 import { createAngularFireAuthMock, createNavControllerMock } from '@test/mocks';
 import { of } from 'rxjs';
-
 import { AuthGuardService } from './auth-guard.service';
 
 describe('AuthGuardService', () => {
@@ -12,8 +11,8 @@ describe('AuthGuardService', () => {
     TestBed.configureTestingModule({
       providers: [
         { provide: AngularFireAuth, useFactory: createAngularFireAuthMock },
-        { provide: NavController, useFactory: createNavControllerMock }
-      ]
+        { provide: NavController, useFactory: createNavControllerMock },
+      ],
     });
   });
 
