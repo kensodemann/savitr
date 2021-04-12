@@ -44,7 +44,7 @@ export abstract class FirestoreDataService<T extends { id?: string }> {
     return actions.map((a) => {
       const data = a.payload.doc.data();
       const id = a.payload.doc.id;
-      return { id, ...(data as object) } as T;
+      return { id, ...(data as Record<string, unknown>) } as T;
     });
   }
 

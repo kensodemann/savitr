@@ -14,24 +14,6 @@ export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
     super(afAuth);
   }
 
-  protected getCollection(user: firebase.User): AngularFirestoreCollection<WorkoutLog> {
-    return this.ngFirestore
-      .collection('users')
-      .doc((user && user.uid) || 'unknown')
-      .collection('weekly-workout-logs', (ref) => ref.orderBy('beginDate', 'desc'));
-  }
-
-  protected actionsToData(actions: Array<DocumentChangeAction<WorkoutLog>>): Array<WorkoutLog> {
-    return actions.map((a) => {
-      const data = a.payload.doc.data();
-      const id = a.payload.doc.id;
-      return {
-        id,
-        beginDate: ((data as any).beginDate as firebase.firestore.Timestamp).toDate(),
-      };
-    });
-  }
-
   async get(id: string): Promise<WorkoutLog> {
     const doc = await super.get(id);
     if (doc && doc.beginDate) {
@@ -57,5 +39,23 @@ export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
       id: doc.id,
       beginDate: (doc.data().beginDate as firebase.firestore.Timestamp).toDate(),
     };
+  }
+
+  protected getCollection(user: firebase.User): AngularFirestoreCollection<WorkoutLog> {
+    return this.ngFirestore
+      .collection('users')
+      .doc((user && user.uid) || 'unknown')
+      .collection('weekly-workout-logs', (ref) => ref.orderBy('beginDate', 'desc'));
+  }
+
+  protected actionsToData(actions: Array<DocumentChangeAction<WorkoutLog>>): Array<WorkoutLog> {
+    return actions.map((a) => {
+      const data = a.payload.doc.data();
+      const id = a.payload.doc.id;
+      return {
+        id,
+        beginDate: ((data as any).beginDate as firebase.firestore.Timestamp).toDate(),
+      };
+    });
   }
 }

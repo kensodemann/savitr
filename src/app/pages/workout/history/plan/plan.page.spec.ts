@@ -320,7 +320,7 @@ describe('PlanPage', () => {
     });
   });
 
-  function initializeTestData() {
+  const initializeTestData = () => {
     logEntries = [
       {
         id: 'fkkgiire0953',
@@ -435,5 +435,5 @@ describe('PlanPage', () => {
         completed: false,
       },
     ];
-  }
+  };
 });

@@ -46,7 +46,7 @@ describe('ExerciseListComponent', () => {
     });
   });
 
-  function initiailzeTestData() {
+  const initiailzeTestData = () => {
     exercises = [
       {
         id: '388495883',
@@ -86,7 +86,7 @@ describe('ExerciseListComponent', () => {
     ];
     sortedExercises = [
       {
-        area: ExerciseFocusAreas.Cardio,
+        area: ExerciseFocusAreas.cardio,
         exercises: [
           {
             id: '9930408A3',
@@ -98,7 +98,7 @@ describe('ExerciseListComponent', () => {
         ],
       },
       {
-        area: ExerciseFocusAreas.Core,
+        area: ExerciseFocusAreas.core,
         exercises: [
           {
             id: 'A98503BEF',
@@ -110,7 +110,7 @@ describe('ExerciseListComponent', () => {
         ],
       },
       {
-        area: ExerciseFocusAreas.UpperBody,
+        area: ExerciseFocusAreas.upperBody,
         exercises: [
           {
             id: '388495883',
@@ -135,8 +135,8 @@ describe('ExerciseListComponent', () => {
           },
         ],
       },
-      { area: ExerciseFocusAreas.LowerBody, exercises: [] },
-      { area: ExerciseFocusAreas.FullBody, exercises: [] },
+      { area: ExerciseFocusAreas.lowerBody, exercises: [] },
+      { area: ExerciseFocusAreas.fullBody, exercises: [] },
     ];
-  }
+  };
 });

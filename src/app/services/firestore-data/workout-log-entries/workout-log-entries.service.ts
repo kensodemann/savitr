@@ -13,13 +13,6 @@ export class WorkoutLogEntriesService extends FirestoreDataService<WorkoutLogEnt
     super(afAuth);
   }
 
-  protected getCollection(user: firebase.User): AngularFirestoreCollection<WorkoutLogEntry> {
-    return this.firestore
-      .collection('users')
-      .doc((user && user.uid) || 'unknown')
-      .collection('workout-log-entries');
-  }
-
   async getAllForLog(id: string): Promise<Array<WorkoutLogEntry>> {
     const user = await this.afAuth.currentUser;
     const collection = this.getCollection(user);
@@ -33,5 +26,12 @@ export class WorkoutLogEntriesService extends FirestoreDataService<WorkoutLogEnt
       d.workoutLog.beginDate = ((d.workoutLog.beginDate as any) as firebase.firestore.Timestamp).toDate();
       return d;
     });
+  }
+
+  protected getCollection(user: firebase.User): AngularFirestoreCollection<WorkoutLogEntry> {
+    return this.firestore
+      .collection('users')
+      .doc((user && user.uid) || 'unknown')
+      .collection('workout-log-entries');
   }
 }

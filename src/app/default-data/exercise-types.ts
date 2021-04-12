@@ -1,13 +1,13 @@
 export const enum ExerciseTypes {
-  BodyWeight = 'Body Weight',
-  FreeWeight = 'Free Weight',
-  Machine = 'Machine',
-  Class = 'Class',
+  bodyWeight = 'Body Weight',
+  freeWeight = 'Free Weight',
+  machine = 'Machine',
+  class = 'Class',
 }
 
 export const exerciseTypes: Array<string> = [
-  ExerciseTypes.BodyWeight,
-  ExerciseTypes.FreeWeight,
-  ExerciseTypes.Machine,
-  ExerciseTypes.Class,
+  ExerciseTypes.bodyWeight,
+  ExerciseTypes.freeWeight,
+  ExerciseTypes.machine,
+  ExerciseTypes.class,
 ];

@@ -9,6 +9,10 @@ import { Exercise, WorkoutLog, WorkoutLogEntry } from '@app/models';
   styleUrls: ['./log-entry-editor.component.scss'],
 })
 export class LogEntryEditorComponent implements OnInit {
+  @Input() logDate: Date;
+  @Input() workoutLog: WorkoutLog;
+  @Input() workoutLogEntry: WorkoutLogEntry;
+
   title: string;
   errorMessage: string;
   warningMessage: string;
@@ -18,10 +22,6 @@ export class LogEntryEditorComponent implements OnInit {
   reps: number;
   time: string;
   weight: number;
-
-  @Input() logDate: Date;
-  @Input() workoutLog: WorkoutLog;
-  @Input() workoutLogEntry: WorkoutLogEntry;
 
   constructor(private modalController: ModalController) {}
 

@@ -1,4 +1,4 @@
-export function byName(c1: { name: string }, c2: { name: string }): number {
+export const byName = (c1: { name: string }, c2: { name: string }): number => {
   if (c1.name.toLowerCase() < c2.name.toLowerCase()) {
     return -1;
   }
@@ -6,7 +6,7 @@ export function byName(c1: { name: string }, c2: { name: string }): number {
     return 1;
   }
   return 0;
-}
+};
 
 export const yesNoButtons = [
   { text: 'Yes', role: 'confirm' },

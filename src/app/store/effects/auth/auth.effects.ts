@@ -17,8 +17,6 @@ import { AuthenticationService } from '@app/services';
 
 @Injectable()
 export class AuthEffects {
-  constructor(private actions$: Actions, private authenticationService: AuthenticationService) {}
-
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(login),
@@ -54,4 +52,6 @@ export class AuthEffects {
       )
     )
   );
+
+  constructor(private actions$: Actions, private authenticationService: AuthenticationService) {}
 }

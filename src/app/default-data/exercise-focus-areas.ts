@@ -1,15 +1,15 @@
 export const enum ExerciseFocusAreas {
-  Cardio = 'Cardio',
-  UpperBody = 'Upper Body',
-  LowerBody = 'Lower Body',
-  FullBody = 'Full Body',
-  Core = 'Core',
+  cardio = 'Cardio',
+  upperBody = 'Upper Body',
+  lowerBody = 'Lower Body',
+  fullBody = 'Full Body',
+  core = 'Core',
 }
 
 export const exerciseFocusAreas: Array<string> = [
-  ExerciseFocusAreas.Cardio,
-  ExerciseFocusAreas.Core,
-  ExerciseFocusAreas.UpperBody,
-  ExerciseFocusAreas.LowerBody,
-  ExerciseFocusAreas.FullBody,
+  ExerciseFocusAreas.cardio,
+  ExerciseFocusAreas.core,
+  ExerciseFocusAreas.upperBody,
+  ExerciseFocusAreas.lowerBody,
+  ExerciseFocusAreas.fullBody,
 ];

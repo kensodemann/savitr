@@ -91,7 +91,7 @@ describe('ExerciseFinderComponent', () => {
     });
   });
 
-  function initiailzeTestData() {
+  const initiailzeTestData = () => {
     exercises = [
       {
         id: '388495883',
@@ -129,5 +129,5 @@ describe('ExerciseFinderComponent', () => {
         type: 'Free Weight',
       },
     ];
-  }
+  };
 });

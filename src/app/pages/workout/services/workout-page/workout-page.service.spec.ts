@@ -9,9 +9,9 @@ import { createOverlayControllerMock, createOverlayElementMock } from '@test/moc
 import { parseISO } from 'date-fns';
 
 describe('PlanPage', () => {
-  let alert;
+  let alert: any;
   let logEntries: Array<WorkoutLogEntry>;
-  let modal;
+  let modal: any;
 
   beforeEach(() => {
     alert = createOverlayElementMock();
@@ -303,7 +303,7 @@ describe('PlanPage', () => {
     });
   });
 
-  function initializeTestData() {
+  const initializeTestData = () => {
     logEntries = [
       {
         id: 'fkkgiire0953',
@@ -418,5 +418,5 @@ describe('PlanPage', () => {
         completed: false,
       },
     ];
-  }
+  };
 });

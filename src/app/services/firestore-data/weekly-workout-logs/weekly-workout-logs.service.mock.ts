@@ -1,7 +1,7 @@
 import { createFirestoreDataServiceMock } from '../firestore-data.service.mock';
 
-export function createWeeklyWorkoutLogsServiceMock() {
+export const createWeeklyWorkoutLogsServiceMock = () => {
   const mock = createFirestoreDataServiceMock();
   (mock as any).getForDate = jest.fn();
   return mock;
-}
+};

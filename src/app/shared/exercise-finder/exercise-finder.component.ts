@@ -11,9 +11,9 @@ import { map, mergeMap } from 'rxjs/operators';
   styleUrls: ['./exercise-finder.component.scss'],
 })
 export class ExerciseFinderComponent implements OnInit {
-  private filterBy: BehaviorSubject<string>;
-
   exercises$: Observable<Array<Exercise>>;
+
+  private filterBy: BehaviorSubject<string>;
 
   constructor(private exercisesService: ExercisesService, private modalController: ModalController) {
     this.filterBy = new BehaviorSubject('');
@@ -22,13 +22,9 @@ export class ExerciseFinderComponent implements OnInit {
   ngOnInit() {
     this.exercises$ = this.filterBy.pipe(
       mergeMap((filter) =>
-        this.exercisesService.all().pipe(
-          map((exercises) =>
-            exercises.filter((exercise) => {
-              return exercise.name.toLocaleLowerCase().includes(filter);
-            })
-          )
-        )
+        this.exercisesService
+          .all()
+          .pipe(map((exercises) => exercises.filter((exercise) => exercise.name.toLocaleLowerCase().includes(filter))))
       )
     );
   }

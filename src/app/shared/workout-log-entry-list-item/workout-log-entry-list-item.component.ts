@@ -10,11 +10,11 @@ export class WorkoutLogEntryListItemComponent implements OnInit {
   @Input() workoutLogEntry: WorkoutLogEntry;
   @Input() showCompletion: boolean;
 
-  completed: boolean;
-
   @Output() delete: EventEmitter<WorkoutLogEntry>;
   @Output() edit: EventEmitter<WorkoutLogEntry>;
   @Output() toggle: EventEmitter<boolean>;
+
+  completed: boolean;
 
   constructor() {
     this.delete = new EventEmitter();

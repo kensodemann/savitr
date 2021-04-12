@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { addDays } from 'date-fns';
-
-import { DateService } from '@app/services';
-import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
 import { WorkoutLog, WorkoutLogEntry } from '@app/models';
 import { WorkoutPageService } from '@app/pages/workout/services/workout-page/workout-page.service';
+import { DateService } from '@app/services';
+import { WeeklyWorkoutLogsService } from '@app/services/firestore-data';
+import { AlertController } from '@ionic/angular';
+import { addDays } from 'date-fns';
 
 @Component({
   selector: 'app-plan',
@@ -14,12 +13,12 @@ import { WorkoutPageService } from '@app/pages/workout/services/workout-page/wor
   styleUrls: ['./plan.page.scss'],
 })
 export class PlanPage implements OnInit {
-  private currentWorkoutLog: WorkoutLog;
-
   beginMS: number;
   beginDates: Array<Date>;
   disableDateChange: boolean;
   exerciseLogs: Array<Array<WorkoutLogEntry>>;
+
+  private currentWorkoutLog: WorkoutLog;
 
   constructor(
     private alertController: AlertController,
