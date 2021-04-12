@@ -15,6 +15,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { environment } from '@env/environment';
 import { reducers, metaReducers } from '@app/store';
 import { AuthEffects } from '@app/store/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +37,7 @@ import { AuthEffects } from '@app/store/effects';
       },
     }),
     EffectsModule.forRoot([AuthEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
