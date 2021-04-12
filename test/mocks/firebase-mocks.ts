@@ -6,12 +6,10 @@ export function createAngularFireAuthMock() {
     user: of(null),
     idToken: of(null),
     idTokenResult: of(null),
-    auth: {
-      sendPasswordResetEmail: jest.fn(() => Promise.resolve()),
-      signInWithEmailAndPassword: jest.fn(() => Promise.resolve()),
-      signInWithPopup: jest.fn(() => Promise.resolve()),
-      signOut: jest.fn(() => Promise.resolve())
-    }
+    sendPasswordResetEmail: jest.fn(() => Promise.resolve()),
+    signInWithEmailAndPassword: jest.fn(() => Promise.resolve()),
+    signInWithPopup: jest.fn(() => Promise.resolve()),
+    signOut: jest.fn(() => Promise.resolve()),
   };
 }
 
@@ -30,8 +28,8 @@ class TestDocument<T> {
 export function createAction<T>(id: string, data: T) {
   return {
     payload: {
-      doc: new TestDocument(id, data)
-    }
+      doc: new TestDocument(id, data),
+    },
   };
 }
 
@@ -43,7 +41,7 @@ export function createAngularFirestoreDocumentMock() {
     valueChanges: jest.fn(() => EMPTY),
     snapshotChanges: jest.fn(() => EMPTY),
     collection: jest.fn(),
-    ref: createDocumentReferenceMock()
+    ref: createDocumentReferenceMock(),
   };
 }
 
@@ -53,14 +51,15 @@ export function createAngularFirestoreCollectionMock() {
     add: jest.fn(() => Promise.resolve(createDocumentReferenceMock())),
     valueChanges: jest.fn(() => EMPTY),
     snapshotChanges: jest.fn(() => EMPTY),
-    ref: createCollectionReferenceMock([])
+    stateChanges: jest.fn(() => EMPTY),
+    ref: createCollectionReferenceMock([]),
   };
 }
 
 export function createAngularFirestoreMock() {
   return {
     collection: jest.fn(() => createAngularFirestoreCollectionMock()),
-    doc: jest.fn(() => createAngularFirestoreDocumentMock())
+    doc: jest.fn(() => createAngularFirestoreDocumentMock()),
   };
 }
 
@@ -70,22 +69,22 @@ export function createCollectionReferenceMock(docs: Array<any>) {
       get: jest.fn(() =>
         Promise.resolve({
           size: docs.length,
-          docs
+          docs,
         })
-      )
-    }))
+      ),
+    })),
   };
 }
 
 export function createDocumentReferenceMock(doc?: { id: string; data: any }) {
   return {
-    get: jest.fn(() => Promise.resolve(createDocumentSnapshotMock(doc)))
+    get: jest.fn(() => Promise.resolve(createDocumentSnapshotMock(doc))),
   };
 }
 
 export function createDocumentSnapshotMock(doc?: { id: string; data: any }) {
   return {
     id: doc ? doc.id : 0,
-    data: jest.fn(() => (doc ? doc.data : {}))
+    data: jest.fn(() => (doc ? doc.data : {})),
   };
 }

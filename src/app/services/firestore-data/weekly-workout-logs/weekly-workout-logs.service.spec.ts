@@ -11,14 +11,14 @@ import {
   createDocumentReferenceMock,
   createDocumentSnapshotMock,
 } from '@test/mocks';
-import { firestore } from 'firebase/app';
+import firebase from 'firebase/app';
 import { of } from 'rxjs';
 import { WeeklyWorkoutLogsService } from './weekly-workout-logs.service';
 
 describe('WeeklyWorkoutLogsService', () => {
-  let logsCollection;
-  let userCollection;
-  let userDoc;
+  let logsCollection: any;
+  let userCollection: any;
+  let userDoc: any;
   let weeklyWorkoutLogs: WeeklyWorkoutLogsService;
 
   beforeEach(() => {
@@ -43,7 +43,9 @@ describe('WeeklyWorkoutLogsService', () => {
     weeklyWorkoutLogs = service;
     // NOTE: User needs to be logged in for this service to be useful
     const afAuth = TestBed.inject(AngularFireAuth);
-    (afAuth as any).auth.currentUser = { uid: '123abc' };
+    (afAuth as any).currentUser = { uid: '123abc' };
+    (afAuth as any).user = of({ uid: '123abc' });
+    (afAuth.authState as any).next();
   }));
 
   it('should be created', () => {
@@ -53,7 +55,7 @@ describe('WeeklyWorkoutLogsService', () => {
   describe('all', () => {
     it('grabs a references to the daily-exercises collection for the user', () => {
       const angularFirestore = TestBed.inject(AngularFirestore);
-      weeklyWorkoutLogs.all();
+      weeklyWorkoutLogs.all().subscribe();
       expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
       expect(angularFirestore.collection).toHaveBeenCalledWith('users');
       expect(userCollection.doc).toHaveBeenCalledTimes(1);
@@ -66,10 +68,10 @@ describe('WeeklyWorkoutLogsService', () => {
       logsCollection.snapshotChanges.mockReturnValue(
         of([
           createAction('314PI', {
-            beginDate: new firestore.Timestamp(1563339600, 0),
+            beginDate: new firebase.firestore.Timestamp(1563339600, 0),
           }),
           createAction('420HI', {
-            beginDate: new firestore.Timestamp(1563445900, 0),
+            beginDate: new firebase.firestore.Timestamp(1563445900, 0),
           }),
         ])
       );
@@ -90,7 +92,7 @@ describe('WeeklyWorkoutLogsService', () => {
   });
 
   describe('get', () => {
-    let document;
+    let document: any;
     beforeEach(() => {
       document = createAngularFirestoreDocumentMock();
       logsCollection.doc.mockReturnValue(document);
@@ -114,9 +116,12 @@ describe('WeeklyWorkoutLogsService', () => {
   });
 
   describe('getForDate', () => {
-    let newLog;
+    let newLog: any;
     beforeEach(() => {
-      newLog = createDocumentReferenceMock({ id: '4273', data: { beginDate: new firestore.Timestamp(1563339600, 0) } });
+      newLog = createDocumentReferenceMock({
+        id: '4273',
+        data: { beginDate: new firebase.firestore.Timestamp(1563339600, 0) },
+      });
       logsCollection.add.mockResolvedValue(newLog);
     });
 
@@ -130,8 +135,14 @@ describe('WeeklyWorkoutLogsService', () => {
     it('returns the first log found by the query', async () => {
       const dt = new Date(1563339600000);
       logsCollection.ref = createCollectionReferenceMock([
-        createDocumentSnapshotMock({ id: '314159', data: { beginDate: new firestore.Timestamp(1563339600, 0) } }),
-        createDocumentSnapshotMock({ id: '414608290262', data: { beginDate: new firestore.Timestamp(1563339600, 0) } }),
+        createDocumentSnapshotMock({
+          id: '314159',
+          data: { beginDate: new firebase.firestore.Timestamp(1563339600, 0) },
+        }),
+        createDocumentSnapshotMock({
+          id: '414608290262',
+          data: { beginDate: new firebase.firestore.Timestamp(1563339600, 0) },
+        }),
       ]);
       const log = await weeklyWorkoutLogs.getForDate(dt);
       expect(log).toEqual({ id: '314159', beginDate: dt });

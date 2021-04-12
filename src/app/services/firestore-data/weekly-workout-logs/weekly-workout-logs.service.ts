@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentChangeAction } from '@angular/fire/firestore';
-import { firestore } from 'firebase/app';
+import firebase from 'firebase/app';
 
 import { FirestoreDataService } from '../firestore-data.service';
 import { WorkoutLog } from '@app/models';
@@ -10,17 +10,15 @@ import { AngularFireAuth } from '@angular/fire/auth';
   providedIn: 'root',
 })
 export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
-  constructor(private ngFirestore: AngularFirestore, private afAuth: AngularFireAuth) {
-    super();
+  constructor(private ngFirestore: AngularFirestore, afAuth: AngularFireAuth) {
+    super(afAuth);
   }
 
-  protected getCollection(): AngularFirestoreCollection<WorkoutLog> {
-    if (this.afAuth.auth.currentUser) {
-      return this.ngFirestore
-        .collection('users')
-        .doc(this.afAuth.auth.currentUser.uid)
-        .collection('weekly-workout-logs', (ref) => ref.orderBy('beginDate', 'desc'));
-    }
+  protected getCollection(user: firebase.User): AngularFirestoreCollection<WorkoutLog> {
+    return this.ngFirestore
+      .collection('users')
+      .doc((user && user.uid) || 'unknown')
+      .collection('weekly-workout-logs', (ref) => ref.orderBy('beginDate', 'desc'));
   }
 
   protected actionsToData(actions: Array<DocumentChangeAction<WorkoutLog>>): Array<WorkoutLog> {
@@ -29,7 +27,7 @@ export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
       const id = a.payload.doc.id;
       return {
         id,
-        beginDate: ((data as any).beginDate as firestore.Timestamp).toDate(),
+        beginDate: ((data as any).beginDate as firebase.firestore.Timestamp).toDate(),
       };
     });
   }
@@ -43,8 +41,10 @@ export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
   }
 
   async getForDate(dt: Date): Promise<WorkoutLog> {
-    let doc;
-    const value = await this.collection.ref.where('beginDate', '==', dt).get();
+    let doc: any;
+    const user = await this.afAuth.currentUser;
+    const collection = this.getCollection(user);
+    const value = await collection.ref.where('beginDate', '==', dt).get();
 
     if (value.size === 0) {
       const ref = await this.add({ beginDate: dt });
@@ -55,7 +55,7 @@ export class WeeklyWorkoutLogsService extends FirestoreDataService<WorkoutLog> {
 
     return {
       id: doc.id,
-      beginDate: (doc.data().beginDate as firestore.Timestamp).toDate(),
+      beginDate: (doc.data().beginDate as firebase.firestore.Timestamp).toDate(),
     };
   }
 }

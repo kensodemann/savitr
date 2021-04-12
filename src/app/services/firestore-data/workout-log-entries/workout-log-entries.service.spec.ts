@@ -9,12 +9,13 @@ import {
   createCollectionReferenceMock,
   createDocumentSnapshotMock,
 } from '@test/mocks';
-import { firestore } from 'firebase/app';
+import firebase from 'firebase/app';
+import { of } from 'rxjs';
 import { WorkoutLogEntriesService } from './workout-log-entries.service';
 
 describe('DailyExercisesService', () => {
-  let collection;
-  let doc;
+  let collection: any;
+  let doc: any;
   let workoutLogEntries: WorkoutLogEntriesService;
 
   beforeEach(() => {
@@ -36,7 +37,9 @@ describe('DailyExercisesService', () => {
     workoutLogEntries = service;
     // NOTE: User needs to be logged in for this service to be useful
     const afAuth = TestBed.inject(AngularFireAuth);
-    (afAuth as any).auth.currentUser = { uid: '123abc' };
+    (afAuth as any).currentUser = { uid: '123abc' };
+    (afAuth as any).user = of({ uid: '123abc' });
+    (afAuth.authState as any).next();
   }));
 
   it('should be created', () => {
@@ -46,7 +49,7 @@ describe('DailyExercisesService', () => {
   describe('all', () => {
     it('grabs a reference to the daily-exercises collection for the user', () => {
       const angularFirestore = TestBed.inject(AngularFirestore);
-      workoutLogEntries.all();
+      workoutLogEntries.all().subscribe();
       expect(angularFirestore.collection).toHaveBeenCalledTimes(1);
       expect(angularFirestore.collection).toHaveBeenCalledWith('users');
       expect(collection.doc).toHaveBeenCalledTimes(1);
@@ -68,7 +71,7 @@ describe('DailyExercisesService', () => {
         createDocumentSnapshotMock({
           id: '314159',
           data: {
-            workoutLog: { id: '314PI159', beginDate: new firestore.Timestamp(1563339600, 0) },
+            workoutLog: { id: '314PI159', beginDate: new firebase.firestore.Timestamp(1563339600, 0) },
             exercise: {
               id: '420059399405',
               name: 'Squats',
@@ -76,7 +79,7 @@ describe('DailyExercisesService', () => {
               area: 'Lower Body',
               type: 'Free Weights',
             },
-            logDate: new firestore.Timestamp(1563512400, 0),
+            logDate: new firebase.firestore.Timestamp(1563512400, 0),
             reps: 12,
             sets: 4,
             weight: 150,
@@ -85,7 +88,7 @@ describe('DailyExercisesService', () => {
         createDocumentSnapshotMock({
           id: '414608',
           data: {
-            workoutLog: { id: '314PI159', beginDate: new firestore.Timestamp(1563339600, 0) },
+            workoutLog: { id: '314PI159', beginDate: new firebase.firestore.Timestamp(1563339600, 0) },
             exercise: {
               id: '420059399405',
               name: 'Push Back',
@@ -93,7 +96,7 @@ describe('DailyExercisesService', () => {
               type: 'Body Weight',
               area: 'Core',
             },
-            logDate: new firestore.Timestamp(1563512400, 0),
+            logDate: new firebase.firestore.Timestamp(1563512400, 0),
             reps: 8,
             sets: 6,
           },
